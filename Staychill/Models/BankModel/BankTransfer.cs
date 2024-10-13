@@ -11,7 +11,7 @@ namespace Staychill.Models.BankModel
         public ICollection<BankAccount>? Accounts { get; set; }
 
         [Required]
-        [RegularExpression(@"\d{3}-\d{1}-\d{5}-\d{1}")]
+        [RegularExpression(@"\d{3}-{1}-{5}-{1}")]
         public string? BankNumber { get; set; } // Bank Account Number //
   
     }

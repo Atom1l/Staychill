@@ -197,14 +197,14 @@ namespace Staychill.Controllers.ZTestingControler
             //-------------------------- (INDEX) --------------------------//
                 public async Task<IActionResult> ProductIndex()
                 {
-                    var model = await _db.ProductDB.Include(p => p.Images).ToListAsync();
+                    var model = await _db.ProductDB.Include(p => p.Images).ToListAsync(); // Include Images from productImage to ProductDB //
                     return View(model);
                 }
 
                 //-------------------------- (CREATE) --------------------------//
                 public IActionResult ProductCreate()
                 {
-                    var product = new Product();
+                    var product = new Product(); // make a new object name product using attributes from Product.cs //
                     return View(product);
                 }
 
@@ -215,10 +215,10 @@ namespace Staychill.Controllers.ZTestingControler
                 {
                     if (ModelState.IsValid)
                     {
-                        _db.ProductDB.Add(product);
+                        _db.ProductDB.Add(product); // Save the data from product that have Product.cs attributes //
                         await _db.SaveChangesAsync();
 
-                        var productImages = new ProductImages
+                        var productImages = new ProductImages // Convert IMG to Bytes to save in database //
                         {
                             ProductId = product.Id,
                             Image1 = await ConvertToBytes(image1),
@@ -227,7 +227,7 @@ namespace Staychill.Controllers.ZTestingControler
                             Image4 = await ConvertToBytes(image4),
                         };
 
-                        _db.ProductImagesDB.Add(productImages);
+                        _db.ProductImagesDB.Add(productImages); // Save the byte type of data into database //
                         await _db.SaveChangesAsync();
 
                         return RedirectToAction("ProductIndex");
@@ -239,7 +239,8 @@ namespace Staychill.Controllers.ZTestingControler
                 //-------------------------- (DELETE) --------------------------//
                 public async Task<IActionResult> ProductDelete( int id)
                 {
-                    var product = await _db.ProductDB.Include(m => m.Images).FirstOrDefaultAsync(p => p.Id == id);
+                    // Find ProductDB include ProductImages Id if matching with id //
+                    var product = await _db.ProductDB.Include(m => m.Images).FirstOrDefaultAsync(p => p.Id == id); 
                     if(product == null)
                     {
                         return NotFound();
@@ -252,7 +253,7 @@ namespace Staychill.Controllers.ZTestingControler
                 [ValidateAntiForgeryToken]
                 public async Task<IActionResult> ProductDeleteConfirmed(int id)
                 {
-                    var product = await _db.ProductDB.FindAsync(id);
+                    var product = await _db.ProductDB.FindAsync(id); // If match and confirmed then proceed to delete the data that contain inside int id //
                     if(product != null)
                     {
                         _db.ProductDB.Remove(product);
@@ -286,8 +287,8 @@ namespace Staychill.Controllers.ZTestingControler
 
         public async Task<IActionResult> PaymentQRIndex()
         {
-            var qr = await _db.QRDataDB.ToListAsync();
-            if(qr == null)
+            var qr = await _db.QRDataDB.ToListAsync(); // Convert QRDataDB to List //
+            if (qr == null)
             {
                 return NotFound();
             }
@@ -296,7 +297,7 @@ namespace Staychill.Controllers.ZTestingControler
 
         public IActionResult PaymentCardIndex()
         {
-            var produt = _db.CreditCardsDB.ToList();
+            var produt = _db.CreditCardsDB.ToList(); // Convert CreditCardsDB to List //
             return View(produt);
         }
 
@@ -327,15 +328,15 @@ namespace Staychill.Controllers.ZTestingControler
         {
             if (ModelState.IsValid)
             {
-                if (Image != null && Image.Length > 0)
+                if (Image != null && Image.Length > 0) // Connvert Bank Account picture that uploaded into byte[] type of file //
                 {
                     bankacc.BankPicsData = await ConvertToBytes(Image);
                 }
 
-                _db.BankAccDB.Add(bankacc);
+                _db.BankAccDB.Add(bankacc); // Save byte[] into the database //
                 await _db.SaveChangesAsync();
 
-                return RedirectToAction("PaymentBankIndex");
+                return RedirectToAction("PaymentBankIndex"); // Return to Index //
             }
             return View(bankacc);
         }
@@ -346,13 +347,13 @@ namespace Staychill.Controllers.ZTestingControler
         {
             if (ModelState.IsValid)
             {
-                if(Image != null && Image.Length > 0)
+                if(Image != null && Image.Length > 0) // Save the QR picture that uploaded into byte[] type of file //
                 {
                     qrdata.QRPicData = await ConvertToBytes(Image);
                 }
-                _db.QRDataDB.Add(qrdata);
+                _db.QRDataDB.Add(qrdata); // Save byte[] into the database //
                 await _db.SaveChangesAsync();
-                return RedirectToAction("PaymentQRIndex");
+                return RedirectToAction("PaymentQRIndex"); // Return to Index //
             }
             return View(qrdata);
         }
@@ -363,9 +364,9 @@ namespace Staychill.Controllers.ZTestingControler
         {
             if (ModelState.IsValid)
             {
-                _db.CreditCardsDB.Add(creditcard);
+                _db.CreditCardsDB.Add(creditcard); // Save the Creditcard data that user fill in the form into database //
                 await _db.SaveChangesAsync();
-                return RedirectToAction("PaymentCardIndex");
+                return RedirectToAction("PaymentCardIndex"); // return to Index //
             }
             return View(creditcard);
         }
@@ -445,7 +446,9 @@ namespace Staychill.Controllers.ZTestingControler
         }
 
 
-        // BANKACCOPTS //
+        // BANKACCOPTIONS //
+        // This controller is about showing the combining between BankAccDB and bankTransfer //
+        // To make a virtual transaction for user using bank account and then bank number //
         public async Task<IActionResult> PaymentBankTransferCreate()
         {
             var bankTransfer = new BankTransfer
@@ -561,8 +564,8 @@ namespace Staychill.Controllers.ZTestingControler
 
         //-------------------------- TRACKING SECTION -------------------------- //
 
-            //-------------------------- (INDEX) Display the Data of ShipmentCode in form of table --------------------------//
-            public IActionResult TrackingIndex()
+                //-------------------------- (INDEX) Display the Data of ShipmentCode in form of table --------------------------//
+                public IActionResult TrackingIndex()
                 {
                     var tracklist = _db.TrackingDB.ToList(); // Create a tracklist variable to contain TrackingDB database that convert to list type //
                     return View(tracklist); // Return with the data of tracklist(TrackingDB.Tolist) //
@@ -599,6 +602,67 @@ namespace Staychill.Controllers.ZTestingControler
                     }
                     return View(model); // If modelstate is not valid //
                 }
+
+                //-------------------------- (EDIT) --------------------------//
+
+                public async Task<IActionResult> TrackingEdit(int? id)
+                {
+                    if (id == null)
+                    {
+                        return NotFound();
+                    }
+
+                    var tracking = await _db.TrackingDB.FindAsync(id);
+                    if (tracking == null)
+                    {
+                        return NotFound();
+                    }
+
+                    return View(tracking); // Return the existing tracking data to the Edit view
+                }
+
+                // POST: Edit
+                [HttpPost]
+                [ValidateAntiForgeryToken]
+                public async Task<IActionResult> TrackingEdit(int id, Tracking model)
+                {
+                    if (id != model.Id) // Check if the id in the route matches the model id
+                    {
+                        return NotFound();
+                    }
+
+                    if (ModelState.IsValid) // Validate the model
+                    {
+                        try
+                        {
+                            _db.Update(model); // Update the tracking object in the database
+                            await _db.SaveChangesAsync(); // Save changes
+                        }
+                        catch (DbUpdateConcurrencyException) // Handle concurrency issues
+                        {
+                            if (!TrackingExists(model.Id))
+                            {
+                                return NotFound();
+                            }
+                            else
+                            {
+                                throw;
+                            }
+                        }
+                        return RedirectToAction(nameof(TrackingIndex)); // Redirect to the index after editing
+                    }
+                    return View(model); // Return the model back to the view if the model state is invalid
+                }
+
+                // Helper method to check if the tracking exists
+                private bool TrackingExists(int id)
+                {
+                    return _db.TrackingDB.Any(e => e.Id == id);
+                }
+
+
+
+                //-------------------------- (EDIT) --------------------------//
 
                 //-------------------------- (DELETE) --------------------------//
                 public async Task<IActionResult> TrackingDelete(int? id)

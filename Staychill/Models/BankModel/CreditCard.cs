@@ -19,11 +19,11 @@ namespace Staychill.Models.BankModel
         public string? NameOnCard { get; set; } // Name of the holder of the card //
 
         [Required]
-        [RegularExpression(@"\d{4}-\d{4}-\d{4}-\d{4}")]
+        [RegularExpression(@"\d{4}-{4}-{4}-{4}")]
         public string? CardNumber { get; set; } // Card Number include "-" //
 
         [Required]
-        [RegularExpression(@"\d{2}/\d{2}")]
+        [RegularExpression(@"\d{2}/{2}")]
         public string? ExpiredDate { get; set; } // Expired Date include "/" //
 
         [Required]
