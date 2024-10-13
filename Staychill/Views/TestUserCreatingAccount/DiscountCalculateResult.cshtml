@@ -1,0 +1,16 @@
+﻿@{
+    ViewData["Title"] = "Discount Calculation Result";
+}
+
+<h1>Discount Calculation Result</h1>
+
+<div>
+    <!-- @ViewBag was mention in controller -->
+    <h4>Original Price: @ViewBag.OriginalPrice</h4>
+    <h4>Discount Amount (%): @ViewBag.DiscountAmount</h4>
+    <h4>Discounted Price: @ViewBag.DiscountedPrice</h4>
+</div>
+
+<div>
+    <a asp-action="DiscountIndex">Back to Discount List</a>
+</div>

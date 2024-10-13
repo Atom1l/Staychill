@@ -1,0 +1,39 @@
+﻿@model IEnumerable<Staychill.Models.ProductModel.TrackingModel.Tracking>
+
+@{
+    ViewData["Title"] = "TrackingIndex";
+}
+
+<h1>TrackingIndex</h1>
+
+<p>
+    <a asp-action="TrackingGenerateCode">Generate Code</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ShipmentCode)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Status)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ShipmentCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Status)
+            </td>
+            <td>
+                <a asp-action="TrackingDelete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

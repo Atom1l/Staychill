@@ -1,0 +1,51 @@
+﻿@model IEnumerable<Staychill.Models.BankModel.QRData>
+
+@{
+    ViewData["Title"] = "PaymentQRIndex";
+}
+
+<h1>PaymentBankIndex</h1>
+
+<p>
+    <a asp-action="PaymentQRCreate">Create QRCREATE</a> |
+    <a asp-action="PaymentBankTransferCreate">Bank Transfer</a> |
+    <a asp-action="PaymentBankIndex">BANK</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                Pics
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Id)
+                </td>
+                <td>
+                    @if (item.QRPicData != null && item.QRPicData.Length > 0) // Check if the image data exists
+                    {
+                        var base64String = Convert.ToBase64String(item.QRPicData);
+                        var imgSrc = $"data:image/png;base64,{base64String}"; // Adjust image format if needed
+                        <img src="@imgSrc" alt="Bank Image" style="width: 200px; height: 200px;" />
+                    }
+                    else
+                    {
+                        <span>No Image</span>
+                    }
+                </td>
+                <td>
+                    <a asp-action="PaymentQRDelete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

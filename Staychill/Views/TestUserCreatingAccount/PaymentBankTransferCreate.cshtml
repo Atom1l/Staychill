@@ -1,0 +1,37 @@
+﻿@model Staychill.Models.BankModel.BankTransfer
+
+@{
+    ViewData["Title"] = "PaymentBankTransferCreate";
+}
+
+<h1>PaymentBankTransferCreate</h1>
+
+<h4>BankTransfer</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="PaymentBankIndex">
+
+            <div class="form-group">
+                @foreach (var bank in Model.Accounts)
+                {
+                    <div class="form-check d-flex flex-row justify-content-start align-items-center">
+                        <input type="radio" class="form-check-input me-3" name="SelectedBankId" value="@bank.Id" id="bank_@bank.Id" />
+                        <label class="form-check-label" for="bank_@bank.Id">
+                            <img src="@($"data:image/png;base64,{Convert.ToBase64String(bank.BankPicsData)}")" alt="@bank.BankName" style="width: 150px; height: 70px; margin-right: 10px;" />
+                            @bank.BankName
+                        </label>
+                    </div>
+                }
+            </div>
+
+            <div class="form-group">
+                <label for="BankNumber">Bank Account Number</label>
+                <input asp-for="BankNumber" class="form-control" />
+            </div>
+
+            <button type="submit" class="btn btn-primary mt-2">Submit</button>
+        </form>
+    </div>
+</div>
+

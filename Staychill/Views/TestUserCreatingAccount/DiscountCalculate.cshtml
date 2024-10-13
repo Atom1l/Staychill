@@ -1,0 +1,23 @@
+﻿@model Staychill.Models.ProductModel.DiscountModel.Discount
+
+@{
+    ViewData["Title"] = "Calculate Discount";
+    var discount = ViewBag.Discount as Staychill.Models.ProductModel.DiscountModel.Discount;
+}
+
+<h1>Calculate Discount for @discount.DiscountCode</h1>
+
+<div>
+    <form asp-action="CalculateDiscount" method="post">
+        <div class="form-group">
+            <label for="originalPrice">Enter Original Price</label>
+            <input type="number" step="0.01" id="originalPrice" name="originalPrice" class="form-control" required />
+        </div>
+        <input type="hidden" name="discountId" value="@discount.Id" />
+        <input type="submit" value="Calculate" class="btn btn-primary" />
+    </form>
+</div>
+
+<div>
+    <a asp-action="DiscountIndex">Back to Discount List</a>
+</div>

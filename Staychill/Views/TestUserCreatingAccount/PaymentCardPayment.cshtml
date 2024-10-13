@@ -1,0 +1,50 @@
+﻿@model Staychill.Models.BankModel.CreditCard
+
+@{
+    ViewData["Title"] = "PaymentCardPayment";
+}
+
+<h1>PaymentCardPayment</h1>
+
+<h4>CreditCard</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="PaymentCardPayment" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="CardType" class="control-label"></label>
+                <select asp-for="CardType" class="control-label" asp-items="@(new SelectList(Model.CardTypeOpt))"></select>
+                <span asp-validation-for="CardType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NameOnCard" class="control-label"></label>
+                <input asp-for="NameOnCard" class="form-control" />
+                <span asp-validation-for="NameOnCard" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CardNumber" class="control-label"></label>
+                <input asp-for="CardNumber" class="form-control" />
+                <span asp-validation-for="CardNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ExpiredDate" class="control-label"></label>
+                <input asp-for="ExpiredDate" class="form-control" />
+                <span asp-validation-for="ExpiredDate" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CVV" class="control-label"></label>
+                <input asp-for="CVV" class="form-control" />
+                <span asp-validation-for="CVV" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="PaymentCardIndex">Back to List</a>
+</div>
+

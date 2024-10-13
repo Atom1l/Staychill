@@ -1,0 +1,97 @@
+﻿@model IEnumerable<Staychill.Models.ProductModel.Product>
+
+@{
+    ViewData["Title"] = "ProductIndex";
+}
+
+<h1>ProductIndex</h1>
+
+<p>
+    <a asp-action="ProductCreate">Create Product</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Id)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Color)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Instock)
+            </th>
+            <th>
+                Pics
+            </th>
+
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var product in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => product.Id)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => product.ProductName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => product.ProductType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => product.Color)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => product.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => product.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => product.Instock)
+                </td>
+                <td>
+                    @if (product.Images != null)
+                    {
+                        <div>
+                            @if (product.Images.Image1 != null)
+                            {
+                                <img src="@($"data:image/png;base64,{Convert.ToBase64String(product.Images.Image1)}")" alt="Image 1" style="width: 100px; height: 100px;" />
+                            }
+                            @if (product.Images.Image2 != null)
+                            {
+                                <img src="@($"data:image/png;base64,{Convert.ToBase64String(product.Images.Image2)}")" alt="Image 2" style="width: 100px; height: 100px;" />
+                            }
+                            @if (product.Images.Image3 != null)
+                            {
+                                <img src="@($"data:image/png;base64,{Convert.ToBase64String(product.Images.Image3)}")" alt="Image 3" style="width: 100px; height: 100px;" />
+                            }
+                            @if (product.Images.Image4 != null)
+                            {
+                                <img src="@($"data:image/png;base64,{Convert.ToBase64String(product.Images.Image4)}")" alt="Image 4" style="width: 100px; height: 100px;" />
+                            }
+                        </div>
+                    }
+                </td>
+                <td>
+                    <a asp-action="ProductDelete" asp-route-id="@product.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

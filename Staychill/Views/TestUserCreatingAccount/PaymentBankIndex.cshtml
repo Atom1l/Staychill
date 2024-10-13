@@ -1,0 +1,51 @@
+﻿@model IEnumerable<Staychill.Models.BankModel.BankAccount>
+
+@{
+    ViewData["Title"] = "PaymentBankIndex";
+}
+
+<h1>PaymentBankIndex</h1>
+
+<p>
+    <a asp-action="PaymentBankCreate">Create BankAccount</a> |
+    <a asp-action="PaymentBankTransferCreate">Bank Transfer</a> |
+    <a asp-action="PaymentQRIndex">QRCODE</a> |
+    <a asp-action="PaymentCardIndex">Credit Card</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.BankName)
+            </th>
+            <th>
+                Pics
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.BankName)
+            </td>
+            <td>
+                @if (item.BankPicsData != null && item.BankPicsData.Length > 0) // Check if the image data exists
+                {
+                    var base64String = Convert.ToBase64String(item.BankPicsData);
+                    var imgSrc = $"data:image/png;base64,{base64String}"; // Adjust image format if needed
+                    <img src="@imgSrc" alt="Bank Image" style="width: 200px; height: 100px;" />
+                }
+                else
+                {
+                    <span>No Image</span>
+                }
+            </td>
+            <td>
+                <a asp-action="PaymentBankDelete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
