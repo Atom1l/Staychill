@@ -15,10 +15,10 @@ namespace Staychill.Models.ProductModel.TrackingModel
 
         public List<string> Statusoptions { get; } = new List<string> // List of Status //
         {
-            "Pending",
-            "Packing",
-            "Shipping",
+            "Waiting for Payment",
+            "Confirmed Order",
             "Delivered",
+            "Sucessfully",
             "Cancelled"
         };
 
