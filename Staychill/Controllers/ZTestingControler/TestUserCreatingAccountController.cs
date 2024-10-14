@@ -261,211 +261,265 @@ namespace Staychill.Controllers.ZTestingControler
                         return RedirectToAction("ProductIndex");
                     }
                     return NotFound();
+        }
+
+                //-------------------------- (CART) --------------------------//
+                public IActionResult ProductAddCart() // This action is showing cart item that just added by button in ProductIndex //
+                {
+                    var cartitems = _db.CartDB.Include(c => c.Product).ToList(); // Convert CartDB including Product into List //
+                    return View(cartitems); // Show the result //
                 }
+                
+                // POST:(CART.ADD) //
+                [HttpPost]
+                [Route("ProductAddToCart")]
+                public IActionResult ProductAddToCart(int productId, int quantity) // This action is about adding product item into cart //
+                {
+                    var product = _db.ProductDB.FirstOrDefault(p => p.Id == productId); // Check if productId is matching with ProductDB.Id //
+                    if(product == null) // If not matching //
+                    {
+                        return Json(new { success = false, message = "Product not found" }); // Return as JSON(return to user as a text display) //
+                    }
+
+                    var cartitem = _db.CartDB.FirstOrDefault(c => c.ProductId == productId); // Check if productId is matching with CartDB.ProductId //
+                    if(cartitem != null)
+                    {
+                        cartitem.Quantity += quantity; // if matching then plus the CartDB.quantity by a number inside input name(quantity) //
+            }
+                    else
+                    {
+                        var newcartitem = new Cart // If not found then create a new Cart item using attribute in Cart.cs //
+                        {
+                            ProductId = productId,
+                            Quantity = quantity,
+                            UnitPrice = product.Price ?? 0, // ?? is to check first if .Price is null or not if null then set value to 0 //
+
+                        };
+                        _db.CartDB.Add(newcartitem); // Add new data that was just created to CartDB //
+                    }
+                    _db.SaveChanges(); // Save changes //
+                    return Json(new { success = true, message = "Product added to cart" }); // Return in JSON instead cause we don't want to redirect after add to cart //
+                }
+
+                // POST:(CART.DELETE) //
+                [HttpPost]
+                [ValidateAntiForgeryToken]
+                public IActionResult ProductRemoveCart (int cartId)
+                {
+                    var productincart = _db.CartDB.FirstOrDefault(p => p.CartId == cartId); // Check if CardDB.CartId matching with cartId //
+                    if(productincart != null) 
+                    {
+                        _db.Remove(productincart); // If match then delete //
+                        _db.SaveChanges(); // Save changes //
+                    }
+                    return RedirectToAction("ProductAddCart"); // Return to CartIndex //
+                }
+
+
 
         //-------------------------- PRODUCT SECTION -------------------------- //
 
         //-------------------------- PAYMENT SECTION -------------------------- //
 
-        public IActionResult PaymentIndex()
-        {
-            return View();
-        }
-
-
-        public async Task<IActionResult> PaymentBankIndex()
-        {
-            var bankAccounts = await _db.BankAccDB.ToListAsync(); // Convert BankAccDB to List //
-
-            if (bankAccounts == null)
-            {
-                return NotFound(); // Handle the case when there's no data
-            }
-
-            return View(bankAccounts);
-        }
-
-        public async Task<IActionResult> PaymentQRIndex()
-        {
-            var qr = await _db.QRDataDB.ToListAsync(); // Convert QRDataDB to List //
-            if (qr == null)
-            {
-                return NotFound();
-            }
-            return View(qr);
-        }
-
-        public IActionResult PaymentCardIndex()
-        {
-            var produt = _db.CreditCardsDB.ToList(); // Convert CreditCardsDB to List //
-            return View(produt);
-        }
-
-
-        //-------------------------- (CREATE) --------------------------//
-        public IActionResult PaymentBankCreate()
-        {
-            var bankacc = new BankAccount();
-            return View(bankacc);
-        }
-
-        public IActionResult PaymentQRCreate()
-        {
-            var qr = new QRData();
-            return View(qr);
-        }
-
-        public IActionResult PaymentCardPayment()
-        {
-            var card = new CreditCard();
-            return View(card);
-        }
-
-        // POST:(CREATE) //
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> PaymentBankCreate(BankAccount bankacc , IFormFile Image)
-        {
-            if (ModelState.IsValid)
-            {
-                if (Image != null && Image.Length > 0) // Connvert Bank Account picture that uploaded into byte[] type of file //
+                public IActionResult PaymentIndex()
                 {
-                    bankacc.BankPicsData = await ConvertToBytes(Image);
+                    return View();
                 }
 
-                _db.BankAccDB.Add(bankacc); // Save byte[] into the database //
-                await _db.SaveChangesAsync();
 
-                return RedirectToAction("PaymentBankIndex"); // Return to Index //
-            }
-            return View(bankacc);
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> PaymentQRCreate(QRData qrdata, IFormFile Image)
-        {
-            if (ModelState.IsValid)
-            {
-                if(Image != null && Image.Length > 0) // Save the QR picture that uploaded into byte[] type of file //
+                public async Task<IActionResult> PaymentBankIndex()
                 {
-                    qrdata.QRPicData = await ConvertToBytes(Image);
+                    var bankAccounts = await _db.BankAccDB.ToListAsync(); // Convert BankAccDB to List //
+
+                    if (bankAccounts == null)
+                    {
+                        return NotFound(); // Handle the case when there's no data
+                    }
+
+                    return View(bankAccounts);
                 }
-                _db.QRDataDB.Add(qrdata); // Save byte[] into the database //
-                await _db.SaveChangesAsync();
-                return RedirectToAction("PaymentQRIndex"); // Return to Index //
-            }
-            return View(qrdata);
-        }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> PaymentCardPayment(CreditCard creditcard)
-        {
-            if (ModelState.IsValid)
-            {
-                _db.CreditCardsDB.Add(creditcard); // Save the Creditcard data that user fill in the form into database //
-                await _db.SaveChangesAsync();
-                return RedirectToAction("PaymentCardIndex"); // return to Index //
-            }
-            return View(creditcard);
-        }
+                public async Task<IActionResult> PaymentQRIndex()
+                {
+                    var qr = await _db.QRDataDB.ToListAsync(); // Convert QRDataDB to List //
+                    if (qr == null)
+                    {
+                        return NotFound();
+                    }
+                    return View(qr);
+                }
 
-        //-------------------------- (DELETE) --------------------------//
-        public async Task<IActionResult> PaymentBankDelete(int id)
-        {
-            var bankAcc = await _db.BankAccDB.FirstOrDefaultAsync(p => p.Id == id);
-            if (bankAcc == null)
-            {
-                return NotFound();
-            }
-            return View(bankAcc);
-        }
-
-        public async Task<IActionResult> PaymentQRDelete(int id)
-        {
-            var qr = await _db.QRDataDB.FirstOrDefaultAsync(q => q.Id == id);
-            if(qr == null)
-            {
-                return NotFound();
-            }
-            return View(qr);
-        }
-
-        public async Task<IActionResult> PaymentCardDelete(int id)
-        {
-            var card = await _db.CreditCardsDB.FirstOrDefaultAsync(c => c.Id == id);
-            if(card == null)
-            {
-                return NotFound();
-            }
-            return View(card);
-        }
-
-        // POST:(DELETE) //
-        [HttpPost,ActionName("PaymentBankDelete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> PaymentBankDeleteConfirmed(int id)
-        {
-            var bankAcc = await _db.BankAccDB.FindAsync(id);
-            if (bankAcc != null)
-            {
-                _db.BankAccDB.Remove(bankAcc);
-                await _db.SaveChangesAsync();
-                return RedirectToAction("PaymentBankIndex");
-            }
-            return NotFound();
-        }
-
-        [HttpPost, ActionName("PaymentQRDelete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> PaymentQRDeleteConfirmed(int id)
-        {
-            var qr = await _db.QRDataDB.FindAsync(id);
-            if (qr != null)
-            {
-                _db.QRDataDB.Remove(qr);
-                await _db.SaveChangesAsync();
-                return RedirectToAction("PaymentQRIndex");
-            }
-            return NotFound();
-        }
-
-        [HttpPost, ActionName("PaymentCardDelete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> PaymentCardDeleteConfirmed(int id)
-        {
-            var card = await _db.CreditCardsDB.FindAsync(id);
-            if(card  != null)
-            {
-                _db.CreditCardsDB.Remove(card);
-                await _db.SaveChangesAsync();
-                return RedirectToAction("PaymentCardIndex");
-            }
-            return NotFound();
-        }
+                public IActionResult PaymentCardIndex()
+                {
+                    var produt = _db.CreditCardsDB.ToList(); // Convert CreditCardsDB to List //
+                    return View(produt);
+                }
 
 
-        // BANKACCOPTIONS //
-        // This controller is about showing the combining between BankAccDB and bankTransfer //
-        // To make a virtual transaction for user using bank account and then bank number //
-        public async Task<IActionResult> PaymentBankTransferCreate()
-        {
-            var bankTransfer = new BankTransfer
-            {
-                Accounts = await _db.BankAccDB.ToListAsync()
-            };
+                //-------------------------- (CREATE) --------------------------//
+                public IActionResult PaymentBankCreate()
+                {
+                    var bankacc = new BankAccount();
+                    return View(bankacc);
+                }
 
-            return View(bankTransfer);
-        }
+                public IActionResult PaymentQRCreate()
+                {
+                    var qr = new QRData();
+                    return View(qr);
+                }
+
+                public IActionResult PaymentCardPayment()
+                {
+                    var card = new CreditCard();
+                    return View(card);
+                }
+
+                // POST:(CREATE) //
+                [HttpPost]
+                [ValidateAntiForgeryToken]
+                public async Task<IActionResult> PaymentBankCreate(BankAccount bankacc , IFormFile Image)
+                {
+                    if (ModelState.IsValid)
+                    {
+                        if (Image != null && Image.Length > 0) // Connvert Bank Account picture that uploaded into byte[] type of file //
+                        {
+                            bankacc.BankPicsData = await ConvertToBytes(Image);
+                        }
+
+                        _db.BankAccDB.Add(bankacc); // Save byte[] into the database //
+                        await _db.SaveChangesAsync();
+
+                        return RedirectToAction("PaymentBankIndex"); // Return to Index //
+                    }
+                    return View(bankacc);
+                }
+
+                [HttpPost]
+                [ValidateAntiForgeryToken]
+                public async Task<IActionResult> PaymentQRCreate(QRData qrdata, IFormFile Image)
+                {
+                    if (ModelState.IsValid)
+                    {
+                        if(Image != null && Image.Length > 0) // Save the QR picture that uploaded into byte[] type of file //
+                        {
+                            qrdata.QRPicData = await ConvertToBytes(Image);
+                        }
+                        _db.QRDataDB.Add(qrdata); // Save byte[] into the database //
+                        await _db.SaveChangesAsync();
+                        return RedirectToAction("PaymentQRIndex"); // Return to Index //
+                    }
+                    return View(qrdata);
+                }
+
+                [HttpPost]
+                [ValidateAntiForgeryToken]
+                public async Task<IActionResult> PaymentCardPayment(CreditCard creditcard)
+                {
+                    if (ModelState.IsValid)
+                    {
+                        _db.CreditCardsDB.Add(creditcard); // Save the Creditcard data that user fill in the form into database //
+                        await _db.SaveChangesAsync();
+                        return RedirectToAction("PaymentCardIndex"); // return to Index //
+                    }
+                    return View(creditcard);
+                }
+
+                //-------------------------- (DELETE) --------------------------//
+                public async Task<IActionResult> PaymentBankDelete(int id)
+                {
+                    var bankAcc = await _db.BankAccDB.FirstOrDefaultAsync(p => p.Id == id);
+                    if (bankAcc == null)
+                    {
+                        return NotFound();
+                    }
+                    return View(bankAcc);
+                }
+
+                public async Task<IActionResult> PaymentQRDelete(int id)
+                {
+                    var qr = await _db.QRDataDB.FirstOrDefaultAsync(q => q.Id == id);
+                    if(qr == null)
+                    {
+                        return NotFound();
+                    }
+                    return View(qr);
+                }
+
+                public async Task<IActionResult> PaymentCardDelete(int id)
+                {
+                    var card = await _db.CreditCardsDB.FirstOrDefaultAsync(c => c.Id == id);
+                    if(card == null)
+                    {
+                        return NotFound();
+                    }
+                    return View(card);
+                }
+
+                // POST:(DELETE) //
+                [HttpPost,ActionName("PaymentBankDelete")]
+                [ValidateAntiForgeryToken]
+                public async Task<IActionResult> PaymentBankDeleteConfirmed(int id)
+                {
+                    var bankAcc = await _db.BankAccDB.FindAsync(id);
+                    if (bankAcc != null)
+                    {
+                        _db.BankAccDB.Remove(bankAcc);
+                        await _db.SaveChangesAsync();
+                        return RedirectToAction("PaymentBankIndex");
+                    }
+                    return NotFound();
+                }
+
+                [HttpPost, ActionName("PaymentQRDelete")]
+                [ValidateAntiForgeryToken]
+                public async Task<IActionResult> PaymentQRDeleteConfirmed(int id)
+                {
+                    var qr = await _db.QRDataDB.FindAsync(id);
+                    if (qr != null)
+                    {
+                        _db.QRDataDB.Remove(qr);
+                        await _db.SaveChangesAsync();
+                        return RedirectToAction("PaymentQRIndex");
+                    }
+                    return NotFound();
+                }
+
+                [HttpPost, ActionName("PaymentCardDelete")]
+                [ValidateAntiForgeryToken]
+                public async Task<IActionResult> PaymentCardDeleteConfirmed(int id)
+                {
+                    var card = await _db.CreditCardsDB.FindAsync(id);
+                    if(card  != null)
+                    {
+                        _db.CreditCardsDB.Remove(card);
+                        await _db.SaveChangesAsync();
+                        return RedirectToAction("PaymentCardIndex");
+                    }
+                    return NotFound();
+                }
+
+
+                // BANKACCOPTIONS //
+                // This controller is about showing the combining between BankAccDB and bankTransfer //
+                // To make a virtual transaction for user using bank account and then bank number //
+                public async Task<IActionResult> PaymentBankTransferCreate()
+                {
+                    var bankTransfer = new BankTransfer
+                    {
+                        Accounts = await _db.BankAccDB.ToListAsync()
+                    };
+
+                    return View(bankTransfer);
+                }
 
         //-------------------------- PAYMENT SECTION -------------------------- //
 
 
         //-------------------------- DISCOUNT SECTION -------------------------- //
 
-        //-------------------------- (INDEX) --------------------------//
-        public IActionResult DiscountIndex()
+                //-------------------------- (INDEX) --------------------------//
+                public IActionResult DiscountIndex()
                 {
                     var discount = _db.DiscountDB.ToList(); // Convert DiscountDB to List type and then contain is discount variable //
                     return View(discount); // Show the result //
