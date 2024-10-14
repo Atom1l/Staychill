@@ -1,0 +1,59 @@
+﻿@model IEnumerable<Staychill.Models.ProductModel.Cart>
+
+@{
+    ViewData["Title"] = "ProductAddCart";
+}
+
+<h1>ProductAddCart</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Quantity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.UnitPrice)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TotalPrice)
+            </th>
+            <th>Product Name</th>
+            <th>Product Type</th>
+            <th>Color</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Quantity)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.UnitPrice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TotalPrice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product.ProductName) <!-- Display Product Name -->
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product.ProductType) <!-- Display Product Type -->
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product.Color) <!-- Display Product Color -->
+                </td>
+                <td>
+                    <!-- Remove button -->
+                    <form asp-action="ProductRemoveCart" asp-controller="TestUserCreatingAccount" method="post">
+                        <input type="hidden" name="cartId" value="@item.CartId" />
+                        <button type="submit" class="btn btn-danger">Remove</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

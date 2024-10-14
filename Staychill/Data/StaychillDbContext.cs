@@ -25,6 +25,7 @@ namespace Staychill.Data
         public DbSet<Staychill.Models.ProductModel.ProductImages> ProductImagesDB { get; set; }
         public DbSet<Staychill.Models.ProductModel.DiscountModel.Discount> DiscountDB { get; set; }
         public DbSet<Staychill.Models.ProductModel.TrackingModel.Tracking> TrackingDB { get; set; }
+        public DbSet<Staychill.Models.ProductModel.Cart> CartDB { get; set; }
 
         // Payment DbSet ----- //
         public DbSet<Staychill.Models.BankModel.BankAccount> BankAccDB { get; set; }
