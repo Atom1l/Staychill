@@ -19,7 +19,7 @@ namespace Staychill.Models.ProductModel
             "None",
             "Mug",
             "Steel Flask",
-            "Thermo Cup"
+            "Tumbler"
         };
 
         [Required]
