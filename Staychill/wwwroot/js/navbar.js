@@ -1,12 +1,24 @@
-﻿// Select the productDropdown and dropdownMenu elements
+﻿// ======================================================= Make Dropdown Clickable ======================================================= //
+// Select the productDropdown and dropdownMenu elements
 const productDropdown = document.getElementById('productDropdown');
 const dropdownMenu = productDropdown.nextElementSibling;
+const arrowIcon = document.getElementById('arrowIcon'); // Select the arrow icon
 
-// Function to toggle dropdown
+// Function to toggle dropdown and arrow
 const toggleDropdown = () => {
     // Check if the window width is below 576px (small screen size)
     if (window.innerWidth < 576) {
-        dropdownMenu.classList.toggle('show'); // Toggle the "show" class
+        // Toggle the "show" class
+        dropdownMenu.classList.toggle('show');
+
+        // Toggle the arrow direction based on whether the dropdown is open
+        if (dropdownMenu.classList.contains('show')) {
+            arrowIcon.classList.remove('arrow-right');
+            arrowIcon.classList.add('arrow-down');
+        } else {
+            arrowIcon.classList.remove('arrow-down');
+            arrowIcon.classList.add('arrow-right');
+        }
     }
 };
 
@@ -20,33 +32,11 @@ productDropdown.addEventListener('click', function (event) {
 document.addEventListener('click', function (event) {
     if (!productDropdown.contains(event.target) && !dropdownMenu.contains(event.target)) {
         dropdownMenu.classList.remove('show');
+
+        // Reset arrow direction when closing
+        arrowIcon.classList.remove('arrow-down');
+        arrowIcon.classList.add('arrow-right');
     }
 });
-
-// === Change Icon === //
-const toggleButton = document.getElementById('navbarToggleButton');
-const icon = toggleButton.querySelector('i'); // Select the <i> element
-
-// Add event listener to the collapse element
-const navbarCollapse = document.querySelector('.navbar-collapse');
-
-toggleButton.addEventListener('click', function () {
-    // Check if the collapse element is already shown
-    if (navbarCollapse.classList.contains('show')) {
-        icon.classList.remove('fa-xmark');
-        icon.classList.add('fa-bars');
-    } else {
-        icon.classList.remove('fa-bars');
-        icon.classList.add('fa-xmark');
-    }
-});
-
-// Listen for the collapse hidden event to reset the icon
-navbarCollapse.addEventListener('hidden.bs.collapse', function () {
-    icon.classList.remove('fa-xmark');
-    icon.classList.add('fa-bars');
-});
-
-
-
+// ======================================================= Make Dropdown Clickable ======================================================= //
 

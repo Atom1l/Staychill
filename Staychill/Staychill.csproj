@@ -32,4 +32,11 @@
     <None Include="wwwroot\js\navbar.js" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="Views\Shared\_Logged-In_Layout.cshtml">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>
