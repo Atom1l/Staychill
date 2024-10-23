@@ -264,42 +264,72 @@ namespace Staychill.Controllers.ZTestingControler
         }
 
                 //-------------------------- (CART) --------------------------//
-                public IActionResult ProductAddCart() // This action is showing cart item that just added by button in ProductIndex //
-                {
-                    var cartitems = _db.CartDB.Include(c => c.Product).ToList(); // Convert CartDB including Product into List //
-                    return View(cartitems); // Show the result //
-                }
+// CART Controller
+public IActionResult ProductAddCart()
+{
+    var cartItems = _db.CartDB
+        .Include(c => c.CartItems)
+        .ThenInclude(ci => ci.Product) // Load the Product for each CartItem
+        .ToList();
+    
+    var viewModel = new TrackingViewModel
+    {
+        CartItemDetails = cartItems,
+        TotalAmount = cartItems.SelectMany(c => c.CartItems).Sum(item => item.TotalPrice) // Calculate total from all CartItems
+    };
 
-                [HttpPost]
-                [Route("ProductAddToCart")]
-                public IActionResult ProductAddToCart(int productId, int quantity) // This action is about adding product item into cart //
-                {
-                    var product = _db.ProductDB.FirstOrDefault(p => p.Id == productId); // Check if productId is matching with ProductDB.Id //
-                    if (product == null) // If not matching //
-                    {
-                        return Json(new { success = false, message = "Product not found" }); // Return as JSON(return to user as a text display) //
-                    }
+    return View(viewModel);
+}
 
-                    var cartitem = _db.CartDB.FirstOrDefault(c => c.ProductId == productId); // Check if productId is matching with CartDB.ProductId //
-                    if (cartitem != null)
-                    {
-                        cartitem.Quantity += quantity; // if matching then plus the CartDB.quantity by a number inside input name(quantity) //
-                    }
-                    else
-                    {
-                        var newcartitem = new Cart // If not found then create a new Cart item using attribute in Cart.cs //
-                        {
-                            // Remove the manual setting of CartId since it's an identity column
-                            ProductId = productId,
-                            Quantity = quantity,
-                            UnitPrice = product.Price ?? 0, // ?? is to check first if .Price is null or not if null then set value to 0 //
-                        };
-                        _db.CartDB.Add(newcartitem); // Add new data that was just created to CartDB //
-                    }
-                    _db.SaveChanges(); // Save changes //
 
-            return Json(new { success = true, message = "Product added to cart" }); // Return in JSON instead cause we don't want to redirect after add to cart //
-                }
+
+
+[HttpPost]
+[Route("ProductAddToCart")]
+public IActionResult ProductAddToCart(int productId, int quantity) 
+{
+    var product = _db.ProductDB.FirstOrDefault(p => p.Id == productId); // Check if productId matches with ProductDB.Id
+    if (product == null) 
+    {
+        return Json(new { success = false, message = "Product not found" }); // Return as JSON
+    }
+
+    // Find the existing Cart (assuming there's only one cart on the website)
+    var cart = _db.CartDB.Include(c => c.CartItems)
+                          .FirstOrDefault(); // Get the first Cart (since there is only one cart)
+    
+    // If the cart does not exist, you might want to create one here or handle the scenario
+    if (cart == null)
+    {
+        cart = new Cart(); // Create a new Cart if one doesn't exist
+        _db.CartDB.Add(cart); // Add it to the database
+        _db.SaveChanges(); // Save changes to generate CartId
+    }
+
+    // Check if the product is already in the cart
+    var cartItem = cart.CartItems.FirstOrDefault(ci => ci.ProductId == productId); 
+    if (cartItem != null)
+    {
+        cartItem.Quantity += quantity; // If matching, increase the quantity
+    }
+    else
+    {
+        // Create a new CartItem
+        var newCartItem = new CartItem 
+        {
+            ProductId = productId,
+            Quantity = quantity,
+            UnitPrice = product.Price ?? 0, // Use null-coalescing to set to 0 if null
+            CartId = cart.CartId // Associate the CartItem with the existing Cart
+        };
+        cart.CartItems.Add(newCartItem); // Add new CartItem to the Cart
+    }
+
+    _db.SaveChanges(); // Save changes
+
+    return Json(new { success = true, message = "Product added to cart" }); // Return success response as JSON
+}
+
 
 
 

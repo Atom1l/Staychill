@@ -121,25 +121,38 @@ namespace Staychill.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CartId"));
 
+                    b.HasKey("CartId");
+
+                    b.ToTable("CartDB");
+                });
+
+            modelBuilder.Entity("Staychill.Models.ProductModel.CartItem", b =>
+                {
+                    b.Property<int>("CartItemId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CartItemId"));
+
+                    b.Property<int>("CartId")
+                        .HasColumnType("int");
+
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<int>("TrackingId")
-                        .HasColumnType("int");
-
                     b.Property<float>("UnitPrice")
                         .HasColumnType("real");
 
-                    b.HasKey("CartId");
+                    b.HasKey("CartItemId");
+
+                    b.HasIndex("CartId");
 
                     b.HasIndex("ProductId");
 
-                    b.HasIndex("TrackingId");
-
-                    b.ToTable("CartDB");
+                    b.ToTable("CartitemsDB");
                 });
 
             modelBuilder.Entity("Staychill.Models.ProductModel.DiscountModel.Discount", b =>
@@ -228,38 +241,6 @@ namespace Staychill.Migrations
                         .IsUnique();
 
                     b.ToTable("ProductImagesDB");
-                });
-
-            modelBuilder.Entity("Staychill.Models.ProductModel.RetainCart", b =>
-                {
-                    b.Property<int>("CartId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("CartId"));
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ShipmentCode")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("TrackingId")
-                        .HasColumnType("int");
-
-                    b.Property<float>("UnitPrice")
-                        .HasColumnType("real");
-
-                    b.HasKey("CartId");
-
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("TrackingId");
-
-                    b.ToTable("RetainCartDB");
                 });
 
             modelBuilder.Entity("Staychill.Models.ProductModel.TrackingModel.Tracking", b =>
@@ -461,23 +442,23 @@ namespace Staychill.Migrations
                         .HasForeignKey("BankTransferId");
                 });
 
-            modelBuilder.Entity("Staychill.Models.ProductModel.Cart", b =>
+            modelBuilder.Entity("Staychill.Models.ProductModel.CartItem", b =>
                 {
+                    b.HasOne("Staychill.Models.ProductModel.Cart", "Cart")
+                        .WithMany("CartItems")
+                        .HasForeignKey("CartId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Staychill.Models.ProductModel.Product", "Product")
-                        .WithMany()
+                        .WithMany("CartItems")
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Staychill.Models.ProductModel.TrackingModel.Tracking", "Tracking")
-                        .WithMany()
-                        .HasForeignKey("TrackingId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                    b.Navigation("Cart");
 
                     b.Navigation("Product");
-
-                    b.Navigation("Tracking");
                 });
 
             modelBuilder.Entity("Staychill.Models.ProductModel.ProductImages", b =>
@@ -489,25 +470,6 @@ namespace Staychill.Migrations
                         .IsRequired();
 
                     b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("Staychill.Models.ProductModel.RetainCart", b =>
-                {
-                    b.HasOne("Staychill.Models.ProductModel.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("Staychill.Models.ProductModel.TrackingModel.Tracking", "Tracking")
-                        .WithMany("RetainCart")
-                        .HasForeignKey("TrackingId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-
-                    b.Navigation("Tracking");
                 });
 
             modelBuilder.Entity("Staychill.Models.UserModel.User", b =>
@@ -526,14 +488,16 @@ namespace Staychill.Migrations
                     b.Navigation("Accounts");
                 });
 
-            modelBuilder.Entity("Staychill.Models.ProductModel.Product", b =>
+            modelBuilder.Entity("Staychill.Models.ProductModel.Cart", b =>
                 {
-                    b.Navigation("Images");
+                    b.Navigation("CartItems");
                 });
 
-            modelBuilder.Entity("Staychill.Models.ProductModel.TrackingModel.Tracking", b =>
+            modelBuilder.Entity("Staychill.Models.ProductModel.Product", b =>
                 {
-                    b.Navigation("RetainCart");
+                    b.Navigation("CartItems");
+
+                    b.Navigation("Images");
                 });
 
             modelBuilder.Entity("Staychill.Models.UserModel.Address", b =>

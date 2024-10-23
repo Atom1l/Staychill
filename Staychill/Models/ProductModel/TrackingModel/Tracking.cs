@@ -14,13 +14,6 @@ namespace Staychill.Models.ProductModel.TrackingModel
         [Required]
         public string? Status { get; set; } // Status of Shipping //
 
-        // Cart //
-        public int CartId { get; set; } // This property must be defined
-
-
-        [ForeignKey("CartId")]
-        public RetainCart RetainCart { get; set; } = null!; // Navigation property
-
         public List<string> Statusoptions { get; } = new List<string> // List of Status //
         {
             "Pending",

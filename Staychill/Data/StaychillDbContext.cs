@@ -27,7 +27,7 @@ namespace Staychill.Data
         public DbSet<Staychill.Models.ProductModel.DiscountModel.Discount> DiscountDB { get; set; }
         public DbSet<Staychill.Models.ProductModel.TrackingModel.Tracking> TrackingDB { get; set; }
         public DbSet<Staychill.Models.ProductModel.Cart> CartDB { get; set; }
-        public DbSet<Staychill.Models.ProductModel.RetainCart> RetainCartDB { get; set; }
+        public DbSet<Staychill.Models.ProductModel.CartItem> CartitemsDB { get; set; }
 
         // Payment DbSet ----- //
         public DbSet<Staychill.Models.BankModel.BankAccount> BankAccDB { get; set; }
@@ -38,33 +38,49 @@ namespace Staychill.Data
 
 
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder) // to mapping Model and Database //
-        { // Set the relationship between each table | use for linking data together //
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            // User to Address relationship
+            modelBuilder.Entity<User>()
+                .HasOne(u => u.Address) // A User has one Address
+                .WithMany(a => a.UsersInfo) // An Address can have many Users
+                .HasForeignKey(u => u.AddressId) // Foreign key in User
+                .OnDelete(DeleteBehavior.Cascade); // Cascade delete behavior
 
-            modelBuilder.Entity<User>() // Define User class from Model as a Entity to create relationship with Address //
-                .HasOne(u => u.Address) // Only One Address //
-                .WithMany(u => u.UsersInfo) // Can contain many user //
-                .HasForeignKey(u => u.AddressId) // With AddressId as a Foreign Key to Link //
-                .OnDelete(DeleteBehavior.Cascade); // Linking data if one got deleted the other got deleted too //
+            // ProductImages to Product relationship
+            modelBuilder.Entity<ProductImages>()
+                .HasOne(p => p.Product) // A ProductImages has one Product
+                .WithOne(p => p.Images) // A Product has one ProductImages (1-to-1 relationship)
+                .HasForeignKey<ProductImages>(p => p.ProductId); // Foreign key in ProductImages
 
-            modelBuilder.Entity<ProductImages>() // Define ProductImages class as a Entity to create relationship with Product //
-                .HasOne(p => p.Product) // One ProductImages will have One Product //
-                .WithOne(p => p.Images) // Declare One to One relationship with Product and ProductImages //
-                .HasForeignKey<ProductImages>(p => p.ProductId); // Set Foreign Key of this relation as ProductId //
+            // Cart to CartItem relationship
+            modelBuilder.Entity<Cart>()
+                .HasMany(c => c.CartItems) // A Cart can have many CartItems
+                .WithOne(ci => ci.Cart) // Each CartItem belongs to one Cart
+                .HasForeignKey(ci => ci.CartId) // Foreign key in CartItem
+                .OnDelete(DeleteBehavior.Cascade); // Cascade delete behavior
 
-            modelBuilder.Entity<Tracking>()
-                    .HasOne(t => t.RetainCart) // Each Tracking has one Cart
-                    .WithOne(c => c.Tracking) // A Cart has one Tracking
-                    .HasForeignKey<Tracking>(t => t.CartId) // Foreign key in Tracking
-                    .OnDelete(DeleteBehavior.Cascade); // Optional: set delete behavior
+            modelBuilder.Entity<CartItem>()
+                .HasOne(ci => ci.Product)
+                .WithMany()
+                .HasForeignKey(ci => ci.ProductId);
 
+            // CartItem to Product relationship
+            modelBuilder.Entity<CartItem>()
+                .HasOne(ci => ci.Product) // Each CartItem has one Product
+                .WithMany(p => p.CartItems) // A Product can be in many CartItems
+                .HasForeignKey(ci => ci.ProductId) // Use ProductId as the foreign key
+                .OnDelete(DeleteBehavior.Cascade); // Cascade delete behavior
+
+            // ShipmentViewModel as a keyless entity
             modelBuilder.Entity<ShipmentViewModel>(entity =>
             {
                 entity.HasNoKey(); // Mark as keyless
             });
 
-            base.OnModelCreating(modelBuilder);
+            base.OnModelCreating(modelBuilder); // Call the base method
         }
+
         public DbSet<Staychill.ViewModel.UserViewModel> UserViewModel { get; set; } = default!;
         public DbSet<Staychill.ViewModel.ShipmentViewModel> ShipmentViewModel { get; set; } = default!;
 

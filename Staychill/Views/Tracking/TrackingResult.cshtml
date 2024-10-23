@@ -1,4 +1,4 @@
-﻿@model Staychill.Models.ProductModel.TrackingModel.Tracking
+﻿@* @model Staychill.Models.ProductModel.TrackingModel.Tracking
 
 @{
     ViewData["Title"] = "Tracking Result";
@@ -25,11 +25,12 @@
         </thead>
         <tbody>
             <tr>
-                <td>@Model.RetainCart.Product.ProductName</td>
-                <td>@Model.RetainCart.Quantity</td>
-                <td>@Model.RetainCart.UnitPrice</td>
-                <td>@Model.RetainCart.TotalPrice</td>
+                <td>@Model.Cart.Product.ProductName</td>
+                <td>@Model.Cart.Quantity</td>
+                <td>@Model.Cart.UnitPrice</td>
+                <td>@Model.Cart.TotalPrice</td>
             </tr>
         </tbody>
     </table>
 </div>
+ *@
