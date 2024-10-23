@@ -12,6 +12,12 @@
         <thead>
             <tr>
                 <th>
+                    @Html.DisplayNameFor(model => model.CartId)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CartId)
+                </th>
+                <th>
                     @Html.DisplayNameFor(model => model.Quantity)
                 </th>
                 <th>
@@ -31,6 +37,12 @@
             {
                 <tr>
                     <td>
+                        @Html.DisplayFor(modelItem => item.CartId)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CartId)
+                    </td>
+                    <td>
                         @Html.DisplayFor(modelItem => item.Quantity)
                     </td>
                     <td>
@@ -49,6 +61,11 @@
                         @Html.DisplayFor(modelItem => item.Product.Color) <!-- Display Product Color -->
                     </td>
                     <td>
+                        <!-- Add to generate button -->
+                        <form asp-action="CreateShipment" asp-controller="Tracking" method="post">
+                            <input type="hidden" name="cartId" value="@item.CartId" />
+                            <button type="submit" class="btn btn-primary">Pay</button>
+                        </form>
                         <!-- Remove button -->
                         <form asp-action="ProductRemoveCart" asp-controller="TestUserCreatingAccount" method="post">
                             <input type="hidden" name="cartId" value="@item.CartId" />

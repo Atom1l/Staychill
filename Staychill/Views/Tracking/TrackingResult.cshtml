@@ -1,0 +1,35 @@
+﻿@model Staychill.Models.ProductModel.TrackingModel.Tracking
+
+@{
+    ViewData["Title"] = "Tracking Result";
+}
+
+<div class="container">
+    <h1>Tracking Result</h1>
+
+    <div class="alert alert-success">
+        <h4>Your shipment has been created successfully!</h4>
+        <p><strong>Shipment Code:</strong> @Model.ShipmentCode</p>
+        <p><strong>Status:</strong> @Model.Status</p>
+    </div>
+
+    <h2>Cart Item Details</h2>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Product Name</th>
+                <th>Quantity</th>
+                <th>Unit Price</th>
+                <th>Total Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>@Model.RetainCart.Product.ProductName</td>
+                <td>@Model.RetainCart.Quantity</td>
+                <td>@Model.RetainCart.UnitPrice</td>
+                <td>@Model.RetainCart.TotalPrice</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

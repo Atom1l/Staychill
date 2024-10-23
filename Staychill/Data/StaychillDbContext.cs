@@ -2,6 +2,7 @@
 using Staychill.Models;
 using Staychill.Models.BankModel;
 using Staychill.Models.ProductModel;
+using Staychill.Models.ProductModel.TrackingModel;
 using Staychill.Models.UserModel;
 using Staychill.ViewModel;
 
@@ -26,6 +27,7 @@ namespace Staychill.Data
         public DbSet<Staychill.Models.ProductModel.DiscountModel.Discount> DiscountDB { get; set; }
         public DbSet<Staychill.Models.ProductModel.TrackingModel.Tracking> TrackingDB { get; set; }
         public DbSet<Staychill.Models.ProductModel.Cart> CartDB { get; set; }
+        public DbSet<Staychill.Models.ProductModel.RetainCart> RetainCartDB { get; set; }
 
         // Payment DbSet ----- //
         public DbSet<Staychill.Models.BankModel.BankAccount> BankAccDB { get; set; }
@@ -50,11 +52,21 @@ namespace Staychill.Data
                 .WithOne(p => p.Images) // Declare One to One relationship with Product and ProductImages //
                 .HasForeignKey<ProductImages>(p => p.ProductId); // Set Foreign Key of this relation as ProductId //
 
+            modelBuilder.Entity<Tracking>()
+                    .HasOne(t => t.RetainCart) // Each Tracking has one Cart
+                    .WithOne(c => c.Tracking) // A Cart has one Tracking
+                    .HasForeignKey<Tracking>(t => t.CartId) // Foreign key in Tracking
+                    .OnDelete(DeleteBehavior.Cascade); // Optional: set delete behavior
 
+            modelBuilder.Entity<ShipmentViewModel>(entity =>
+            {
+                entity.HasNoKey(); // Mark as keyless
+            });
 
             base.OnModelCreating(modelBuilder);
         }
         public DbSet<Staychill.ViewModel.UserViewModel> UserViewModel { get; set; } = default!;
+        public DbSet<Staychill.ViewModel.ShipmentViewModel> ShipmentViewModel { get; set; } = default!;
 
     }
 }

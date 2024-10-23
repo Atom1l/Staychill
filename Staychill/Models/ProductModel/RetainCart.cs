@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Staychill.Models.ProductModel
 {
-    public class Cart
+    public class RetainCart
     {
         [Key]
         public int CartId { get; set; } // Primary key for the Cart

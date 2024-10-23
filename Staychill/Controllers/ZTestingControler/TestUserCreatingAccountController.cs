@@ -269,40 +269,43 @@ namespace Staychill.Controllers.ZTestingControler
                     var cartitems = _db.CartDB.Include(c => c.Product).ToList(); // Convert CartDB including Product into List //
                     return View(cartitems); // Show the result //
                 }
-                
-                // POST:(CART.ADD) //
+
                 [HttpPost]
                 [Route("ProductAddToCart")]
                 public IActionResult ProductAddToCart(int productId, int quantity) // This action is about adding product item into cart //
                 {
                     var product = _db.ProductDB.FirstOrDefault(p => p.Id == productId); // Check if productId is matching with ProductDB.Id //
-                    if(product == null) // If not matching //
+                    if (product == null) // If not matching //
                     {
                         return Json(new { success = false, message = "Product not found" }); // Return as JSON(return to user as a text display) //
                     }
 
                     var cartitem = _db.CartDB.FirstOrDefault(c => c.ProductId == productId); // Check if productId is matching with CartDB.ProductId //
-                    if(cartitem != null)
+                    if (cartitem != null)
                     {
                         cartitem.Quantity += quantity; // if matching then plus the CartDB.quantity by a number inside input name(quantity) //
-            }
+                    }
                     else
                     {
                         var newcartitem = new Cart // If not found then create a new Cart item using attribute in Cart.cs //
                         {
+                            // Remove the manual setting of CartId since it's an identity column
                             ProductId = productId,
                             Quantity = quantity,
                             UnitPrice = product.Price ?? 0, // ?? is to check first if .Price is null or not if null then set value to 0 //
-
                         };
                         _db.CartDB.Add(newcartitem); // Add new data that was just created to CartDB //
                     }
                     _db.SaveChanges(); // Save changes //
-                    return Json(new { success = true, message = "Product added to cart" }); // Return in JSON instead cause we don't want to redirect after add to cart //
+
+            return Json(new { success = true, message = "Product added to cart" }); // Return in JSON instead cause we don't want to redirect after add to cart //
                 }
 
-                // POST:(CART.DELETE) //
-                [HttpPost]
+
+
+
+        // POST:(CART.DELETE) //
+        [HttpPost]
                 [ValidateAntiForgeryToken]
                 public IActionResult ProductRemoveCart (int cartId)
                 {
