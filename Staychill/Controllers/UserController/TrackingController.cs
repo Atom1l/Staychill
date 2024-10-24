@@ -20,19 +20,36 @@ namespace Staychill.Controllers.UserController
         // ========== DISPLAY ========== //
         public IActionResult TrackingResult(string shipmentCode)
         {
-            // Find the tracking entry by shipment code
+            // Retrieve the tracking entry based on the shipment code
             var trackingEntry = _db.TrackingDB
-                                    .Include(t => t.RetainCarts) // Include RetainCarts
-                                    .ThenInclude(rc => rc.RetainCartItems) // Include RetainCartItems
-                                    .FirstOrDefault(t => t.ShipmentCode == shipmentCode);
+                .Include(t => t.RetainCarts)
+                .ThenInclude(rc => rc.RetainCartItems)
+                .FirstOrDefault(t => t.ShipmentCode == shipmentCode);
 
+            // Check if tracking entry exists
             if (trackingEntry == null)
             {
-                return NotFound(); // Handle case where tracking entry is not found
+                return NotFound($"Tracking information for shipment code {shipmentCode} not found.");
             }
 
-            return View(trackingEntry); // Pass the tracking entry to the view
+            // Map the data to the ViewModel
+            var viewModel = new TrackingResultViewModel
+            {
+                ShipmentCode = trackingEntry.ShipmentCode,
+                Status = trackingEntry.Status,
+                RetainCartItems = trackingEntry.RetainCarts.SelectMany(rc => rc.RetainCartItems)
+                    .Select(item => new RetainCartItemViewModel
+                    {
+                        ProductId = item.ProductId,
+                        Quantity = item.Quantity,
+                        UnitPrice = item.UnitPrice,
+                    }).ToList()
+            };
+
+            // Return the view with the ViewModel
+            return View(viewModel);
         }
+
 
         public IActionResult TrackingIndex()
         {
@@ -40,62 +57,67 @@ namespace Staychill.Controllers.UserController
         }
 
         // ========== Merge CartItems to TrackingDB ========== //
-
         [HttpPost]
-        public IActionResult CreateShipment(List<int> cartIds)
+        public IActionResult CreateShipment(int[] cartIds, int[] quantities, float[] unitPrices, float[] totalPrices)
         {
-            if (cartIds == null || !cartIds.Any())
+            // Check if any items are selected
+            if (cartIds == null || cartIds.Length == 0)
             {
-                return BadRequest("No cart items selected.");
+                return BadRequest("No items selected.");
             }
 
-            // Log selected cart IDs
-            foreach (var id in cartIds)
-            {
-                Console.WriteLine("Selected cartId: " + id);
-            }
-
-            // Generate shipment code
-            string shipmentCode = Tracking.GenerateShipmentCode();
-
-            // Create a new RetainCarts instance
+            // Create a new RetainCarts instance to store retained cart items
             var retainCart = new RetainCarts
             {
                 RetainCartItems = new List<RetainCartItem>()
             };
 
-            // Process each selected cart item
-            foreach (var cartId in cartIds)
-            {
-                var cartItem = _db.CartDB.Include(c => c.CartItems)
-                                          .ThenInclude(ci => ci.Product)
-                                          .FirstOrDefault(c => c.CartId == cartId);
+            // Generate shipment code
+            string shipmentCode = Tracking.GenerateShipmentCode();
 
+            // Process each cart item using the provided parameters
+            for (int i = 0; i < cartIds.Length; i++)
+            {
+                var cartId = cartIds[i];
+
+                // Retrieve the cart item based on cartId
+                var cartItem = _db.CartDB
+                    .Include(c => c.CartItems)
+                    .ThenInclude(ci => ci.Product)
+                    .FirstOrDefault(c => c.CartId == cartId);
+
+                // Check if the cart item exists
                 if (cartItem == null)
                 {
-                    continue;
+                    return NotFound($"Cart with ID {cartId} not found.");
                 }
 
-                // Add each cart item to RetainCarts
-                foreach (var item in cartItem.CartItems)
+                // Create a RetainCartItem using the quantities and prices provided
+                var retainCartItem = new RetainCartItem
                 {
-                    var retainCartItem = new RetainCartItem
-                    {
-                        ProductId = item.ProductId,
-                        Quantity = item.Quantity,
-                        UnitPrice = item.UnitPrice,
-                        RetainCartId = retainCart.ReCartId // Ensure the foreign key is set correctly
-                    };
+                    ProductId = cartItem.CartItems.FirstOrDefault()?.ProductId ?? 0, // Assuming you want the first product's ID
+                    Quantity = quantities[i],
+                    UnitPrice = unitPrices[i],
+                };
 
-                    retainCart.RetainCartItems.Add(retainCartItem);
-                }
+                // Add the retain cart item to the RetainCarts instance
+                retainCart.RetainCartItems.Add(retainCartItem);
 
-                // Remove the cart item from CartDB
+                // Optionally, remove the cart item from the CartDB if necessary
                 _db.CartDB.Remove(cartItem);
             }
 
-            // Save RetainCart
+            // Save RetainCart to the database
             _db.RetaincartsDB.Add(retainCart);
+            _db.SaveChanges(); // This will generate ReCartId
+
+            // Assign ReCartId to each RetainCartItem
+            foreach (var item in retainCart.RetainCartItems)
+            {
+                item.RetainCartId = retainCart.ReCartId;
+            }
+
+            // Save the updated RetainCartItems
             _db.SaveChanges();
 
             // Create tracking entry
@@ -110,9 +132,12 @@ namespace Staychill.Controllers.UserController
             _db.TrackingDB.Add(tracking);
             _db.SaveChanges();
 
-            // Redirect to the tracking result with the shipment code
-            return RedirectToAction("TrackingResult", new { shipmentCode });
+            // Redirect or return a view after processing
+            return RedirectToAction("TrackingResult", new {shipmentCode});
         }
+
+
+
 
 
 

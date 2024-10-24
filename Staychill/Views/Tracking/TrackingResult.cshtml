@@ -1,37 +1,36 @@
-﻿@model Staychill.Models.ProductModel.TrackingModel.Tracking
+﻿@model Staychill.ViewModel.TrackingResultViewModel
 
-<h2>Tracking Result for Shipment Code: @Model.ShipmentCode</h2>
+<h2>Tracking Result</h2>
+
+<p>Shipment Code: @Model.ShipmentCode</p>
 <p>Status: @Model.Status</p>
 
-@if (Model.RetainCarts != null && Model.RetainCarts.Count > 0)
+@if (Model.RetainCartItems != null && Model.RetainCartItems.Any())
 {
-    foreach (var retainCart in Model.RetainCarts)
-    {
-        <h3>Products in this Shipment:</h3>
-        <table class="table">
-            <thead>
+    <h3>Items:</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Product ID</th>
+                <th>Quantity</th>
+                <th>Unit Price</th>
+                <th>Total Price</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.RetainCartItems)
+            {
                 <tr>
-                    <th>Product Name</th>
-                    <th>Quantity</th>
-                    <th>Unit Price</th>
-                    <th>Total Price</th>
+                    <td>@item.ProductId</td>
+                    <td>@item.Quantity</td>
+                    <td>@item.UnitPrice.ToString("C")</td>
+                    <td>@item.TotalPrice.ToString("C")</td>
                 </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in retainCart.RetainCartItems)
-                {
-                    <tr>
-                        <td>@item.Product.ProductName</td> <!-- Assuming Product has a Name property -->
-                        <td>@item.Quantity</td>
-                        <td>@item.UnitPrice.ToString("C")</td> <!-- Format as currency -->
-                        <td>@item.TotalPrice.ToString("C")</td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    }
+            }
+        </tbody>
+    </table>
 }
 else
 {
-    <p>No products found for this shipment.</p>
+    <p>No items found for this shipment.</p>
 }

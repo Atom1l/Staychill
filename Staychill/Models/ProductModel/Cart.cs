@@ -1,5 +1,6 @@
 ﻿using Staychill.Models.ProductModel.TrackingModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Staychill.Models.ProductModel
 {
@@ -22,6 +23,7 @@ namespace Staychill.Models.ProductModel
         [Key]
         public int CartItemId { get; set; } // Primary key for CartItem
 
+        [ForeignKey("Product")]
         [Required]
         public int ProductId { get; set; } // Foreign key to the Product
 
@@ -35,6 +37,7 @@ namespace Staychill.Models.ProductModel
 
         public Product Product { get; set; } = null!; // Navigation property to Product
 
+        [ForeignKey("Cart")]
         public int CartId { get; set; } // Foreign key to Cart
 
         public Cart Cart { get; set; } = null!; // Navigation property to Cart

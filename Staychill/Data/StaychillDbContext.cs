@@ -29,7 +29,7 @@ namespace Staychill.Data
         public DbSet<Staychill.Models.ProductModel.Cart> CartDB { get; set; }
         public DbSet<Staychill.Models.ProductModel.CartItem> CartitemsDB { get; set; }
         public DbSet<Staychill.Models.ProductModel.RetainCarts> RetaincartsDB { get; set; }
-        public DbSet<RetainCartItem> RetainCartItems { get; set; }
+        public DbSet<Staychill.Models.ProductModel.RetainCartItem> RetainCartItems { get; set; }
 
         // Payment DbSet ----- //
         public DbSet<Staychill.Models.BankModel.BankAccount> BankAccDB { get; set; }
