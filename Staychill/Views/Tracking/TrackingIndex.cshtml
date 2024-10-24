@@ -1,0 +1,15 @@
+﻿@model Staychill.Models.ProductModel.TrackingModel.Tracking
+@{
+}
+
+<div class="container-fluid">
+    <div class="w-100 min-vh-100 h-auto d-flex justify-content-center align-items-center align-content-center text-center">
+        <form asp-action="TrackingResult" class="fs-3">
+            <div>
+                <div class="mb-2">Tracking Shipment</div>
+                <input type="text" name="shipmentCode" placeholder="Shipment Code.." />
+            </div>
+            <button type="submit" class="btn btn-primary mt-2 p-2">Search</button>
+        </form>
+    </div>
+</div>

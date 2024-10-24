@@ -90,42 +90,18 @@
                     }
                 </td>
                 <td>
-                    <form id="cartForm-@product.Id">
+                    <form asp-action="CartIndex" asp-controller="Cart" method="post">
                         <input type="hidden" name="productId" value="@product.Id" />
                         <input type="number" name="quantity" value="1" min="1" />
-                        <button type="button" onclick="addToCart(@product.Id)">Add to Cart</button>
+                        <button type="submit">Add to Cart</button>
                     </form>
 
                     <a asp-action="ProductDelete" asp-route-id="@product.Id">Delete</a>
                 </td>
+
             </tr>
         }
     </tbody>
 </table>
 
-<!-- SCRIPTS FROM GPT TO NOT REDIRECT TO ANOTHER ACTION AFTER ADDING PRODUCT -->
-<div id="cartMessage" style="color: green; display:none;">
-    Product added to cart!
-</div>
-
-@section Scripts {
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script>
-        function addToCart(productId) {
-            var form = $("#cartForm-" + productId);
-
-            $.ajax({
-                url: '@Url.Action("ProductAddToCart", "TestUserCreatingAccount")',
-                type: 'POST',
-                data: form.serialize(),
-                success: function () {
-                    $("#cartMessage").fadeIn().delay(2000).fadeOut();
-                },
-                error: function () {
-                    alert('Failed to add product to cart. Please try again.');
-                }
-            });
-        }
-    </script>
-}
 

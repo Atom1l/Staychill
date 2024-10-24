@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Staychill.Data;
 
@@ -11,9 +12,11 @@ using Staychill.Data;
 namespace Staychill.Migrations
 {
     [DbContext(typeof(StaychillDbContext))]
-    partial class StaychillDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241023145153__cart02")]
+    partial class _cart02
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -137,9 +140,6 @@ namespace Staychill.Migrations
                     b.Property<int>("CartId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("DiscountId")
-                        .HasColumnType("int");
-
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
@@ -152,8 +152,6 @@ namespace Staychill.Migrations
                     b.HasKey("CartItemId");
 
                     b.HasIndex("CartId");
-
-                    b.HasIndex("DiscountId");
 
                     b.HasIndex("ProductId");
 
@@ -246,56 +244,6 @@ namespace Staychill.Migrations
                         .IsUnique();
 
                     b.ToTable("ProductImagesDB");
-                });
-
-            modelBuilder.Entity("Staychill.Models.ProductModel.RetainCartItem", b =>
-                {
-                    b.Property<int>("ReCartItemId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReCartItemId"));
-
-                    b.Property<int>("ProductId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("ReCartId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RetainCartId")
-                        .HasColumnType("int");
-
-                    b.Property<float>("UnitPrice")
-                        .HasColumnType("real");
-
-                    b.HasKey("ReCartItemId");
-
-                    b.HasIndex("ProductId");
-
-                    b.HasIndex("RetainCartId");
-
-                    b.ToTable("RetainCartItems");
-                });
-
-            modelBuilder.Entity("Staychill.Models.ProductModel.RetainCarts", b =>
-                {
-                    b.Property<int>("ReCartId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReCartId"));
-
-                    b.Property<int?>("TrackingId")
-                        .HasColumnType("int");
-
-                    b.HasKey("ReCartId");
-
-                    b.HasIndex("TrackingId");
-
-                    b.ToTable("RetaincartsDB");
                 });
 
             modelBuilder.Entity("Staychill.Models.ProductModel.TrackingModel.Tracking", b =>
@@ -505,10 +453,6 @@ namespace Staychill.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Staychill.Models.ProductModel.DiscountModel.Discount", "Discount")
-                        .WithMany()
-                        .HasForeignKey("DiscountId");
-
                     b.HasOne("Staychill.Models.ProductModel.Product", "Product")
                         .WithMany("CartItems")
                         .HasForeignKey("ProductId")
@@ -516,8 +460,6 @@ namespace Staychill.Migrations
                         .IsRequired();
 
                     b.Navigation("Cart");
-
-                    b.Navigation("Discount");
 
                     b.Navigation("Product");
                 });
@@ -531,35 +473,6 @@ namespace Staychill.Migrations
                         .IsRequired();
 
                     b.Navigation("Product");
-                });
-
-            modelBuilder.Entity("Staychill.Models.ProductModel.RetainCartItem", b =>
-                {
-                    b.HasOne("Staychill.Models.ProductModel.Product", "Product")
-                        .WithMany()
-                        .HasForeignKey("ProductId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Staychill.Models.ProductModel.RetainCarts", "RetainCart")
-                        .WithMany("RetainCartItems")
-                        .HasForeignKey("RetainCartId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Product");
-
-                    b.Navigation("RetainCart");
-                });
-
-            modelBuilder.Entity("Staychill.Models.ProductModel.RetainCarts", b =>
-                {
-                    b.HasOne("Staychill.Models.ProductModel.TrackingModel.Tracking", "Tracking")
-                        .WithMany("RetainCarts")
-                        .HasForeignKey("TrackingId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.Navigation("Tracking");
                 });
 
             modelBuilder.Entity("Staychill.Models.UserModel.User", b =>
@@ -588,16 +501,6 @@ namespace Staychill.Migrations
                     b.Navigation("CartItems");
 
                     b.Navigation("Images");
-                });
-
-            modelBuilder.Entity("Staychill.Models.ProductModel.RetainCarts", b =>
-                {
-                    b.Navigation("RetainCartItems");
-                });
-
-            modelBuilder.Entity("Staychill.Models.ProductModel.TrackingModel.Tracking", b =>
-                {
-                    b.Navigation("RetainCarts");
                 });
 
             modelBuilder.Entity("Staychill.Models.UserModel.Address", b =>

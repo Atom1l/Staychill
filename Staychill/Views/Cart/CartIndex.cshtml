@@ -1,21 +1,16 @@
-﻿@model Staychill.ViewModel.TrackingViewModel
+﻿@model Staychill.ViewModel.CartViewModel
 
 <div class="container-fluid border">
-    <h1 class="mt-5">ProductAddCart</h1>
+    <h1 class="mt-5">Shopping Cart</h1>
 
-    <!-- Table for Cart Items -->
     <table class="table justify-content-center align-items-center align-content-center">
         <thead>
             <tr>
-                <th>Cart ID</th>
-                <th>CartItemID</th>
+                <th>Product Name</th>
                 <th>Quantity</th>
                 <th>Unit Price</th>
+                <th>Discount</th>
                 <th>Total Price</th>
-                <th>Product Name</th>
-                <th>Product Type</th>
-                <th>Color</th>
-                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -24,17 +19,24 @@
                 foreach (var item in cart.CartItems)
                 {
                     <tr>
-                        <td>@Html.DisplayFor(model => cart.CartId)</td>
-                        <td>@Html.DisplayFor(model => item.CartItemId)</td>
+                        <td>@Html.DisplayFor(model => item.Product.ProductName)</td>
                         <td>@Html.DisplayFor(model => item.Quantity)</td>
                         <td>@Html.DisplayFor(model => item.UnitPrice)</td>
-                        <td>@Html.DisplayFor(model => item.TotalPrice)</td>
-                        <td>@Html.DisplayFor(model => item.Product.ProductName)</td>
-                        <td>@Html.DisplayFor(model => item.Product.ProductType)</td>
-                        <td>@Html.DisplayFor(model => item.Product.Color)</td>
+                        <td>@(item.Discount != null ? item.Discount.DiscountAmount.ToString() : "0.00")</td>
                         <td>
-                            <!-- Remove Item from Cart -->
-                            <form asp-action="ProductRemoveCart" asp-controller="TestUserCreatingAccount" method="post" style="display:inline;">
+                            @if (Model.DiscountedTotal > 0)
+                            {
+                                <div>
+                                    <strong>@Model.DiscountedTotal.ToString("F2")</strong>
+                                </div>
+                            }
+                            else
+                            {
+                                @Html.DisplayFor(model => item.TotalPrice)
+                            }
+                        </td>
+                        <td>
+                            <form asp-action="CartRemove" asp-controller="Cart" method="post">
                                 <input type="hidden" name="RemovecartId" value="@cart.CartId" />
                                 <input type="hidden" name="RemoveitemId" value="@item.CartItemId" />
                                 <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to remove this item from the cart?');">Remove</button>
@@ -45,6 +47,18 @@
             }
         </tbody>
     </table>
+
+    <div>
+        <strong>Total Amount: @Model.TotalAmount</strong>
+    </div>
+
+    <div>
+        <h5>Apply Discount Code:</h5>
+        <form asp-action="ApplyDiscount" method="post">
+            <input type="text" asp-for="DiscountCode" placeholder="Enter discount code" />
+            <button type="submit">Apply Discount</button>
+        </form>
+    </div>
 
     <!-- Shipment Form -->
     <form asp-action="CreateShipment" asp-controller="Tracking" method="post">
@@ -63,4 +77,6 @@
 
         <button type="submit" class="btn btn-primary mt-2">Pay for All Items</button>
     </form>
+
+
 </div>

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Staychill.Models.ProductModel.TrackingModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace Staychill.Models.ProductModel
 {
@@ -48,6 +49,8 @@ namespace Staychill.Models.ProductModel
         public int? Instock { get; set; } // Quantity of the product in stock //
 
         public ProductImages? Images { get; set; }
+
+        public ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
     }
 
     public class ProductImages

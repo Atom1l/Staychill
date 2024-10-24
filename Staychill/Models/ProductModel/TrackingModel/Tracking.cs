@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Staychill.Models.ProductModel.TrackingModel
 {
@@ -15,21 +16,20 @@ namespace Staychill.Models.ProductModel.TrackingModel
 
         public List<string> Statusoptions { get; } = new List<string> // List of Status //
         {
-            "Waiting for Payment",
+            "Pending",
             "Confirmed Order",
             "Delivered",
             "Sucessfully",
             "Cancelled"
         };
 
+        public virtual ICollection<RetainCarts> RetainCarts { get; set; } = new List<RetainCarts>();
+
         // Create a Constructor to give a ShipmentCode value = GenerateShipmentCode() //
-        public Tracking()
-        {
-            ShipmentCode = GenerateShipmentCode();
-        }
+
 
         // Create a function for generating a random code for ShipmentCode value //
-        public string GenerateShipmentCode()
+        public static string GenerateShipmentCode()
         {
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"; // will random in A-Z a-z 0-9 //
             var random = new Random(); // Set variable random to contain new Random() //

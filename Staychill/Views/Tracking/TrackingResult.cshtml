@@ -1,0 +1,45 @@
+﻿@model Staychill.ViewModel.TrackingResultViewModel
+
+<div class="container-fluid sample-1">
+    <h2>Tracking Result</h2>
+
+    <p>Shipment Code: @Model.ShipmentCode</p>
+    <p>Status: @Model.Status</p>
+
+    @if (Model.RetainCartItems != null && Model.RetainCartItems.Any())
+    {
+        <h3>Items:</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>Product ID</th>
+                    <th>Quantity</th>
+                    <th>Unit Price</th>
+                    <th>Total Price</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.RetainCartItems)
+                {
+                    <tr>
+                        <td>@item.ProductId</td>
+                        <td>@item.Quantity</td>
+                        <td>@item.UnitPrice.ToString("C")</td>
+                        <td>@item.TotalPrice.ToString("C")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No items found for this shipment.</p>
+    }
+</div>
+
+<div class="container-fluid sample-2">
+    <div class="w-100 min-vh-100 h-auto ">
+
+    </div>
+
+</div>

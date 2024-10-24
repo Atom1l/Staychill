@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Staychill.Data;
 
@@ -11,9 +12,11 @@ using Staychill.Data;
 namespace Staychill.Migrations
 {
     [DbContext(typeof(StaychillDbContext))]
-    partial class StaychillDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241023175921__cart05")]
+    partial class _cart05
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -137,9 +140,6 @@ namespace Staychill.Migrations
                     b.Property<int>("CartId")
                         .HasColumnType("int");
 
-                    b.Property<int?>("DiscountId")
-                        .HasColumnType("int");
-
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
 
@@ -152,8 +152,6 @@ namespace Staychill.Migrations
                     b.HasKey("CartItemId");
 
                     b.HasIndex("CartId");
-
-                    b.HasIndex("DiscountId");
 
                     b.HasIndex("ProductId");
 
@@ -505,10 +503,6 @@ namespace Staychill.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Staychill.Models.ProductModel.DiscountModel.Discount", "Discount")
-                        .WithMany()
-                        .HasForeignKey("DiscountId");
-
                     b.HasOne("Staychill.Models.ProductModel.Product", "Product")
                         .WithMany("CartItems")
                         .HasForeignKey("ProductId")
@@ -516,8 +510,6 @@ namespace Staychill.Migrations
                         .IsRequired();
 
                     b.Navigation("Cart");
-
-                    b.Navigation("Discount");
 
                     b.Navigation("Product");
                 });
