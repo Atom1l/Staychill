@@ -23,14 +23,13 @@ namespace Staychill.Models.ProductModel.TrackingModel
             "Cancelled"
         };
 
+        public virtual ICollection<RetainCarts> RetainCarts { get; set; } = new List<RetainCarts>();
+
         // Create a Constructor to give a ShipmentCode value = GenerateShipmentCode() //
-        public Tracking()
-        {
-            ShipmentCode = GenerateShipmentCode();
-        }
+
 
         // Create a function for generating a random code for ShipmentCode value //
-        public string GenerateShipmentCode()
+        public static string GenerateShipmentCode()
         {
             const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"; // will random in A-Z a-z 0-9 //
             var random = new Random(); // Set variable random to contain new Random() //

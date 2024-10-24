@@ -28,6 +28,8 @@ namespace Staychill.Data
         public DbSet<Staychill.Models.ProductModel.TrackingModel.Tracking> TrackingDB { get; set; }
         public DbSet<Staychill.Models.ProductModel.Cart> CartDB { get; set; }
         public DbSet<Staychill.Models.ProductModel.CartItem> CartitemsDB { get; set; }
+        public DbSet<Staychill.Models.ProductModel.RetainCarts> RetaincartsDB { get; set; }
+        public DbSet<RetainCartItem> RetainCartItems { get; set; }
 
         // Payment DbSet ----- //
         public DbSet<Staychill.Models.BankModel.BankAccount> BankAccDB { get; set; }
@@ -60,17 +62,26 @@ namespace Staychill.Data
                 .HasForeignKey(ci => ci.CartId) // Foreign key in CartItem
                 .OnDelete(DeleteBehavior.Cascade); // Cascade delete behavior
 
-            modelBuilder.Entity<CartItem>()
-                .HasOne(ci => ci.Product)
-                .WithMany()
-                .HasForeignKey(ci => ci.ProductId);
-
             // CartItem to Product relationship
             modelBuilder.Entity<CartItem>()
                 .HasOne(ci => ci.Product) // Each CartItem has one Product
                 .WithMany(p => p.CartItems) // A Product can be in many CartItems
                 .HasForeignKey(ci => ci.ProductId) // Use ProductId as the foreign key
                 .OnDelete(DeleteBehavior.Cascade); // Cascade delete behavior
+
+            // Tracking to RetainCart relationship
+            modelBuilder.Entity<Tracking>()
+                .HasMany(t => t.RetainCarts)
+                .WithOne(rc => rc.Tracking) // Assuming RetainCart has a property named Tracking
+                .HasForeignKey(rc => rc.TrackingId) // Foreign key in RetainCart
+                .OnDelete(DeleteBehavior.Cascade); // Optional: specify delete behavior
+
+            // RetainCart to RetainCartItem relationship
+            modelBuilder.Entity<RetainCarts>()
+                .HasMany(rc => rc.RetainCartItems)
+                .WithOne(rci => rci.RetainCart) // Assuming RetainCartItem has a property named RetainCart
+                .HasForeignKey(rci => rci.RetainCartId) // Foreign key in RetainCartItem
+                .OnDelete(DeleteBehavior.Restrict); // Optional: specify delete behavior
 
             // ShipmentViewModel as a keyless entity
             modelBuilder.Entity<ShipmentViewModel>(entity =>

@@ -673,7 +673,7 @@ public IActionResult ProductAddToCart(int productId, int quantity)
                     if (ModelState.IsValid) // Check the modelstate if it valid or not //
                     {
                         // Create a variable to contain the GenerateShipmentCode() //
-                        var generatedCode = model.GenerateShipmentCode(); // GenerateShipmentCode output is string(Shipment) and We set that value to generatedCode variable //
+                        var generatedCode = Tracking.GenerateShipmentCode(); // GenerateShipmentCode output is string(Shipment) and We set that value to generatedCode variable //
                         model.ShipmentCode = generatedCode; // (model is a parameter of Tracking) We refer ShipmentCode to set it value to generatedCode //
 
                         var tracking = new Tracking // Set the constructor to use the Tracking.cs attributes values //

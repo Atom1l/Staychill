@@ -2,7 +2,7 @@
 
 <div class="container-fluid border">
     <h1 class="mt-5">ProductAddCart</h1>
-    <form asp-action="CreateShipment" asp-controller="Tracking" method="post">
+    <form asp-action="CreateShipment" asp-controller="Tracking" onsubmit="return validateSelection()">
         <table class="table justify-content-center align-items-center align-content-center">
             <thead>
                 <tr>
@@ -59,11 +59,22 @@
 </div>
 
 <script>
-    // JavaScript to toggle 'select all' functionality
+    // JavaScript to toggle 'select all' functionality //
     document.getElementById('selectAll').addEventListener('click', function () {
         var checkboxes = document.getElementsByName('cartIds');
         for (var checkbox of checkboxes) {
             checkbox.checked = this.checked;
         }
     });
+    // Validation to ensure at least one item is selected //
+    function validateSelection() {
+        var checkboxes = document.getElementsByName('cartIds');
+        for (var checkbox of checkboxes) {
+            if (checkbox.checked) {
+                return true; // At least one checkbox is checked
+            }
+        }
+        alert('Please select at least one item to proceed.');
+        return false; // Prevent form submission
+    }
 </script>

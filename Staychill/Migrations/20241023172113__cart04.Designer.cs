@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Staychill.Data;
 
@@ -11,9 +12,11 @@ using Staychill.Data;
 namespace Staychill.Migrations
 {
     [DbContext(typeof(StaychillDbContext))]
-    partial class StaychillDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241023172113__cart04")]
+    partial class _cart04
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -257,10 +260,7 @@ namespace Staychill.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ReCartId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RetainCartId")
+                    b.Property<int?>("RetainCartId")
                         .HasColumnType("int");
 
                     b.Property<float>("UnitPrice")
@@ -533,8 +533,7 @@ namespace Staychill.Migrations
                     b.HasOne("Staychill.Models.ProductModel.RetainCarts", "RetainCart")
                         .WithMany("RetainCartItems")
                         .HasForeignKey("RetainCartId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
+                        .OnDelete(DeleteBehavior.Restrict);
 
                     b.Navigation("Product");
 

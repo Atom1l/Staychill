@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Staychill.Data;
 
@@ -11,9 +12,11 @@ using Staychill.Data;
 namespace Staychill.Migrations
 {
     [DbContext(typeof(StaychillDbContext))]
-    partial class StaychillDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241023152643__cart03")]
+    partial class _cart03
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -246,10 +249,7 @@ namespace Staychill.Migrations
             modelBuilder.Entity("Staychill.Models.ProductModel.RetainCartItem", b =>
                 {
                     b.Property<int>("ReCartItemId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReCartItemId"));
 
                     b.Property<int>("ProductId")
                         .HasColumnType("int");
@@ -257,10 +257,7 @@ namespace Staychill.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<int?>("ReCartId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("RetainCartId")
+                    b.Property<int?>("RetainCartId")
                         .HasColumnType("int");
 
                     b.Property<float>("UnitPrice")
@@ -269,8 +266,6 @@ namespace Staychill.Migrations
                     b.HasKey("ReCartItemId");
 
                     b.HasIndex("ProductId");
-
-                    b.HasIndex("RetainCartId");
 
                     b.ToTable("RetainCartItems");
                 });
@@ -532,7 +527,7 @@ namespace Staychill.Migrations
 
                     b.HasOne("Staychill.Models.ProductModel.RetainCarts", "RetainCart")
                         .WithMany("RetainCartItems")
-                        .HasForeignKey("RetainCartId")
+                        .HasForeignKey("ReCartItemId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 

@@ -38,6 +38,8 @@ namespace Staychill.Models.ProductModel
         public int CartId { get; set; } // Foreign key to Cart
 
         public Cart Cart { get; set; } = null!; // Navigation property to Cart
+
+
     }
 
 

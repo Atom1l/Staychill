@@ -1,87 +1,125 @@
-﻿//using System;
-//using System.Collections.Generic;
-//using System.Linq;
-//using System.Security.Cryptography.Pkcs;
-//using System.Threading.Tasks;
-//using Microsoft.AspNetCore.Mvc;
-//using Microsoft.AspNetCore.Mvc.Rendering;
-//using Microsoft.EntityFrameworkCore;
-//using NuGet.DependencyResolver;
-//using Staychill.Data;
-//using Staychill.Models;
-//using Staychill.Models.BankModel;
-//using Staychill.Models.ProductModel;
-//using Staychill.Models.ProductModel.DiscountModel;
-//using Staychill.Models.ProductModel.TrackingModel;
-//using Staychill.Models.UserModel;
-//using Staychill.ViewModel;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Staychill.Data;
+using Staychill.Models.ProductModel;
+using Staychill.Models.ProductModel.TrackingModel;
+using Staychill.ViewModel;
 
-//namespace Staychill.Controllers.UserController
-//{
-//    public class TrackingController : Controller
-//    {
-//        private readonly StaychillDbContext _db;
-//        public TrackingController(StaychillDbContext db)
-//        {
-//            _db = db;
-//        }
-//        // ========== DISPLAY ========== //
-//        public IActionResult TrackingResult(string shipmentCode, string status, int cartId)
-//        {
-//            // Retrieve the tracking information based on the shipment code or cart ID
-//            var tracking = _db.TrackingDB.Include(t => t.Cart)
-//                                          .ThenInclude(c => c.Product)
-//                                          .FirstOrDefault(t => t.ShipmentCode == shipmentCode);
+namespace Staychill.Controllers.UserController
+{
+    public class TrackingController : Controller
+    {
+        private readonly StaychillDbContext _db;
+        public TrackingController(StaychillDbContext db)
+        {
+            _db = db;
+        }
 
-//            if (tracking == null)
-//            {
-//                return NotFound(); // Return a 404 if the tracking information is not found
-//            }
+        // ========== DISPLAY ========== //
+        public IActionResult TrackingResult(string shipmentCode)
+        {
+            // Find the tracking entry by shipment code
+            var trackingEntry = _db.TrackingDB
+                                    .Include(t => t.RetainCarts) // Include RetainCarts
+                                    .ThenInclude(rc => rc.RetainCartItems) // Include RetainCartItems
+                                    .FirstOrDefault(t => t.ShipmentCode == shipmentCode);
 
-//            return View(tracking); // Pass the tracking information to the view
-//        }
+            if (trackingEntry == null)
+            {
+                return NotFound(); // Handle case where tracking entry is not found
+            }
 
-//        public IActionResult TrackingIndex()
-//        {
-//            return View();
-//        }
+            return View(trackingEntry); // Pass the tracking entry to the view
+        }
 
-//        // ========== DISPLAY ========== //
+        public IActionResult TrackingIndex()
+        {
+            return View();
+        }
 
-//        // ========== Merge CartItems to TrackingDB ========== //
-//        [HttpPost]
-//        public IActionResult CreateShipment(int cartId)
-//        {
-//            // Find the cart item based on the cartId
-//            var cartItem = _db.CartDB.Include(c => c.Product).FirstOrDefault(c => c.CartId == cartId);
+        // ========== Merge CartItems to TrackingDB ========== //
 
-//            if (cartItem == null)
-//            {
-//                return NotFound(); // Return a 404 if the cart item is not found
-//            }
+        [HttpPost]
+        public IActionResult CreateShipment(List<int> cartIds)
+        {
+            if (cartIds == null || !cartIds.Any())
+            {
+                return BadRequest("No cart items selected.");
+            }
 
-            
+            // Log selected cart IDs
+            foreach (var id in cartIds)
+            {
+                Console.WriteLine("Selected cartId: " + id);
+            }
 
-//            // Create a new Tracking entry
-//            var tracking = new Tracking
-//            {
-//                TCartId = cartItem.CartId, // Use the newly created RetainCart's ID
-//                Status = "Pending",
-//            };
+            // Generate shipment code
+            string shipmentCode = Tracking.GenerateShipmentCode();
 
-//            // Save the new tracking entry to the database
-//            _db.TrackingDB.Add(tracking);
-//            _db.SaveChanges(); // Save changes
+            // Create a new RetainCarts instance
+            var retainCart = new RetainCarts
+            {
+                RetainCartItems = new List<RetainCartItem>()
+            };
 
-//            // Remove the cart item from CartDB
-//            _db.CartDB.Remove(cartItem);
-//            _db.SaveChanges(); // Save changes again to remove cart item
+            // Process each selected cart item
+            foreach (var cartId in cartIds)
+            {
+                var cartItem = _db.CartDB.Include(c => c.CartItems)
+                                          .ThenInclude(ci => ci.Product)
+                                          .FirstOrDefault(c => c.CartId == cartId);
 
-//            // Redirect or return a view
-//            return RedirectToAction("TrackingResult", new { shipmentCode = tracking.ShipmentCode, status = tracking.Status, cartId = cartItem.CartId });
-//        }
+                if (cartItem == null)
+                {
+                    continue;
+                }
+
+                // Add each cart item to RetainCarts
+                foreach (var item in cartItem.CartItems)
+                {
+                    var retainCartItem = new RetainCartItem
+                    {
+                        ProductId = item.ProductId,
+                        Quantity = item.Quantity,
+                        UnitPrice = item.UnitPrice,
+                        RetainCartId = retainCart.ReCartId // Ensure the foreign key is set correctly
+                    };
+
+                    retainCart.RetainCartItems.Add(retainCartItem);
+                }
+
+                // Remove the cart item from CartDB
+                _db.CartDB.Remove(cartItem);
+            }
+
+            // Save RetainCart
+            _db.RetaincartsDB.Add(retainCart);
+            _db.SaveChanges();
+
+            // Create tracking entry
+            var tracking = new Tracking
+            {
+                ShipmentCode = shipmentCode,
+                Status = "Pending",
+                RetainCarts = new List<RetainCarts> { retainCart }
+            };
+
+            // Save tracking entry
+            _db.TrackingDB.Add(tracking);
+            _db.SaveChanges();
+
+            // Redirect to the tracking result with the shipment code
+            return RedirectToAction("TrackingResult", new { shipmentCode });
+        }
 
 
 
-//    }
-//}
+
+
+
+
+
+    }
+}
