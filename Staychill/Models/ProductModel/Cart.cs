@@ -1,4 +1,5 @@
-﻿using Staychill.Models.ProductModel.TrackingModel;
+﻿using Staychill.Models.ProductModel.DiscountModel;
+using Staychill.Models.ProductModel.TrackingModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -27,13 +28,19 @@ namespace Staychill.Models.ProductModel
         [Required]
         public int ProductId { get; set; } // Foreign key to the Product
 
+
         [Required]
         public int Quantity { get; set; } // Quantity of the product in the cart
 
         [Required]
         public float UnitPrice { get; set; } // Unit price of the product
 
-        public float TotalPrice => UnitPrice * Quantity; // Calculated total price
+        // Discount Define //
+        public int? DiscountId { get; set; }
+        public Discount Discount { get; set; } = null!;
+        // Discount Define //
+
+        public float TotalPrice => CalculateTotalPrice(); // Calculated total price
 
         public Product Product { get; set; } = null!; // Navigation property to Product
 
@@ -41,6 +48,24 @@ namespace Staychill.Models.ProductModel
         public int CartId { get; set; } // Foreign key to Cart
 
         public Cart Cart { get; set; } = null!; // Navigation property to Cart
+
+
+        // Calculate Method //
+        private float CalculateTotalPrice()
+        {
+            float totalPrice = UnitPrice * Quantity;
+
+            // Check if a discount is applied
+            if (Discount != null)
+            {
+                // Apply discount
+                totalPrice -= (totalPrice * Discount.DiscountAmount / 100);
+            }
+
+            return totalPrice;
+        }
+
+
 
 
     }

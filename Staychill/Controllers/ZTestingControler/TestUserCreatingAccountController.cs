@@ -282,8 +282,6 @@ namespace Staychill.Controllers.ZTestingControler
                 }
 
 
-
-
                 [HttpPost]
                 [Route("ProductAddToCart")]
                 public IActionResult ProductAddToCart(int productId, int quantity) 
@@ -331,19 +329,36 @@ namespace Staychill.Controllers.ZTestingControler
                 }
 
 
-                // POST:(CART.DELETE) //
-                [HttpPost]
-                [ValidateAntiForgeryToken]
-                public IActionResult ProductRemoveCart (int RemovecartId, int RemoveitemId)
+        // POST:(CART.DELETE) //
+        [HttpPost]
+        public IActionResult ProductRemoveCart(int RemovecartId, int[] RemoveitemId)
+        {
+            // Find the cart using the CartId
+            var cart = _db.CartDB
+                .Include(c => c.CartItems)
+                .ThenInclude(c => c.Product)
+                .FirstOrDefault(p => p.CartId == RemovecartId);
+
+            if (cart != null)
+            {
+                // Remove each CartItem that matches the provided CartItemIds
+                foreach (var itemId in RemoveitemId)
                 {
-                    var productincart = _db.CartDB.FirstOrDefault(p => p.CartId == RemovecartId); // Check if CardDB.CartId matching with cartId //
-                    if(productincart != null) 
+                    var itemToRemove = cart.CartItems.FirstOrDefault(ci => ci.CartItemId == itemId);
+                    if (itemToRemove != null)
                     {
-                        _db.Remove(productincart); // If match then delete //
-                        _db.SaveChanges(); // Save changes //
+                        // Remove the item from the cart
+                        cart.CartItems.Remove(itemToRemove);
                     }
-                    return RedirectToAction("ProductAddCart"); // Return to CartIndex //
                 }
+                _db.SaveChanges(); // Save changes to the database
+            }
+
+            return RedirectToAction("ProductAddCart"); // Redirect to the appropriate action
+        }
+
+
+
 
 
 
@@ -351,7 +366,7 @@ namespace Staychill.Controllers.ZTestingControler
 
         //-------------------------- PAYMENT SECTION -------------------------- //
 
-                public IActionResult PaymentIndex()
+        public IActionResult PaymentIndex()
                 {
                     return View();
                 }
