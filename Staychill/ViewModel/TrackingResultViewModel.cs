@@ -15,7 +15,7 @@ namespace Staychill.ViewModel
         public int ProductId { get; set; }
         public int Quantity { get; set; }
         public float UnitPrice { get; set; }
-        public float TotalPrice => Quantity * UnitPrice; // Calculated property
+        public float TotalPrice => Quantity * UnitPrice;
     }
 
 }

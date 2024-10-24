@@ -2,6 +2,8 @@
 
 <div class="container-fluid border">
     <h1 class="mt-5">ProductAddCart</h1>
+
+    <!-- Form for submitting all items (for payment) -->
     <form asp-action="CreateShipment" asp-controller="Tracking">
         <table class="table justify-content-center align-items-center align-content-center">
             <thead>
@@ -13,6 +15,7 @@
                     <th>Product Name</th>
                     <th>Product Type</th>
                     <th>Color</th>
+                    <th>Action</th>
                 </tr>
             </thead>
             <tbody>
@@ -52,6 +55,7 @@
             </tbody>
         </table>
 
+        <!-- Pay for All Items Button -->
         <button type="submit" class="btn btn-primary mt-2">Pay for All Items</button>
     </form>
 </div>

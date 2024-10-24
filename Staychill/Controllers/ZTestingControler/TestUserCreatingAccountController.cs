@@ -264,82 +264,79 @@ namespace Staychill.Controllers.ZTestingControler
         }
 
                 //-------------------------- (CART) --------------------------//
-// CART Controller
-public IActionResult ProductAddCart()
-{
-    var cartItems = _db.CartDB
-        .Include(c => c.CartItems)
-        .ThenInclude(ci => ci.Product) // Load the Product for each CartItem
-        .ToList();
-    
-    var viewModel = new TrackingViewModel
-    {
-        CartItemDetails = cartItems,
-        TotalAmount = cartItems.SelectMany(c => c.CartItems).Sum(item => item.TotalPrice) // Calculate total from all CartItems
-    };
-
-    return View(viewModel);
-}
-
-
-
-
-[HttpPost]
-[Route("ProductAddToCart")]
-public IActionResult ProductAddToCart(int productId, int quantity) 
-{
-    var product = _db.ProductDB.FirstOrDefault(p => p.Id == productId); // Check if productId matches with ProductDB.Id
-    if (product == null) 
-    {
-        return Json(new { success = false, message = "Product not found" }); // Return as JSON
-    }
-
-    // Find the existing Cart (assuming there's only one cart on the website)
-    var cart = _db.CartDB.Include(c => c.CartItems)
-                          .FirstOrDefault(); // Get the first Cart (since there is only one cart)
-    
-    // If the cart does not exist, you might want to create one here or handle the scenario
-    if (cart == null)
-    {
-        cart = new Cart(); // Create a new Cart if one doesn't exist
-        _db.CartDB.Add(cart); // Add it to the database
-        _db.SaveChanges(); // Save changes to generate CartId
-    }
-
-    // Check if the product is already in the cart
-    var cartItem = cart.CartItems.FirstOrDefault(ci => ci.ProductId == productId); 
-    if (cartItem != null)
-    {
-        cartItem.Quantity += quantity; // If matching, increase the quantity
-    }
-    else
-    {
-        // Create a new CartItem
-        var newCartItem = new CartItem 
-        {
-            ProductId = productId,
-            Quantity = quantity,
-            UnitPrice = product.Price ?? 0, // Use null-coalescing to set to 0 if null
-            CartId = cart.CartId // Associate the CartItem with the existing Cart
-        };
-        cart.CartItems.Add(newCartItem); // Add new CartItem to the Cart
-    }
-
-    _db.SaveChanges(); // Save changes
-
-    return Json(new { success = true, message = "Product added to cart" }); // Return success response as JSON
-}
-
-
-
-
-
-        // POST:(CART.DELETE) //
-        [HttpPost]
-                [ValidateAntiForgeryToken]
-                public IActionResult ProductRemoveCart (int cartId)
+                // CART Controller
+                public IActionResult ProductAddCart()
                 {
-                    var productincart = _db.CartDB.FirstOrDefault(p => p.CartId == cartId); // Check if CardDB.CartId matching with cartId //
+                    var cartItems = _db.CartDB
+                        .Include(c => c.CartItems)
+                        .ThenInclude(ci => ci.Product) // Load the Product for each CartItem
+                        .ToList();
+    
+                    var viewModel = new TrackingViewModel
+                    {
+                        CartItemDetails = cartItems,
+                        TotalAmount = cartItems.SelectMany(c => c.CartItems).Sum(item => item.TotalPrice) // Calculate total from all CartItems
+                    };
+
+                    return View(viewModel);
+                }
+
+
+
+
+                [HttpPost]
+                [Route("ProductAddToCart")]
+                public IActionResult ProductAddToCart(int productId, int quantity) 
+                {
+                    var product = _db.ProductDB.FirstOrDefault(p => p.Id == productId); // Check if productId matches with ProductDB.Id
+                    if (product == null) 
+                    {
+                        return Json(new { success = false, message = "Product not found" }); // Return as JSON
+                    }
+
+                    // Find the existing Cart (assuming there's only one cart on the website)
+                    var cart = _db.CartDB.Include(c => c.CartItems)
+                                          .FirstOrDefault(); // Get the first Cart (since there is only one cart)
+    
+                    // If the cart does not exist, you might want to create one here or handle the scenario
+                    if (cart == null)
+                    {
+                        cart = new Cart(); // Create a new Cart if one doesn't exist
+                        _db.CartDB.Add(cart); // Add it to the database
+                        _db.SaveChanges(); // Save changes to generate CartId
+                    }
+
+                    // Check if the product is already in the cart
+                    var cartItem = cart.CartItems.FirstOrDefault(ci => ci.ProductId == productId); 
+                    if (cartItem != null)
+                    {
+                        cartItem.Quantity += quantity; // If matching, increase the quantity
+                    }
+                    else
+                    {
+                        // Create a new CartItem
+                        var newCartItem = new CartItem 
+                        {
+                            ProductId = productId,
+                            Quantity = quantity,
+                            UnitPrice = product.Price ?? 0, // Use null-coalescing to set to 0 if null
+                            CartId = cart.CartId // Associate the CartItem with the existing Cart
+                        };
+                        cart.CartItems.Add(newCartItem); // Add new CartItem to the Cart
+                    }
+
+                    _db.SaveChanges(); // Save changes
+
+                    return Json(new { success = true, message = "Product added to cart" }); // Return success response as JSON
+                }
+
+
+                // POST:(CART.DELETE) //
+                [HttpPost]
+                [ValidateAntiForgeryToken]
+                public IActionResult ProductRemoveCart (int RemovecartId, int RemoveitemId)
+                {
+                    var productincart = _db.CartDB.FirstOrDefault(p => p.CartId == RemovecartId); // Check if CardDB.CartId matching with cartId //
                     if(productincart != null) 
                     {
                         _db.Remove(productincart); // If match then delete //
