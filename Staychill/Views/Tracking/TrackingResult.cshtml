@@ -16,6 +16,7 @@
                     <th>Quantity</th>
                     <th>Unit Price</th>
                     <th>Total Price</th>
+                    <th>Total DiscountPrice</th>
                 </tr>
             </thead>
             <tbody>
@@ -26,20 +27,27 @@
                         <td>@item.Quantity</td>
                         <td>@item.UnitPrice.ToString("C")</td>
                         <td>@item.TotalPrice.ToString("C")</td>
+                        <td>@item.TotalDiscountedPrice</td>
                     </tr>
                 }
             </tbody>
         </table>
+
+
+        <div>
+            @if (Model.RetainCartItems != null && Model.RetainCartItems.Any())
+            {
+                <p>Total Discount Price : @Model.RetainCartItems.Sum(item => item.TotalDiscountedPrice ?? 0)</p>
+                <p>Total Discount Price : @Model.RetainCartItems.Sum(item => item.DiscountAmount ?? 0)</p>
+            }
+        </div>
+        <div>
+            
+        </div>
+
     }
     else
     {
         <p>No items found for this shipment.</p>
     }
-</div>
-
-<div class="container-fluid sample-2">
-    <div class="w-100 min-vh-100 h-auto ">
-
-    </div>
-
 </div>

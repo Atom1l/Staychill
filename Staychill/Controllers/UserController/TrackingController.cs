@@ -1,11 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Staychill.Data;
+using Staychill.Models.BankModel;
 using Staychill.Models.ProductModel;
 using Staychill.Models.ProductModel.TrackingModel;
 using Staychill.ViewModel;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Staychill.Controllers.UserController
 {
@@ -41,7 +44,10 @@ namespace Staychill.Controllers.UserController
                         ProductId = item.ProductId,
                         Quantity = item.Quantity,
                         UnitPrice = item.UnitPrice,
-                    }).ToList()
+                        DiscountAmount = item.DiscountAmount,
+                        TotalDiscountedPrice = item.TotalDiscountedPrice,
+                    }).ToList(),
+                    
             };
 
             // Return the view with the "viewModel" //
@@ -58,13 +64,26 @@ namespace Staychill.Controllers.UserController
 
         // ========== MERGE CART ITEMS TO TRACKINGDB ========== //
         [HttpPost]
-        public IActionResult CreateShipment(int[] cartIds, int[] quantities, float[] unitPrices) // List bc 1 Cart can contain many products //
+        public async Task<IActionResult> CreateShipment(int[] cartIds, int[] quantities, float[] unitPrices, float discountAmount, float discountPrice, CartViewModel cartViewModel
+            ,string SelectedPaymethod, string creditcardType, string creditcardName, string creditcardNumber, string creditcardExp , string creditcardCvv
+            ,string bankAcc, string bankNumber, IFormFile uploadedPic, QRData qrDB) // Expecting discountedPrices as an array
         {
             // Check if any items are selected //
             if (cartIds == null || cartIds.Length == 0)
             {
                 return BadRequest("No items selected.");
             }
+            if (cartViewModel == null) 
+            {
+                return BadRequest("paymentViewModel is null");
+            }
+
+            // Validate SelectedPaymentMethod
+            if (string.IsNullOrEmpty(SelectedPaymethod))
+            {
+                return BadRequest("Selected payment method is required.");
+            }
+
 
             // Create a new RetainCarts variable to store RetainCartItems
             var retainCart = new RetainCarts
@@ -75,10 +94,12 @@ namespace Staychill.Controllers.UserController
             // Generate shipment code | 8 digit random between A-Z,0-9 //
             string shipmentCode = Tracking.GenerateShipmentCode();
 
+
+
             // Process each cart item using the provided parameters //
             for (int i = 0; i < cartIds.Length; i++)
             {
-                var cartId = cartIds[i]; // Sort in Array type due to many products per Cart //
+                var cartId = cartIds[i];
 
                 // Retrieve the cart item based on cartId //
                 var cartItem = _db.CartDB
@@ -89,7 +110,7 @@ namespace Staychill.Controllers.UserController
                 // Check if the cartItem exists //
                 if (cartItem == null)
                 {
-                    return NotFound($"Cart with ID {cartId} not found."); // Show the Information that CartId is not found // 
+                    return NotFound($"Cart with ID {cartId} not found.");
                 }
 
                 // Create a RetainCartItem using the quantities and prices provided //
@@ -98,46 +119,93 @@ namespace Staychill.Controllers.UserController
                     ProductId = cartItem.CartItems.FirstOrDefault()?.ProductId ?? 0,
                     Quantity = quantities[i],
                     UnitPrice = unitPrices[i],
+
+                    DiscountAmount = discountAmount,
+                    TotalDiscountedPrice = discountPrice, // Use the corresponding discounted price for each item
+
                 };
 
                 // Add the retain cart item to the RetainCarts instance //
                 retainCart.RetainCartItems.Add(retainCartItem);
 
-                // After Added to RetainCart remove the cartItem to clear the Cart //
+                // After added to RetainCart, remove the cartItem to clear the Cart //
                 _db.CartDB.Remove(cartItem);
             }
 
             // Save RetainCart to the database //
             _db.RetaincartsDB.Add(retainCart);
             _db.SaveChanges();
-
+       
             // Assign ReCartId to each RetainCartItem //
             foreach (var item in retainCart.RetainCartItems)
             {
-                // For each Item in RetainCartItems will be assign RetainCartId attribute as same as retaubCart.ReCartId //
                 item.RetainCartId = retainCart.ReCartId;
             }
 
             // Save the updated RetainCartItems //
             _db.SaveChanges();
 
+            // Save UploadedImage as Byte[] //
+            if (uploadedPic != null && uploadedPic.Length > 0)
+            {
+                qrDB.UserUploadedData = await ConvertToBytes(uploadedPic); // ==== NoT YET ==== //
+                _db.SaveChanges();
+            }
+
+            // Create and save PaymentMethod
+            var paymentMethod = new PaymentMethod
+            {
+                PaymentmethodType = SelectedPaymethod,
+                BankTransfer = SelectedPaymethod == "Bank transfer" ? new BankTransfer
+                {
+                    BankAccount = bankAcc,
+                    BankNumber = bankNumber,
+                } : null,
+                CreditCard = SelectedPaymethod == "Credit Card" ? new CreditCard
+                {
+                    NameOnCard = creditcardName,
+                    CardNumber = creditcardNumber,
+                    ExpiredDate = creditcardExp,
+                    CVV = creditcardCvv,
+                } : null,
+                QRData = SelectedPaymethod == "Prompt Pay" ? new QRData
+                {
+                    UserUploadedData = qrDB.UserUploadedData,
+                } : null
+            };
+
+            // Save PaymentMethod to the database
+            await _db.PaymentDB.AddAsync(paymentMethod);
+            await _db.SaveChangesAsync();
+
             // Create tracking //
             var tracking = new Tracking
             {
                 ShipmentCode = shipmentCode,
                 Status = "Pending",
-                RetainCarts = new List<RetainCarts> { retainCart } // Creat a new RetainCarts in Tracking | value to be the same as the value of "retainCart" //
+                RetainCarts = new List<RetainCarts> { retainCart },
+                PaymentMethod = paymentMethod,
             };
 
             // Save tracking //
             _db.TrackingDB.Add(tracking);
             _db.SaveChanges();
 
-            // Redirect to TrackingResult with parameter of shipmentCode that we just generate in this Process //
-            return RedirectToAction("TrackingResult", new {shipmentCode});
+            // Redirect to TrackingResult with parameter of shipmentCode that we just generated in this process //
+            return RedirectToAction("TrackingResult", new { shipmentCode });
         }
+
         // ========== MERGE CART ITEMS TO TRACKINGDB ========== //
 
+        private async Task<byte[]> ConvertToBytes(IFormFile file)
+        {
+
+            using (var memoryStream = new MemoryStream())
+            {
+                await file.CopyToAsync(memoryStream);
+                return memoryStream.ToArray();
+            }
+        }
 
 
 

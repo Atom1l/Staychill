@@ -1,0 +1,122 @@
+﻿@model Staychill.ViewModel.CartViewModel
+
+
+<div class="container-fluid">
+    <form asp-action="CreateShipment" asp-controller="Tracking" method="post">
+        <div class="row border">
+            <h1>Payment Page</h1>
+                <!-- LEFT COLUMN -->
+                <div class="left-column col-12 col-sm-8 p-2 border">
+                    <h3>Select Payment</h3>
+                    <div><!-- Select PayMethod -->
+                        <button type="button" onclick="setPaymethod('Credit Card')" class="me-2 p-2">Credit Card</button>
+                        <button type="button" onclick="setPaymethod('Bank transfer')" class="me-2 p-2">Bank transfer</button>
+                        <button type="button" onclick="setPaymethod('Prompt Pay')" class="me-2 p-2">Prompt Pay</button>
+                    </div>
+                    <input type="hidden" name="SelectedPaymethod" id="SelectedPaymethod" />
+
+                    <!-- CreditCard Method -->
+                    <div class="" id="creditcard_detail">
+                    <select name="selectedCardtype" id="cardTypeSelect" onchange="updateCreditCardType()">
+                            <optgroup>
+                                <option>-None-</option>
+                                <option>VISA</option>
+                                <option>MasterCard</option>
+                                <option>TrueMoney</option>
+                            </optgroup>
+                        </select>
+                        <input type="hidden" name="creditcardType" id="SelectedCardType" />
+
+                        <div> <!-- Name on credit card -->
+                            <label for="creditcardName">Name on credit card</label>
+                            <input type="text" name="creditcardName" value="" placeholder="Name on credit card" />
+                        </div>
+
+                        <div> <!-- Name on credit card -->
+                            <label for="creditcardNumber">Name on credit card</label>
+                            <input type="text" name="creditcardNumber" value="" placeholder="Card Number" />
+                        </div>
+                        <div> <!-- Name on credit card -->
+                            <label for="creditcardExp">Name on credit card</label>
+                            <input type="text" name="creditcardExp" value="" placeholder="Expired Date" />
+                        </div>
+
+                        <div> <!-- Name on credit card -->
+                            <label for="creditcardCvv">Name on credit card</label>
+                            <input type="text" name="creditcardCvv" value="" placeholder="CVV" />
+                        </div>
+                    </div>
+
+                    <!-- BankTransfer Method -->
+                    <div class="" id="banktransfer_detail" style="display:none">
+                        <select name="bankaccselect" id="bankaccselect" onchange="updateBankacc()">
+                            <optgroup>
+                                <option>-None-</option>
+                                @foreach(var account in Model.PaymentViewModel.BankTransfer?.Accounts ?? null!){
+                                    <option value="@account.BankName">@account.BankName</option>
+                                }
+                            </optgroup>
+                        </select>
+                        <input type="hidden" name="bankAcc" id="SelectedBankAcc" />
+                        <input type="type" name="bankNumber" value="" placeholder="Bank account number" />
+                    </div>
+
+                    <!-- QR Method -->
+                    <div class="" id="promptpay_detail" style="display:none">
+                        <div>
+                        <img src="/pic/StayChill logo.png" alt="StaychillQR" width="100px" height="100px" />
+                        </div>
+                         <div>
+                            <label for="uploadedPic">Evidence</label>
+                            <input type="file" name="uploadedPic" accept="image/jpeg,png"/> 
+                            <input type="hidden" name="uploadedPicByte"/>
+                         </div>   
+                    </div>
+                
+                </div>
+
+                <!-- RIGHT COLUMN -->
+                <div class="right-column col-12 col-sm-4 p-2 border">
+                    <h3 class="mt-3">Cart Details</h3>
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Total Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var cart in Model.CartItemDetails)
+                            {
+                                foreach (var item in cart.CartItems)
+                                {
+                                    <tr>
+                                        <td>@item.Product.ProductName</td>
+                                        <td>@item.TotalPrice</td>
+                                    </tr>
+
+                                    <!-- Hidden inputs for each cart item -->
+                                    <input type="hidden" name="cartIds" value="@cart.CartId" />
+                                    <input type="hidden" name="quantities" value="@item.Quantity" />
+                                    <input type="hidden" name="unitPrices" value="@item.UnitPrice" />
+                                }
+
+                            }
+                        </tbody>
+                    </table>
+
+                    <h3>Order Summary</h3>
+                    <p>Total Discount: @Model.TotalDiscountAmount ฿</p>
+                    <p>Total Price after Discount: @Model.DiscountedTotal ฿</p>
+
+                    <input type="hidden" name="discountAmount" value="@Model.TotalDiscountAmount" readonly />
+                    <input type="hidden" name="discountPrice" value="@(Model.DiscountedTotal > 0 ? Model.DiscountedTotal : Model.TotalAmount)" readonly />
+
+                    <button type="submit" class="btn btn-primary mt-2">Pay for All Items</button>
+
+                </div>
+        </div>
+    </form>
+</div>
+
+<script src="/js/PaymentIndex.js"></script>

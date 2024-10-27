@@ -39,7 +39,11 @@ namespace Staychill.Models.ProductModel
         [Required]
         public float UnitPrice { get; set; } // Unit price of the product
 
-        public float TotalPrice => UnitPrice * Quantity; // Calculated total price
+        public float TotalPrice { get; set; } // Calculated total price
+
+        public float DiscountAmount { get; set; }
+
+        public float TotalDiscountedPrice { get; set; }
 
         public Product Product { get; set; } = null!; // Navigation property to Product
 

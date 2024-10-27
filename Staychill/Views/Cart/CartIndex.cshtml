@@ -1,82 +1,103 @@
 ﻿@model Staychill.ViewModel.CartViewModel
 
-<div class="container-fluid border">
-    <h1 class="mt-5">Shopping Cart</h1>
 
-    <table class="table justify-content-center align-items-center align-content-center">
-        <thead>
-            <tr>
-                <th>Product Name</th>
-                <th>Quantity</th>
-                <th>Unit Price</th>
-                <th>Discount</th>
-                <th>Total Price</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var cart in Model.CartItemDetails)
-            {
-                foreach (var item in cart.CartItems)
-                {
+<div class="container-fluid">
+    
+    <div class="row border">
+        <h1 class="mt-5 col-12 text-start">Your Cart</h1>
+        <div class="left-column col-12 col-sm-6 p-2">
+            <table class="table justify-content-center align-items-center align-content-center">
+                <thead>
                     <tr>
-                        <td>@Html.DisplayFor(model => item.Product.ProductName)</td>
-                        <td>@Html.DisplayFor(model => item.Quantity)</td>
-                        <td>@Html.DisplayFor(model => item.UnitPrice)</td>
-                        <td>@(item.Discount != null ? item.Discount.DiscountAmount.ToString() : "0.00")</td>
-                        <td>
-                            @if (Model.DiscountedTotal > 0)
-                            {
-                                <div>
-                                    <strong>@Model.DiscountedTotal.ToString("F2")</strong>
-                                </div>
-                            }
-                            else
-                            {
-                                @Html.DisplayFor(model => item.TotalPrice)
-                            }
-                        </td>
-                        <td>
-                            <form asp-action="CartRemove" asp-controller="Cart" method="post">
-                                <input type="hidden" name="RemovecartId" value="@cart.CartId" />
-                                <input type="hidden" name="RemoveitemId" value="@item.CartItemId" />
-                                <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to remove this item from the cart?');">Remove</button>
-                            </form>
-                        </td>
+                        <th>Picture</th>
+                        <th>Product Name</th>
+                        <th>Quantity</th>
+                        <th>Total Price</th>
+                        <th>Action</th>
                     </tr>
-                }
-            }
-        </tbody>
-    </table>
+                </thead>
+                <tbody class="align-self-center">
+                    @foreach (var cart in Model.CartItemDetails)
+                    {
+                        foreach (var item in cart.CartItems)
+                        {
+                            <tr>
+                                <td>
+                                    @if (item.Product.Images != null)
+                                    {
+                                        @if (item.Product.Images.Image1 != null)
+                                        {
+                                            <img src="@($"data:image/png;base64,{Convert.ToBase64String(item.Product.Images.Image1)}")" alt="Image 1" class="img-fluid" style="width: 100px; height: 100px;" />
+                                        }
+                                    }
+                                </td>
+                                <td>@Html.DisplayFor(model => item.Product.ProductName)</td>
+                                <td>
+                                    <div>
+                                        <form asp-action="UpdateQuantity" asp-controller="Cart" method="post" style="display: inline; border-none p-2">
+                                            <input type="hidden" name="productId" value="@item.Product.Id" />
+                                            <input type="hidden" name="action" value="decrease" />
+                                            <button type="submit">-</button>
+                                        </form>
 
-    <div>
-        <strong>Total Amount: @Model.TotalAmount</strong>
-    </div>
+                                        <input type="text" value="@item.Quantity" readonly style="width: 50px; text-align: center;" />
 
-    <div>
-        <h5>Apply Discount Code:</h5>
-        <form asp-action="ApplyDiscount" method="post">
-            <input type="text" asp-for="DiscountCode" placeholder="Enter discount code" />
-            <button type="submit">Apply Discount</button>
-        </form>
-    </div>
-
-    <!-- Shipment Form -->
-    <form asp-action="CreateShipment" asp-controller="Tracking" method="post">
-
-        @foreach (var cart in Model.CartItemDetails)
-        {
-            foreach (var item in cart.CartItems)
+                                        <form asp-action="UpdateQuantity" asp-controller="Cart" method="post" style="display: inline; border-none p-2">
+                                            <input type="hidden" name="productId" value="@item.Product.Id" />
+                                            <input type="hidden" name="action" value="increase" />
+                                            <button type="submit">+</button>
+                                        </form>
+                                    </div>
+                                </td>
+                                <td>@Html.DisplayFor(model => item.TotalPrice)</td>
+                                <td>
+                                    <form asp-action="CartRemove" asp-controller="Cart" method="post">
+                                        <input type="hidden" name="RemovecartId" value="@cart.CartId" />
+                                        <input type="hidden" name="RemoveitemId" value="@item.CartItemId" />
+                                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to remove this item from the cart?');">Remove</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+        <div class="right-column col-12 col-sm-6 p-2">
+            <div>
+                <strong>Total Amount: @Model.TotalAmount</strong>
+            </div>
+            @if (Model.DiscountedTotal > 0)
             {
-                <input type="hidden" name="cartIds" value="@cart.CartId" />
-                <input type="hidden" name="quantities" value="@item.Quantity" />
-                <input type="hidden" name="unitPrices" value="@item.UnitPrice" />
+                <div>
+                    <strong>Total after Discount: @Model.DiscountedTotal</strong>
+                </div>
             }
-        }
 
-        <!-- Additional shipment details fields here -->
+            <div>
+                <h5>Apply Discount Code:</h5>
+                <form asp-action="ApplyDiscount" method="post">
+                    <input type="text" asp-for="DiscountCode" placeholder="Enter discount code" id="Code" />
+                    <button type="submit">Apply Discount</button>
+                </form>
+            </div>
 
-        <button type="submit" class="btn btn-primary mt-2">Pay for All Items</button>
-    </form>
-
-
+            <!-- Check if there are items in the cart -->
+            @if (Model.CartItemDetails.Any(cart => cart.CartItems.Any()))
+            {
+                <!-- Go To Payment -->
+                <form asp-action="PaymentIndex" asp-controller="Payment">
+                    <input type="hidden" name="discountAmount" value="@Model.TotalDiscountAmount" readonly />
+                    <input type="hidden" name="discountPrice" value="@(Model.DiscountedTotal > 0 ? Model.DiscountedTotal : Model.TotalAmount)" readonly />
+                    <button type="submit" class="btn btn-primary mt-2">Make a Payment</button>
+                </form>
+            }
+            else
+            {
+                <div class="alert alert-warning mt-2">
+                    Your cart is empty. Please add items to your cart before proceeding to payment.
+                </div>
+            }
+        </div>
+    </div>
 </div>
