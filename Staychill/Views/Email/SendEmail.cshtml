@@ -1,0 +1,20 @@
+﻿@model Staychill.Models.ProductModel.TrackingModel.Tracking;
+@{
+    ViewBag.Title = "SendEmail";
+}
+
+<h2>Sending Email</h2>
+
+@using (Html.BeginForm())
+{
+    <div class="input-group">
+        <input type="text" name="usermail" class="form-control" />
+        <div class="input-group-btn">
+            <button type="submit" class="btn btn-success">
+                Submit
+            </button>
+        </div>
+    </div>
+}
+
+<hr />

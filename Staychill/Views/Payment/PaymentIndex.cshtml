@@ -2,7 +2,7 @@
 
 
 <div class="container-fluid">
-    <form asp-action="CreateShipment" asp-controller="Tracking" method="post">
+    <form asp-action="CreateShipment" asp-controller="Tracking" method="post" enctype="multipart/form-data">
         <div class="row border">
             <h1>Payment Page</h1>
                 <!-- LEFT COLUMN -->
@@ -13,11 +13,11 @@
                         <button type="button" onclick="setPaymethod('Bank transfer')" class="me-2 p-2">Bank transfer</button>
                         <button type="button" onclick="setPaymethod('Prompt Pay')" class="me-2 p-2">Prompt Pay</button>
                     </div>
-                    <input type="hidden" name="SelectedPaymethod" id="SelectedPaymethod" />
+                    <input type="hidden" name="SelectedPaymethod" id="SelectedPaymethod" required />
 
                     <!-- CreditCard Method -->
                     <div class="" id="creditcard_detail">
-                    <select name="selectedCardtype" id="cardTypeSelect" onchange="updateCreditCardType()">
+                        <select name="selectedCardtype" id="cardTypeSelect" onchange="updateCreditCardType()">
                             <optgroup>
                                 <option>-None-</option>
                                 <option>VISA</option>
@@ -25,25 +25,26 @@
                                 <option>TrueMoney</option>
                             </optgroup>
                         </select>
-                        <input type="hidden" name="creditcardType" id="SelectedCardType" />
+                        <input type="hidden" name="creditcardType" id="SelectedCardType" required />
 
                         <div> <!-- Name on credit card -->
                             <label for="creditcardName">Name on credit card</label>
-                            <input type="text" name="creditcardName" value="" placeholder="Name on credit card" />
+                            <input type="text" name="creditcardName" value="" placeholder="Name on credit card" required />
                         </div>
 
-                        <div> <!-- Name on credit card -->
-                            <label for="creditcardNumber">Name on credit card</label>
-                            <input type="text" name="creditcardNumber" value="" placeholder="Card Number" />
-                        </div>
-                        <div> <!-- Name on credit card -->
-                            <label for="creditcardExp">Name on credit card</label>
-                            <input type="text" name="creditcardExp" value="" placeholder="Expired Date" />
+                        <div> <!-- Card Number -->
+                            <label for="creditcardNumber">Card Number</label>
+                            <input type="text" name="creditcardNumber" id="creditcardNumber" value="" placeholder="Card Number" min="20" maxlength="20" required/> <!-- Need Adjustment (JS) -->
                         </div>
 
-                        <div> <!-- Name on credit card -->
-                            <label for="creditcardCvv">Name on credit card</label>
-                            <input type="text" name="creditcardCvv" value="" placeholder="CVV" />
+                        <div> <!-- Expired Date -->
+                            <label for="creditcardExp">Expired Date</label>
+                            <input type="text" name="creditcardExp" id="creditcardExp" value="" placeholder="Expired Date" min="5" maxlength="5" required/> <!-- Need Adjustment (JS) -->
+                        </div>
+
+                        <div> <!-- CVV -->
+                            <label for="creditcardCvv">CVV</label>
+                            <input type="text" name="creditcardCvv" value="" placeholder="CVV" min="3" maxlength="3" required />
                         </div>
                     </div>
 
@@ -57,8 +58,8 @@
                                 }
                             </optgroup>
                         </select>
-                        <input type="hidden" name="bankAcc" id="SelectedBankAcc" />
-                        <input type="type" name="bankNumber" value="" placeholder="Bank account number" />
+                        <input type="hidden" name="bankAcc" id="SelectedBankAcc" required/>
+                        <input type="type" name="bankNumber" id="bankNumber" value="" placeholder="Bank account number" min="13" maxlength="13" required /> <!-- Need Adjustment (JS) -->
                     </div>
 
                     <!-- QR Method -->
@@ -68,11 +69,9 @@
                         </div>
                          <div>
                             <label for="uploadedPic">Evidence</label>
-                            <input type="file" name="uploadedPic" accept="image/jpeg,png"/> 
-                            <input type="hidden" name="uploadedPicByte"/>
+                            <input type="file" name="uploadedPic" id="uploadedPic"  accept="image/jpeg,image/png" required/> 
                          </div>   
-                    </div>
-                
+                    </div>               
                 </div>
 
                 <!-- RIGHT COLUMN -->
@@ -113,7 +112,10 @@
                     <input type="hidden" name="discountPrice" value="@(Model.DiscountedTotal > 0 ? Model.DiscountedTotal : Model.TotalAmount)" readonly />
 
                     <button type="submit" class="btn btn-primary mt-2">Pay for All Items</button>
-
+                    <div>
+                        <p>Receipt sent to : @Model.UserEmail</p>
+                    </div>
+                    <input type="" name="usermail" value="@Model.UserEmail" />
                 </div>
         </div>
     </form>

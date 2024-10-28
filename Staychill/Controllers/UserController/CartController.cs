@@ -89,73 +89,73 @@ namespace Staychill.Controllers.UserController
         }
         // ========== DISPLAY ========== //
 
+        // ====================================================================================================================== //
 
         // ========== APPLYDISCOUNT ========== //
         [HttpPost]
-        public IActionResult ApplyDiscount(CartViewModel model)
+        public IActionResult ApplyDiscount(CartViewModel model) // Click the apply discount to preceed this action //
         {
             {
 
-                var discount = _db.DiscountDB.FirstOrDefault(d => d.DiscountCode == model.DiscountCode);
+                var discount = _db.DiscountDB.FirstOrDefault(d => d.DiscountCode == model.DiscountCode); // Retrieve the discountCode data //
 
                 var cartitems = _db.CartDB.Include(c => c.CartItems).ThenInclude(c => c.Product)
-                                          .Include(c => c.CartItems).ThenInclude(c => c.Product.Images).ToList();
+                                          .Include(c => c.CartItems).ThenInclude(c => c.Product.Images).ToList(); // Retrieve the CartDB data //
 
-                model.TotalAmount = cartitems.SelectMany(c => c.CartItems).Sum(item => item.TotalPrice);
+                model.TotalAmount = cartitems.SelectMany(c => c.CartItems).Sum(item => item.TotalPrice); // Calculate the total price of the product(s) //
 
-                if (discount != null)
+                if (discount != null) // If Discount code is exist //
                 {
-                    model.DiscountAmount = discount.DiscountAmount;
-                    model.TotalDiscountAmount = model.CalculatedDiscountAmount;
-                    model.DiscountedTotal = model.TotalAmount - model.CalculatedDiscountAmount;
+                    model.DiscountAmount = discount.DiscountAmount; // CartViewModel.DiscountAmount = discount(DiscountDB).DiscountAmount to receive the amount of discount //
+                    model.TotalDiscountAmount = model.CalculatedDiscountAmount; // Method to calculate the discount amount with total price but not the final result yet //
+                    model.DiscountedTotal = model.TotalAmount - model.CalculatedDiscountAmount; // Final Total Price //
                 }
-                else
+                else // If Discount code is not exist //
                 {
-                    model.DiscountedTotal = model.TotalAmount; // No discount applied
+                    model.DiscountedTotal = model.TotalAmount; // No discount applied //
                 }
 
                 model.CartItemDetails = cartitems;
 
 
-                return View("CartIndex", model);
+                return View("CartIndex", model); // Return to CartIndex with new CartViewModel that got update Discount data //
             }
 
         }
         // ========== APPLYDISCOUNT ========== //
 
-
+        // ====================================================================================================================== //
 
         // ========== QUANTITIES BUTTON ========== //
         [HttpPost]
-        public IActionResult UpdateQuantity(int productId, string action)
+        public IActionResult UpdateQuantity(int productId, string action) // To make user can edit quantities of the product at CartIndex //
         {
-            var cart = _db.CartDB.Include(c => c.CartItems).ThenInclude(c => c.Product).FirstOrDefault();
-            var item = cart.CartItems.FirstOrDefault(c => c.ProductId == productId);
-            if (item != null)
+            var cart = _db.CartDB.Include(c => c.CartItems).ThenInclude(c => c.Product).FirstOrDefault(); // Retrieve the Cartitem data //
+            var item = cart.CartItems.FirstOrDefault(c => c.ProductId == productId); // Find if the Id parameter that we send through is matching with CartItem Id //
+            if (item != null) // If item not null //
             {
-                if (action == "increase" && item.Quantity <= item.Product.Instock)
+                if (action == "increase" && item.Quantity <= item.Product.Instock) // button with action "increase" and the amount of quantity still not more that inStock //
                 {
                     item.Quantity ++;
                 }
-                else if (action == "decrease" && item.Quantity > 1)
+                else if (action == "decrease" && item.Quantity > 1) // button with action "decrease" and the amount of quantity still not less than 1 //
                 {
                     item.Quantity --;
                 }
                 _db.SaveChanges();
             }
 
-            return RedirectToAction("CartIndex");
+            return RedirectToAction("CartIndex"); // Return to CartIndex | No need to add beside parameter because this is directly edit through database not viewModel //
         }
-
         // ========== QUANTITIES BUTTON ========== //
 
-
+        // ====================================================================================================================== //
 
         // ========== REMOVEFROMCART ========== //
         [HttpPost]
         public IActionResult CartRemove(int RemovecartId, int[] RemoveitemId)
         {
-            // Find the cart using the CartId
+            // Find the cart using the CartId and check if Id is matching //
             var cart = _db.CartDB
                 .Include(c => c.CartItems)
                 .ThenInclude(c => c.Product)
@@ -166,10 +166,10 @@ namespace Staychill.Controllers.UserController
                 // Remove each CartItem that matches the provided CartItemIds
                 foreach (var itemId in RemoveitemId)
                 {
-                    var itemToRemove = cart.CartItems.FirstOrDefault(ci => ci.CartItemId == itemId);
+                    var itemToRemove = cart.CartItems.FirstOrDefault(ci => ci.CartItemId == itemId); // Check the ItemId to see the Item detail | ItemId is not a CartId //
                     if (itemToRemove != null)
                     {
-                        itemToRemove.Product.Instock += itemToRemove.Quantity; // Add back the stock by a quantity value //
+                        itemToRemove.Product.Instock += itemToRemove.Quantity; // Add the amount of quantity back to stock //
                         cart.CartItems.Remove(itemToRemove); // Remove the item from the cart //
                     }
                 }
