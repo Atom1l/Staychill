@@ -36,6 +36,7 @@ namespace Staychill.Data
         public DbSet<Staychill.Models.BankModel.BankTransfer> BankTransferDB { get; set; }
         public DbSet<Staychill.Models.BankModel.QRData> QRDataDB { get; set; }
         public DbSet<Staychill.Models.BankModel.CreditCard> CreditCardsDB { get; set; }
+        public DbSet<Staychill.Models.BankModel.PaymentMethod> PaymentDB { get; set; }
 
 
 
@@ -82,6 +83,27 @@ namespace Staychill.Data
                 .WithOne(rci => rci.RetainCart) // Assuming RetainCartItem has a property named RetainCart
                 .HasForeignKey(rci => rci.RetainCartId) // Foreign key in RetainCartItem
                 .OnDelete(DeleteBehavior.Restrict); // Optional: specify delete behavior
+
+            // One-to-one relationship between PaymentMethod and CreditCard
+            modelBuilder.Entity<PaymentMethod>()
+                .HasOne(p => p.CreditCard)
+                .WithOne(c => c.PaymentMethod)
+                .HasForeignKey<CreditCard>(c => c.PaymentMethodId)
+                .OnDelete(DeleteBehavior.Cascade); // Configure deletion behavior
+
+            // One-to-one relationship between PaymentMethod and QRData
+            modelBuilder.Entity<PaymentMethod>()
+                .HasOne(p => p.QRData)
+                .WithOne(q => q.PaymentMethod)
+                .HasForeignKey<QRData>(q => q.PaymentMethodId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // One-to-one relationship between PaymentMethod and BankTransfer
+            modelBuilder.Entity<PaymentMethod>()
+                .HasOne(p => p.BankTransfer)
+                .WithOne(b => b.PaymentMethod)
+                .HasForeignKey<BankTransfer>(b => b.PaymentMethodId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             // ShipmentViewModel as a keyless entity
             modelBuilder.Entity<ShipmentViewModel>(entity =>

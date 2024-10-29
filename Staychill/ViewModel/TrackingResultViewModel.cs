@@ -8,6 +8,7 @@ namespace Staychill.ViewModel
         public string? ShipmentCode { get; set; }
         public string? Status { get; set; }
         public List<RetainCartItemViewModel>? RetainCartItems { get; set; }
+
     }
 
     public class RetainCartItemViewModel
@@ -16,6 +17,9 @@ namespace Staychill.ViewModel
         public int Quantity { get; set; }
         public float UnitPrice { get; set; }
         public float TotalPrice => Quantity * UnitPrice;
+
+        public float? DiscountAmount { get; set; }
+        public float? TotalDiscountedPrice { get; set; }
     }
 
 }

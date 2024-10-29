@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Staychill.Data;
 
@@ -11,9 +12,11 @@ using Staychill.Data;
 namespace Staychill.Migrations
 {
     [DbContext(typeof(StaychillDbContext))]
-    partial class StaychillDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241025160149__AddPaymentMethodModel")]
+    partial class _AddPaymentMethodModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -55,21 +58,11 @@ namespace Staychill.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("BankAccount")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("BankNumber")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("PaymentMethodId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("PaymentMethodId")
-                        .IsUnique()
-                        .HasFilter("[PaymentMethodId] IS NOT NULL");
 
                     b.ToTable("BankTransferDB");
                 });
@@ -102,14 +95,7 @@ namespace Staychill.Migrations
                     b.Property<string>("NameOnCard")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("PaymentMethodId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("PaymentMethodId")
-                        .IsUnique()
-                        .HasFilter("[PaymentMethodId] IS NOT NULL");
 
                     b.ToTable("CreditCardsDB");
                 });
@@ -122,11 +108,22 @@ namespace Staychill.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PaymentmethodId"));
 
-                    b.Property<string>("PaymentmethodType")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int?>("BankTransferId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("CreditCardId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("QRDataId")
+                        .HasColumnType("int");
 
                     b.HasKey("PaymentmethodId");
+
+                    b.HasIndex("BankTransferId");
+
+                    b.HasIndex("CreditCardId");
+
+                    b.HasIndex("QRDataId");
 
                     b.ToTable("PaymentDB");
                 });
@@ -139,20 +136,10 @@ namespace Staychill.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("PaymentMethodId")
-                        .HasColumnType("int");
-
                     b.Property<byte[]>("QRPicData")
                         .HasColumnType("varbinary(max)");
 
-                    b.Property<byte[]>("UserUploadedData")
-                        .HasColumnType("varbinary(max)");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("PaymentMethodId")
-                        .IsUnique()
-                        .HasFilter("[PaymentMethodId] IS NOT NULL");
 
                     b.ToTable("QRDataDB");
                 });
@@ -359,9 +346,6 @@ namespace Staychill.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<int?>("PaymentmethodId")
-                        .HasColumnType("int");
-
                     b.Property<string>("ShipmentCode")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -371,8 +355,6 @@ namespace Staychill.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("PaymentmethodId");
 
                     b.ToTable("TrackingDB");
                 });
@@ -555,34 +537,25 @@ namespace Staychill.Migrations
                         .HasForeignKey("BankTransferId");
                 });
 
-            modelBuilder.Entity("Staychill.Models.BankModel.BankTransfer", b =>
+            modelBuilder.Entity("Staychill.Models.BankModel.PaymentMethod", b =>
                 {
-                    b.HasOne("Staychill.Models.BankModel.PaymentMethod", "PaymentMethod")
-                        .WithOne("BankTransfer")
-                        .HasForeignKey("Staychill.Models.BankModel.BankTransfer", "PaymentMethodId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                    b.HasOne("Staychill.Models.BankModel.BankTransfer", "BankTransfer")
+                        .WithMany()
+                        .HasForeignKey("BankTransferId");
 
-                    b.Navigation("PaymentMethod");
-                });
+                    b.HasOne("Staychill.Models.BankModel.CreditCard", "CreditCard")
+                        .WithMany()
+                        .HasForeignKey("CreditCardId");
 
-            modelBuilder.Entity("Staychill.Models.BankModel.CreditCard", b =>
-                {
-                    b.HasOne("Staychill.Models.BankModel.PaymentMethod", "PaymentMethod")
-                        .WithOne("CreditCard")
-                        .HasForeignKey("Staychill.Models.BankModel.CreditCard", "PaymentMethodId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                    b.HasOne("Staychill.Models.BankModel.QRData", "QRData")
+                        .WithMany()
+                        .HasForeignKey("QRDataId");
 
-                    b.Navigation("PaymentMethod");
-                });
+                    b.Navigation("BankTransfer");
 
-            modelBuilder.Entity("Staychill.Models.BankModel.QRData", b =>
-                {
-                    b.HasOne("Staychill.Models.BankModel.PaymentMethod", "PaymentMethod")
-                        .WithOne("QRData")
-                        .HasForeignKey("Staychill.Models.BankModel.QRData", "PaymentMethodId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                    b.Navigation("CreditCard");
 
-                    b.Navigation("PaymentMethod");
+                    b.Navigation("QRData");
                 });
 
             modelBuilder.Entity("Staychill.Models.ProductModel.CartItem", b =>
@@ -650,15 +623,6 @@ namespace Staychill.Migrations
                     b.Navigation("Tracking");
                 });
 
-            modelBuilder.Entity("Staychill.Models.ProductModel.TrackingModel.Tracking", b =>
-                {
-                    b.HasOne("Staychill.Models.BankModel.PaymentMethod", "PaymentMethod")
-                        .WithMany()
-                        .HasForeignKey("PaymentmethodId");
-
-                    b.Navigation("PaymentMethod");
-                });
-
             modelBuilder.Entity("Staychill.Models.UserModel.User", b =>
                 {
                     b.HasOne("Staychill.Models.UserModel.Address", "Address")
@@ -673,15 +637,6 @@ namespace Staychill.Migrations
             modelBuilder.Entity("Staychill.Models.BankModel.BankTransfer", b =>
                 {
                     b.Navigation("Accounts");
-                });
-
-            modelBuilder.Entity("Staychill.Models.BankModel.PaymentMethod", b =>
-                {
-                    b.Navigation("BankTransfer");
-
-                    b.Navigation("CreditCard");
-
-                    b.Navigation("QRData");
                 });
 
             modelBuilder.Entity("Staychill.Models.ProductModel.Cart", b =>

@@ -31,9 +31,9 @@
                     @Html.DisplayFor(modelItem => item.Id)
                 </td>
                 <td>
-                    @if (item.QRPicData != null && item.QRPicData.Length > 0) // Check if the image data exists
+                    @if (item.UserUploadedData != null && item.UserUploadedData.Length > 0) // Check if the image data exists
                     {
-                        var base64String = Convert.ToBase64String(item.QRPicData);
+                        var base64String = Convert.ToBase64String(item.UserUploadedData);
                         var imgSrc = $"data:image/png;base64,{base64String}"; // Adjust image format if needed
                         <img src="@imgSrc" alt="Bank Image" style="width: 200px; height: 200px;" />
                     }

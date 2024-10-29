@@ -448,7 +448,7 @@ namespace Staychill.Controllers.ZTestingControler
                     {
                         if(Image != null && Image.Length > 0) // Save the QR picture that uploaded into byte[] type of file //
                         {
-                            qrdata.QRPicData = await ConvertToBytes(Image);
+                            qrdata.UserUploadedData = await ConvertToBytes(Image);
                         }
                         _db.QRDataDB.Add(qrdata); // Save byte[] into the database //
                         await _db.SaveChangesAsync();

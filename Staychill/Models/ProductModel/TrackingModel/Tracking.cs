@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Staychill.Models.BankModel;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Staychill.Models.ProductModel.TrackingModel
@@ -23,9 +24,9 @@ namespace Staychill.Models.ProductModel.TrackingModel
             "Cancelled"
         };
 
-        public virtual ICollection<RetainCarts> RetainCarts { get; set; } = new List<RetainCarts>();
+        public virtual ICollection<RetainCarts> RetainCarts { get; set; } = new List<RetainCarts>(); // Define RetainCarts to Include //
 
-        // Create a Constructor to give a ShipmentCode value = GenerateShipmentCode() //
+        public PaymentMethod? PaymentMethod { get; set; } // Define PaymentMethod to Include //
 
 
         // Create a function for generating a random code for ShipmentCode value //
