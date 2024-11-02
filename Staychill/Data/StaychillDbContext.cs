@@ -105,6 +105,18 @@ namespace Staychill.Data
                 .HasForeignKey<BankTransfer>(b => b.PaymentMethodId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            // Ensuring that Username is unique
+            modelBuilder.Entity<User>()
+                .HasIndex(u => u.Username)
+                .IsUnique();
+
+            // User-Tracking relationship using Username as FK
+            modelBuilder.Entity<Tracking>()
+                .HasOne(t => t.User)
+                .WithMany(u => u.Trackings)
+                .HasForeignKey(t => t.UserId)
+                .OnDelete(DeleteBehavior.Cascade); // Optional: Cascade delete if User is delete
+
             // ShipmentViewModel as a keyless entity
             modelBuilder.Entity<ShipmentViewModel>(entity =>
             {
