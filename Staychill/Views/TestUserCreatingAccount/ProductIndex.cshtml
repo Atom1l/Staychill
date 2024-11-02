@@ -57,7 +57,7 @@
                 <td>
                     @Html.DisplayFor(modelItem => product.Color)
                 </td>
-                <td>
+                <td class="container-fluid">
                     @Html.DisplayFor(modelItem => product.Description)
                 </td>
                 <td>
@@ -66,25 +66,25 @@
                 <td>
                     @Html.DisplayFor(modelItem => product.Instock)
                 </td>
-                <td>
+                <td class="container-fluid">
                     @if (product.Images != null)
                     {
                         <div>
                             @if (product.Images.Image1 != null)
                             {
-                                <img src="@($"data:image/png;base64,{Convert.ToBase64String(product.Images.Image1)}")" alt="Image 1" style="width: 100px; height: 100px;" />
+                                <img src="@($"data:image/png;base64,{Convert.ToBase64String(product.Images.Image1)}")" alt="Image 1" style="width: 50px; height: 50px;"/>
                             }
                             @if (product.Images.Image2 != null)
                             {
-                                <img src="@($"data:image/png;base64,{Convert.ToBase64String(product.Images.Image2)}")" alt="Image 2" style="width: 100px; height: 100px;" />
+                                <img src="@($"data:image/png;base64,{Convert.ToBase64String(product.Images.Image2)}")" alt="Image 2" style="width: 50px; height: 50px;" />
                             }
                             @if (product.Images.Image3 != null)
                             {
-                                <img src="@($"data:image/png;base64,{Convert.ToBase64String(product.Images.Image3)}")" alt="Image 3" style="width: 100px; height: 100px;" />
+                                <img src="@($"data:image/png;base64,{Convert.ToBase64String(product.Images.Image3)}")" alt="Image 3" style="width: 50px; height: 50px;"/>
                             }
                             @if (product.Images.Image4 != null)
                             {
-                                <img src="@($"data:image/png;base64,{Convert.ToBase64String(product.Images.Image4)}")" alt="Image 4" style="width: 100px; height: 100px;" />
+                                <img src="@($"data:image/png;base64,{Convert.ToBase64String(product.Images.Image4)}")" alt="Image 4" style="width: 50px; height: 50px;"/>
                             }
                         </div>
                     }

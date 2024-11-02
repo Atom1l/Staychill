@@ -1,4 +1,5 @@
 ﻿using Staychill.Models.BankModel;
+using Staychill.Models.UserModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -8,6 +9,9 @@ namespace Staychill.Models.ProductModel.TrackingModel
     {
         [Key]
         public int Id { get; set; } // Id for Declartion //
+
+        public int? UserId { get; set; } // Foreign Key //
+        public User? User { get; set; }
 
         [Required]
         public string? ShipmentCode { get; set; } // ShipmentCode getting After Done Payment //

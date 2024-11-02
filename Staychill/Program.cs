@@ -1,7 +1,13 @@
+using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
 using Staychill.Data;
+using Staychill.Email;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Add EmailSender services //
+builder.Services.AddTransient<Staychill.Email.IEmailSender, EmailSender>();
+
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

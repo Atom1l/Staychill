@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Staychill.Models.ProductModel.TrackingModel;
 
 
 namespace Staychill.Models.UserModel
@@ -34,6 +35,8 @@ namespace Staychill.Models.UserModel
         public int AddressId { get; set; } // Foreign Key linking to Address Table //
 
         public virtual Address? Address { get; set; }  // Navigation property to Address class //
+
+        public virtual ICollection<Tracking>? Trackings { get; set; }
 
     }
 
