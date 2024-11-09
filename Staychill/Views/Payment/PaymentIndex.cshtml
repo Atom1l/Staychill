@@ -1,14 +1,15 @@
 ﻿@model Staychill.ViewModel.CartViewModel
 
 
-<div class="container-fluid">
-    <form asp-action="CreateShipment" asp-controller="Tracking" method="post" enctype="multipart/form-data">
-        <div class="row border">
-            <h1>Payment Page</h1>
+<div class="container">
+    <div class="payment-contain">
+        <form asp-action="CreateShipment" asp-controller="Tracking" method="post" enctype="multipart/form-data">
+            <div class="row mt-3">
+                <h1 class="select-payment col-12 text-center text-md-start fw-bold">Select Payment</h1>
                 <!-- LEFT COLUMN -->
-                <div class="left-column col-12 col-sm-8 p-2 border">
-                    <h3>Select Payment</h3>
-                    <div><!-- Select PayMethod -->
+                <div class="left-column col-12 col-sm-8 p-2">
+                    <div>
+                        <!-- Select PayMethod -->
                         <button type="button" onclick="setPaymethod('Credit Card')" class="me-2 p-2">Credit Card</button>
                         <button type="button" onclick="setPaymethod('Bank transfer')" class="me-2 p-2">Bank transfer</button>
                         <button type="button" onclick="setPaymethod('Prompt Pay')" class="me-2 p-2">Prompt Pay</button>
@@ -27,22 +28,26 @@
                         </select>
                         <input type="hidden" name="creditcardType" id="SelectedCardType" required />
 
-                        <div> <!-- Name on credit card -->
+                        <div>
+                            <!-- Name on credit card -->
                             <label for="creditcardName">Name on credit card</label>
                             <input type="text" name="creditcardName" value="" placeholder="Name on credit card" required />
                         </div>
 
-                        <div> <!-- Card Number -->
+                        <div>
+                            <!-- Card Number -->
                             <label for="creditcardNumber">Card Number</label>
-                            <input type="text" name="creditcardNumber" id="creditcardNumber" value="" placeholder="Card Number" min="20" maxlength="20" required/> <!-- Need Adjustment (JS) -->
+                            <input type="text" name="creditcardNumber" id="creditcardNumber" value="" placeholder="Card Number" min="20" maxlength="20" required /> <!-- Need Adjustment (JS) -->
                         </div>
 
-                        <div> <!-- Expired Date -->
+                        <div>
+                            <!-- Expired Date -->
                             <label for="creditcardExp">Expired Date</label>
-                            <input type="text" name="creditcardExp" id="creditcardExp" value="" placeholder="Expired Date" min="5" maxlength="5" required/> <!-- Need Adjustment (JS) -->
+                            <input type="text" name="creditcardExp" id="creditcardExp" value="" placeholder="Expired Date" min="5" maxlength="5" required /> <!-- Need Adjustment (JS) -->
                         </div>
 
-                        <div> <!-- CVV -->
+                        <div>
+                            <!-- CVV -->
                             <label for="creditcardCvv">CVV</label>
                             <input type="text" name="creditcardCvv" value="" placeholder="CVV" min="3" maxlength="3" required />
                         </div>
@@ -53,29 +58,30 @@
                         <select name="bankaccselect" id="bankaccselect" onchange="updateBankacc()">
                             <optgroup>
                                 <option>-None-</option>
-                                @foreach(var account in Model.PaymentViewModel.BankTransfer?.Accounts ?? null!){
+                                @foreach (var account in Model.PaymentViewModel.BankTransfer?.Accounts ?? null!)
+                                {
                                     <option value="@account.BankName">@account.BankName</option>
                                 }
                             </optgroup>
                         </select>
-                        <input type="hidden" name="bankAcc" id="SelectedBankAcc" required/>
+                        <input type="hidden" name="bankAcc" id="SelectedBankAcc" required />
                         <input type="type" name="bankNumber" id="bankNumber" value="" placeholder="Bank account number" min="13" maxlength="13" required /> <!-- Need Adjustment (JS) -->
                     </div>
 
                     <!-- QR Method -->
                     <div class="" id="promptpay_detail" style="display:none">
                         <div>
-                        <img src="/pic/StayChill logo.png" alt="StaychillQR" width="100px" height="100px" />
+                            <img src="/pic/StayChill logo.png" alt="StaychillQR" width="100px" height="100px" />
                         </div>
-                         <div>
+                        <div>
                             <label for="uploadedPic">Evidence</label>
-                            <input type="file" name="uploadedPic" id="uploadedPic"  accept="image/jpeg,image/png" required/> 
-                         </div>   
-                    </div>               
+                            <input type="file" name="uploadedPic" id="uploadedPic" accept="image/jpeg,image/png" required />
+                        </div>
+                    </div>
                 </div>
 
                 <!-- RIGHT COLUMN -->
-                <div class="right-column col-12 col-sm-4 p-2 border">
+                <div class="right-column col-12 col-sm-4 p-2">
                     <h3 class="mt-3">Cart Details</h3>
                     <table class="table">
                         <thead>
@@ -117,8 +123,9 @@
                     </div>
                     <input type="" name="usermail" value="@Model.UserEmail" />
                 </div>
-        </div>
-    </form>
+            </div>
+        </form>
+    </div>
 </div>
 
 <script src="/js/PaymentIndex.js"></script>

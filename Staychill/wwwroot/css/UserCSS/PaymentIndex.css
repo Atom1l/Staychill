@@ -1,0 +1,14 @@
+﻿* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    /*overflow-x:hidden;*/ /*This make navbar icon have overflow */
+}
+
+.payment-contain{
+    margin-top:50px;
+}
+.select-payment {
+    margin-left: 50px;
+    margin-bottom: 30px;
+}
