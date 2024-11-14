@@ -20,7 +20,7 @@ namespace Staychill.Controllers.UserController
         }
 
         // ========== DISPLAY ========== //
-        public IActionResult TrackingResult(string shipmentCode) // Display an items and it status after User fill the input in TrackingIndex or Clicked Payment //
+        public IActionResult TrackingResult(string shipmentCode= "WA45WbBt") // Display an items and it status after User fill the input in TrackingIndex or Clicked Payment //
         {
             // Retrieve the tracking entry based on the shipment code to a variable track //
             var track = _db.TrackingDB.Include(t => t.RetainCarts).ThenInclude(rc => rc.RetainCartItems).FirstOrDefault(t => t.ShipmentCode == shipmentCode);
@@ -41,10 +41,12 @@ namespace Staychill.Controllers.UserController
                     .Select(item => new RetainCartItemViewModel
                     {
                         ProductId = item.ProductId,
+                        ProductName = item.ProductName,
                         Quantity = item.Quantity,
                         UnitPrice = item.UnitPrice,
                         DiscountAmount = item.DiscountAmount,
                         TotalDiscountedPrice = item.TotalDiscountedPrice,
+                        ProductIMG = item.ProductIMG,
                     }).ToList(),
                     
             };
@@ -65,7 +67,7 @@ namespace Staychill.Controllers.UserController
         [HttpPost]
         public async Task<IActionResult> CreateShipment(int[] cartIds, int[] quantities, float[] unitPrices, float discountAmount, float discountPrice, CartViewModel cartViewModel
             ,string SelectedPaymethod, string creditcardType, string creditcardName, string creditcardNumber, string creditcardExp , string creditcardCvv
-            ,string bankAcc, string bankNumber, IFormFile uploadedPic) // the reasoned to use a lot of these parameters is because I can declare CartViewModel and transfer the data to this action //
+            ,string bankAcc, string bankNumber, IFormFile uploadedPic, byte[] productImgbytes, string[] productName) // the reasoned to use a lot of these parameters is because I can declare CartViewModel and transfer the data to this action //
         {
             // Check if any items are selected //
             if (cartIds == null || cartIds.Length == 0)
@@ -116,9 +118,10 @@ namespace Staychill.Controllers.UserController
                 var retainCartItem = new RetainCartItem
                 {
                     ProductId = cartItem.CartItems.FirstOrDefault()?.ProductId ?? 0,
+                    ProductName = productName[i],
                     Quantity = quantities[i],
                     UnitPrice = unitPrices[i],
-
+                    ProductIMG = productImgbytes,
                     DiscountAmount = discountAmount, // discount amount for total price of the products not each item discount amount //
                     TotalDiscountedPrice = discountPrice, // Sum of the total price of products subtract by the discountamount //
 

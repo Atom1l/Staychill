@@ -13,7 +13,9 @@ namespace Staychill.ViewModel
 
     public class RetainCartItemViewModel
     {
+        public byte[]? ProductIMG { get; set; }
         public int ProductId { get; set; }
+        public string? ProductName { get; set; }
         public int Quantity { get; set; }
         public float UnitPrice { get; set; }
         public float TotalPrice => Quantity * UnitPrice;
@@ -23,6 +25,3 @@ namespace Staychill.ViewModel
     }
 
 }
-
-
-

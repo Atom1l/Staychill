@@ -6,13 +6,13 @@
 
         <h1 class="your-cart col-12 text-center text-md-start fw-bold">Your Cart</h1>
 
-        <div class="container-fluid left-column col-12 col-md-7 p-2">
+        <div class="container-fluid cart-left-column col-12 col-md-7 p-2">
             <div class="d-flex flex-column justify-content-start align-items-center align-content-center">
                 @foreach (var cart in Model.CartItemDetails)
                 {
                     foreach (var item in cart.CartItems)
                     {
-                        <div class="cartitem-cartIndex container-fluid align-middle d-flex flex-column flex-sm-row justify-content-start align-items-center align-content-center mb-3 p-2 p-md-4 text-center col-12">
+                        <div class="cartitem-cartIndex container-fluid align-middle d-flex flex-column flex-sm-row justify-content-center justify-content-md-start align-items-center align-content-center mb-3 p-2 p-md-4 text-center col-12">
                             <div class="text-end text-md-start col-12 col-sm-1 mb-1 mb-md-0">
                                 <form asp-action="CartRemove" asp-controller="Cart" method="post">
                                     <input type="hidden" name="RemovecartId" value="@cart.CartId" />
@@ -56,7 +56,7 @@
             </div>
         </div>
         
-        <div class="container-fluid right-column col-12 col-md-5 p-2">
+        <div class="container-fluid cart-right-column col-12 col-md-5 p-2">
 
             <div class="mb-4 w-100">
                 <div class="fs-4 mt-1">Enter your code</div>
@@ -73,19 +73,19 @@
                 {
                     foreach (var item in cart.CartItems)
                     {
-                        <div class="cartlist d-flex flex-row justify-content-between align-items-center align-content-center pe-2 ps-2">
+                        <div class="cart-cartlist d-flex flex-row justify-content-between align-items-center align-content-center pe-2 ps-2">
                             <span class="text-start fw-bold">@Html.DisplayFor(model => item.Product.ProductName)<span class="fw-normal"> | @Html.DisplayFor(model => item.Product.Color)</span></span>
                             <span class="text-end"><div>@item.TotalPrice.ToString("N2") ฿</div></span>
                         </div>
                     }
                 }
-                <div class="coupon-discount d-flex flex-row justify-content-between align-items-center align-content-center pe-2 ps-2">
+                <div class="cart-coupon-discount d-flex flex-row justify-content-between align-items-center align-content-center pe-2 ps-2">
                     <span class="text-start fw-bold">Coupon discount</span>
                     <td class="text-end">
                         @if (Model.DiscountedTotal > 0)
                         {
                             <div>
-                                <div>@Model.TotalDiscountAmount.ToString("N2") ฿</div>
+                                <div class="">@Model.TotalDiscountAmount.ToString("N2") ฿</div>
                             </div>
                         }
                         else

@@ -2,13 +2,347 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    /*overflow-x:hidden;*/ /*This make navbar icon have overflow */
 }
 
 .payment-contain{
     margin-top:50px;
 }
 .select-payment {
-    margin-left: 50px;
+    /*margin-left: 50px;*/
     margin-bottom: 30px;
+}
+.payment-left-column, .payment-right-column {
+    padding: 1rem 1rem 1rem 1rem;
+}
+
+.payment-left-column {
+    padding-right: 2% !important;
+}
+.payment-right-column {
+    border-left: solid 1px black;
+    padding-left: 2.5% !important;
+}
+.payment-select{
+}
+.payment-select button{
+    flex: 0 1 30%;
+    border-radius : 8px !important;
+    border: solid 1px #8F8F8F;
+    background: white;
+    padding: 20px 30px 20px 30px !important;
+    
+}
+.payment-button-color {
+    background-color: #c9f0f7 !important;
+}
+.credit-card-method, .bank-method, .qr-method{
+    width:100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    align-content: center;
+}
+.card-selected-type, .card-selected-name, .card-selected-number, .card-selected-exp, .card-selected-cvv, .bank-account, .bank-number, .qrcode, .user-uploaded {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+.qrcode {
+    align-items: center;
+}
+.card-selected-type, .card-selected-name, .card-selected-number, .card-selected-exp, .card-selected-cvv, .bank-account, .bank-number, .qrcode ,.qr-method label {
+    font-weight:bold;
+}
+.qr-method input{
+    border-radius: 0px !important;
+    padding: 0 !important;
+    border:none !important;
+}
+.payment-left-column input {
+    padding: 10px;
+    border-radius: 10px;
+    border: solid 1px #8F8F8F;
+    outline: none;
+}
+.payment-left-column select {
+    padding: 10px;
+    border-radius: 10px;
+    border: solid 1px #8F8F8F;
+    outline:none;
+}
+.payment-detail{
+}
+
+.payment-email-detail input {
+    outline: none;
+    border: none;
+    color: #8F8F8F;
+}
+
+@media(max-width:1356px) {
+    .payment-select button{
+        font-size : 1.3rem !important;
+    }
+}
+
+@media(max-width:1253px) {
+    .payment-select button {
+        font-size: 1.1rem !important;
+    }
+}
+
+@media(max-width:1170px) {
+    .payment-select button {
+        font-size: 1.4rem !important;
+    }
+    .payment- left-column .fs-3 {
+        font-size: 1.5rem !important;
+    }
+
+    .payment-left-column .fs-4 {
+        font-size: 1.3rem !important;
+    }
+    
+    .payment-right-column .payment-email-section .payment-email-detail .fs-5{
+        font-size: 1.1rem !important;
+    }
+}
+
+@media(max-width:1098px) {
+    .payment-select button {
+        font-size: 1.3rem !important;
+    }
+}
+
+@media(max-width:1030px) {
+    .payment-left-column .fs-4 {
+        font-size: 1.15rem !important;
+    }
+}
+
+@media (max-width: 950px) {
+    .payment-left-column .fs-4 {
+        font-size: 1rem !important;
+    }
+
+    .payment-cartlist, .payment-coupon-discount {
+        font-size: 1.3rem !important;
+    }
+}
+
+@media (max-width: 940px) {
+    .payment-right-column .payment-email-section .payment-email-detail .fs-5 {
+        font-size: 1rem !important;
+    }
+}
+
+@media (max-width: 890px) {
+    .payment-right-column .payment-email-section .payment-email-detail .fs-5 {
+        font-size: 0.85rem !important;
+    }
+}
+
+@media (max-width: 860px) {
+    .payment-left-column .fs-4 {
+        font-size: 1rem !important;
+    }
+    .payment-cartlist, .payment-coupon-discount {
+        font-size: 1.15rem !important;
+    }
+}
+
+@media (max-width: 830px) {
+    .payment-select button {
+        font-size: 1rem !important;
+    }
+    .payment-cartlist, .payment-coupon-discount {
+        font-size: 1.15rem !important;
+    }
+
+}
+
+@media (max-width: 800px) {
+    .payment-left-column .fs-4 {
+        font-size: 1rem !important;
+    }
+}
+
+@media (max-width: 768px) {
+    .your-cart {
+        margin-left: 0px;
+        margin-bottom: 0px;
+    }
+
+    .cartitem-cartIndex {
+        margin-bottom: 20px !important;
+    }
+
+    .payment-right-column {
+        border: none;
+    }
+}
+
+@media (max-width: 767px) {
+    .payment-select button {
+        font-size: 1.6rem !important;
+    }
+    .payment-left-column {
+        width: 100%;
+    }
+    .payment-left-column .fs-4 {
+        font-size: 1rem !important;
+    }
+    .cartitem-cartIndex {
+        width: 100%;
+    }
+    .payment-right-column .payment-email-section .payment-email-detail .fs-5 {
+        font-size: 1.2rem !important;
+    }
+}
+
+@media (max-width: 575px) {
+    .payment-select button {
+        font-size: 1.2rem !important;
+        padding: 15px 20px 15px 20px !important;
+    }
+    .payment-left-column {
+        width: 100%;
+    }
+
+    .payment-left-column .fs-4 {
+        font-size: 1.3rem !important;
+    }
+    .payment-right-column .payment-email-section .payment-email-detail .fs-5 {
+        font-size: 1rem !important;
+    }
+}
+
+@media (max-width: 510px) {
+    .payment-select button {
+        font-size: 1rem !important;
+    }
+}
+
+@media (max-width: 415px) {
+    .payment-select button {
+        font-size: 0.95rem !important;
+        padding: 10px 15px 10px 15px !important;
+    }
+    .payment-right-column .payment-email-section .payment-email-detail .fs-5 {
+        font-size: 0.8rem !important;
+    }
+}
+
+@media (max-width: 375px) {
+    .payment-select button {
+        font-size: 0.9rem !important;
+        padding: 10px 15px 10px 15px !important;
+    }
+}
+
+@media (max-width: 370px) {
+    .payment-left-column {
+        width: 100%;
+    }
+    .payment-left-column div {
+        width: 100%;
+    }
+    .payment-left-column .fs-4 {
+        font-size: 1rem !important;
+    }
+    .payment-left-column .fs-5 {
+        font-size: 0.9rem !important;
+    }
+    .payment-select button {
+        width:100%;
+        font-size: 0.8rem !important;
+        padding: 5px 10px 5px 10px !important;
+        margin-bottom:5px;
+    }
+    .credit-card-method .row{
+        width:100%;
+        margin-left:1px;
+    }
+    .bank-method .row {
+        width: 100%;
+        margin-left: 1px;
+    }
+    .qr-method .row {
+        width: 100%;
+        margin-left: 1px;
+    }
+
+    .payment-right-column .fs-4 {
+        font-size: 1.1rem !important;
+    }
+
+    .payment-right-column .fs-5 {
+        font-size: 0.95rem !important;
+        white-space: nowrap;
+    }
+
+    .payment-cartlist, .payment-coupon-discount {
+        font-size: 0.9rem !important;
+    }
+
+    .payment-right-column .payment-email-section .payment-email-detail .fs-5 {
+        font-size: 0.7rem !important;
+    }
+}
+
+@media (max-width: 320px) {
+    .payment-select button {
+        width: 100%;
+        font-size: 0.7rem !important;
+        padding: 5px 5px 5px 5px !important;
+    }
+    .credit-card-method, .bank-method, .qr-method .fs-4 {
+        font-size: 1rem !important;
+    }
+    .credit-card-method .fs-5 {
+        font-size: 0.9rem !important;
+    }
+    .payment-right-column .payment-email-section .payment-email-detail .fs-5 {
+        font-size: 0.6rem !important;
+    }
+}
+
+@media (max-width: 306px) {
+    .payment-left-column {
+        width: 100%;
+    }
+    .payment-left-column div {
+        width: 100%;
+    }
+    .payment-left-column .fs-4 {
+        font-size: 0.9rem !important;
+    }
+    .payment-left-column .fs-5 {
+        font-size: 0.8rem !important;
+    }
+    .payment-right-column .fs-4 {
+        font-size: 0.9rem !important;
+    }
+    .payment-right-column .fs-5 {
+        font-size: 0.6rem !important;
+        white-space: nowrap;
+    }
+    .payment-cartlist, .payment-coupon-discount {
+        font-size: 0.7rem !important;
+    }
+    .btn-make-payment {
+        width: 100%;
+    }
+}
+
+@media (max-width: 250px){
+    .payment-select button {
+        width: 100%;
+        font-size: 0.6rem !important;
+        padding: 5px 5px 5px 5px !important;
+    }
+    .payment-cartlist, .payment-coupon-discount {
+        font-size: 0.55rem !important;
+    }
 }
