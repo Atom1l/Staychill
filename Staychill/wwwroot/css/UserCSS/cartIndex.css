@@ -1,0 +1,226 @@
+﻿*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    /*overflow-x:hidden;*/ /*This make navbar icon have overflow */
+}
+.container {
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-width: 100%;
+    padding-right: 2rem;
+    padding-left: 2rem;
+}
+.table-contain{
+    margin-top:50px !important;
+}
+.your-cart{
+    margin-left:50px;
+    margin-bottom: 30px;
+}
+.cartitem-cartIndex {
+    border: solid 1px #b7b7b7;
+    border-radius: 20px !important; /* Not working rn*/
+}
+.cart-left-column, .cart-right-column {
+    padding: 1rem 1rem 1rem 1rem;
+}
+.cart-left-column {
+    padding-right: 2% !important;
+}
+.product-img{
+    width:50%;
+    height:auto;
+}
+.vertical-line {
+    width: 2px;
+    height: 100%;
+    background-color: black;
+    border-radius: 25px;
+}
+.cart-right-column {
+    border-left: solid 1px black;
+    padding-left: 2.5% !important;
+}
+.discount-input{
+    width:77%;
+    margin-right:5px;
+    border:none;
+    border-bottom: solid 1px black;
+    outline:none;
+}
+.discount-input:focus{
+    background:none;
+}
+.btn-apply{
+    padding: 3px 6% 3px 6%;
+    border : solid 1px black;
+    border-radius: 7px !important;
+}
+.btn-apply:hover{
+    background: #ededed !important;
+    transition: 0.2s ease-in-out;
+}
+.cart-total-line{
+    margin-top:5px;
+    margin-bottom:10px;
+}
+.btn-make-payment{
+    border:;
+    border-radius:0px !important;
+    padding: 10px 20% 10px 20%;
+}
+@media(max-width:1170px){
+    .cart-left-column .fs-3 {
+        font-size: 1.5rem !important;
+    }
+    .cart-left-column .fs-4 {
+        font-size: 1.3rem !important;
+    }
+    .product-img {
+        width: 60%;
+    }
+}
+@media(max-width:1030px) {
+    .cart-left-column .fs-4 {
+        font-size: 1.15rem !important;
+    }
+}
+@media (max-width: 950px) {
+    .cart-left-column .fs-4 {
+        font-size: 1rem !important;
+    }
+    .cart-cartlist, .cart-coupon-discount {
+        font-size: 1.3rem !important;
+    }
+}
+@media (max-width: 860px) {
+    .product-name{
+        width:48px;
+        word-wrap:break-word;
+        word-break:break-word;
+    }
+    .cart-left-column .fs-4 {
+        font-size: 1rem !important;
+    }
+    .cart-cartlist, .cart-coupon-discount {
+        font-size: 1.15rem !important;
+    }
+}
+@media (max-width: 830px) {
+    .cart-cartlist, .cart-coupon-discount {
+        font-size: 1.15rem !important;
+    }
+    .product-img {
+        width:80%;
+    }
+}
+@media (max-width: 800px) {
+    .cart-left-column .fs-4 {
+        font-size: 1rem !important;
+    }
+}
+@media (max-width: 768px) {
+    .your-cart {
+        margin-left: 0px;
+        margin-bottom: 0px;
+    }
+    .cartitem-cartIndex {
+        margin-bottom: 20px !important;
+    }
+    .cart-right-column {
+        border: none;
+    }
+}
+@media (max-width: 767px){
+    .cart-left-column {
+        width: 100%;
+    }
+    .cart-left-column .fs-4{
+        font-size: 1rem !important;
+    }
+    .cartitem-cartIndex{
+        width:100%;
+    }
+    .product-name {
+        width:15%
+    }
+    .product-img {
+        padding:0px;
+        width: 50%;
+    }
+}
+@media (max-width: 575px){
+    .cart-left-column{
+        width: 100%
+    }
+    .cart-left-column div {
+        width: 100%;
+    }
+    .cart-left-column .fs-4{
+        font-size: 1.3rem !important;
+    }
+    .cartitem-cartIndex {
+        width: 80%;
+    }
+    .product-img{
+        width:60%
+    }
+    .product-name{
+        width:100%
+    }
+}
+@media (max-width: 370px) {
+    .cart-left-column{
+        width:100%;
+    }
+    .cart-left-column div{
+        width:100%;
+    }
+    .cart-left-column .fs-4{
+        font-size: 1rem !important;
+    }
+    .cart-right-column .fs-4 {
+        font-size: 1.1rem !important;
+    }
+    .cart-right-column .fs-5 {
+        font-size: 0.95rem !important;
+        white-space: nowrap;
+    }
+    .cart-cartlist, .cart-coupon-discount {
+        font-size: 0.9rem !important;
+    }
+}
+@media (max-width: 306px) {
+    .cart-left-column {
+        width: 100%;
+    }
+    .cart-left-column div {
+        width: 100%;
+    }
+    .cart-left-column .fs-4 {
+        font-size: 1rem !important;
+    }
+    .cart-right-column .fs-4 {
+        font-size: 0.9rem !important;
+    }
+
+    .cart-right-column .fs-5 {
+        font-size: 0.6rem !important;
+        white-space: nowrap;
+    }
+    .cart-cartlist, .cart-coupon-discount {
+        font-size: 0.7rem !important;
+    }
+    .btn-make-payment {
+        width: 100%;
+    }
+}
+
+@media (max-width: 250px) {
+    .cart-cartlist, .cart-coupon-discount {
+        font-size: 0.55rem !important;
+    }
+}
+
+

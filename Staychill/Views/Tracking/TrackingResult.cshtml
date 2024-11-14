@@ -1,53 +1,52 @@
 ﻿@model Staychill.ViewModel.TrackingResultViewModel
 
-<div class="container-fluid sample-1">
-    <h2>Tracking Result</h2>
+<div class="container">
+    <div class="tracking-contain row mt-3">
 
-    <p>Shipment Code: @Model.ShipmentCode</p>
-    <p>Status: @Model.Status</p>
+        <div class="tracking-left-column col-6 border">
+            <div class="row mt-3">
+                <div class="select-payment col-12 text-center text-md-start fs-3 fw-bold me-3">Tracking</div>
+            </div>
+        </div>
 
-    @if (Model.RetainCartItems != null && Model.RetainCartItems.Any())
-    {
-        <h3>Items:</h3>
-        <table>
-            <thead>
-                <tr>
-                    <th>Product ID</th>
-                    <th>Quantity</th>
-                    <th>Unit Price</th>
-                    <th>Total Price</th>
-                    <th>Total DiscountPrice</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model.RetainCartItems)
+        <div class="tracking-right-column col-6 border">
+
+            <div class="row mt-3">
+                <div class="fs-3">Order Id : <span>@Model.ShipmentCode</span></div>
+            </div>
+            <hr />
+            <div class=" d-flex flex-column justify-content-center align-items-center align-content-center">
+                @foreach (var shipment in Model.RetainCartItems)
                 {
-                    <tr>
-                        <td>@item.ProductId</td>
-                        <td>@item.Quantity</td>
-                        <td>@item.UnitPrice.ToString("C")</td>
-                        <td>@item.TotalPrice.ToString("C")</td>
-                        <td>@item.TotalDiscountedPrice</td>
-                    </tr>
+                    <div class="cartitem-cartIndex container-fluid align-middle d-flex flex-column flex-sm-row justify-content-center justify-content-md-start align-items-center align-content-center mb-3 p-2 p-md-4 text-center col-12">
+                        
+                        <div class="text-center text-md-start col-12 col-sm-3 mb-1 mb-md-0 ps-0 ps-md-2">
+                            @if (shipment.ProductIMG != null)
+                            {
+                                @if (shipment.ProductIMG != null)
+                                {
+                                    <img src="@($"data:image/png;base64,{Convert.ToBase64String(shipment.ProductIMG)}")" alt="Image 1" class="product-img img-fluid" />
+                                }
+                            }
+                        </div>
+                        <div class="product-name text-center text-md-start fw-bold fs-4 col-12 col-sm-2 pe-2">@Html.DisplayFor(model => shipment.ProductName)</div>
+                       
+                        <div class="text-center fw-bold fs-4 col-12 col-sm-2">@Html.DisplayFor(model => shipment.TotalPrice) ฿</div>
+                    </div>
                 }
-            </tbody>
-        </table>
-
-
-        <div>
-            @if (Model.RetainCartItems != null && Model.RetainCartItems.Any())
-            {
-                <p>Total Discount Price : @Model.RetainCartItems.Sum(item => item.TotalDiscountedPrice ?? 0)</p>
-                <p>Total Discount Price : @Model.RetainCartItems.Sum(item => item.DiscountAmount ?? 0)</p>
-            }
+            </div>
+            <hr />
+            <div class="d-flex flex-row justify-content-between align-items-center align-content-center pe-2 ps-2 fs-5">
+                <span class="text-start fw-bold">Totals</span>
+                <td class="text-end">  
+                    @foreach (var item in Model.RetainCartItems)
+                    {
+                        <div class="fw-bold">@item.TotalDiscountedPrice?.ToString("N2") ฿</div>
+                    }
+                </td>
+            </div>
+            <div class="mt-3 text-center"><a class="text-decoration-none text-black" asp-action="ProductIndex" asp-controller="TestUserCreatingAccount"><i class="fa fa-angle-left"></i> <span class="fs-5">Continue your shopping</span></a></div>
         </div>
-        <div>
-            
-        </div>
 
-    }
-    else
-    {
-        <p>No items found for this shipment.</p>
-    }
+    </div>
 </div>

@@ -7,6 +7,9 @@
     <link rel="icon" href="~/pic/StayChill logo.png" type="image/x-icon" />
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/UserCSS/CartIndex.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/UserCSS/PaymentIndex.css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/UserCSS/TrackingResult.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Staychill.styles.css" asp-append-version="true" />
 
     <!-- Icons Library CDN -->
@@ -25,7 +28,7 @@
                     <i class="fa-solid fa-bars"></i>
                 </button>
                 <!-- Navbar content -->
-                <div class="navbar-collapse collapse d-sm-flex flex-sm-row justify-content-center">
+                <div class="navbar-collapse collapse d-sm-flex flex-sm-row justify-content-center ps-3">
                     <!-- Unorder List of navigation links -->
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item d-flex flex-column flex-sm-row fs-5">
@@ -58,7 +61,7 @@
                 <!-- Cart & User -->
                 <div class="d-flex ms-auto align-items-center align-content-start align-content-sm-center me-3">
                     <a class="searchnav text-decoration-none" href="#"><i class="bi bi-search"></i></a>
-                    <a class="cartnav" asp-controller="TestUserCreatingAccount" asp-action="ProductAddCart"><i class="bi bi-cart2"></i></a>       
+                    <a class="cartnav" asp-controller="Cart" asp-action="CartIndex"><i class="bi bi-cart2"></i></a>       
                     <!-- User dropdown -->
                     <div class="nav-item dropdown">
                         <div class="nav-link text-dark fw-normal  usernav" id="userDropdown" role="button">

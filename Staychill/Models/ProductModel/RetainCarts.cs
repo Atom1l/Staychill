@@ -31,7 +31,13 @@ namespace Staychill.Models.ProductModel
         public int ReCartItemId { get; set; } // Primary key for RetainCartItem
 
         [Required]
+        public byte[]? ProductIMG { get; set; } // Product IMG
+
+        [Required]
         public int ProductId { get; set; } // Foreign key to the Product
+
+        [Required]
+        public string? ProductName { get; set; }
 
         [Required]
         public int Quantity { get; set; } // Quantity of the product in the cart

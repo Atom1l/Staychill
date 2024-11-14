@@ -3,11 +3,12 @@
 
 // Set default payment method to Credit Card on page load //
 document.addEventListener('DOMContentLoaded', () => {
-    setPaymethod('Credit Card');
+    const defaultbutton = document.querySelector('.payment-select button:first-child');
+    setPaymethod(defaultbutton,'Credit Card');
 });
 
 // Toggle Paymethod and show item inside it //
-function setPaymethod(method) { // onclick="setPaymethod(method)" //
+function setPaymethod(button,method) { // onclick="setPaymethod(method)" //
 
     document.getElementById("SelectedPaymethod").value = method;
 
@@ -29,6 +30,13 @@ function setPaymethod(method) { // onclick="setPaymethod(method)" //
     clearPaymentMethodInputs('creditcard_detail');
     clearPaymentMethodInputs('banktransfer_detail');
     clearPaymentMethodInputs('promptpay_detail');
+
+    document.querySelectorAll('.payment-select button').forEach(btn => {
+        btn.classList.remove('payment-button-color');
+    });
+
+    // Add 'selected' class to the clicked button
+    button.classList.add('payment-button-color');
 };
 
 // Remove details values from old selected method after changing paymentmethod //
@@ -83,3 +91,35 @@ document.getElementById('bankNumber').addEventListener('input', function (e) {
 
 // =============================================================== Handle Text Typing Method =============================================================== //
 
+//document.querySelector('form').addEventListener('submit', (event) => {
+//    // Reset all required attributes before setting the relevant ones
+//    clearAllRequiredFields();
+
+//    const selectedMethod = document.getElementById("SelectedPaymethod").value;
+
+//    // Set required fields only for the active method section
+//    if (selectedMethod === 'Credit Card') {
+//        setRequiredFields(['creditcardName', 'creditcardNumber', 'creditcardExp', 'creditcardCvv']);
+//    } else if (selectedMethod === 'Bank transfer') {
+//        setRequiredFields(['bankaccselect', 'bankNumber']);
+//    } else if (selectedMethod === 'Prompt Pay') {
+//        setRequiredFields(['uploadedPic']);
+//    }
+//});
+
+//function clearAllRequiredFields() {
+//    document.querySelectorAll('[required]').forEach(field => {
+//        field.removeAttribute('required');
+//    });
+//}
+
+//function setRequiredFields(fieldIds) {
+//    fieldIds.forEach(id => {
+//        const field = document.getElementById(id);
+//        if (field) {
+//            field.setAttribute('required', 'required');
+//        }
+//    });
+//}
+
+// =============================================================== Button Color Selected =============================================================== //

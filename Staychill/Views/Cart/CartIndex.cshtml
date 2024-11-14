@@ -1,95 +1,127 @@
 ﻿@model Staychill.ViewModel.CartViewModel
 
-
-<div class="container-fluid">
+<div class="container">
     
-    <div class="row border">
-        <h1 class="mt-5 col-12 text-start">Your Cart</h1>
-        <div class="left-column col-12 col-sm-6 p-2">
-            <table class="table justify-content-center align-items-center align-content-center">
-                <thead>
-                    <tr>
-                        <th>Picture</th>
-                        <th>Product Name</th>
-                        <th>Quantity</th>
-                        <th>Total Price</th>
-                        <th>Action</th>
-                    </tr>
-                </thead>
-                <tbody class="align-self-center">
-                    @foreach (var cart in Model.CartItemDetails)
+    <div class="table-contain row mt-3">
+
+        <h1 class="your-cart col-12 text-center text-md-start fw-bold">Your Cart</h1>
+
+        <div class="container-fluid cart-left-column col-12 col-md-7 p-2">
+            <div class="d-flex flex-column justify-content-start align-items-center align-content-center">
+                @foreach (var cart in Model.CartItemDetails)
+                {
+                    foreach (var item in cart.CartItems)
                     {
-                        foreach (var item in cart.CartItems)
-                        {
-                            <tr>
-                                <td>
-                                    @if (item.Product.Images != null)
+                        <div class="cartitem-cartIndex container-fluid align-middle d-flex flex-column flex-sm-row justify-content-center justify-content-md-start align-items-center align-content-center mb-3 p-2 p-md-4 text-center col-12">
+                            <div class="text-end text-md-start col-12 col-sm-1 mb-1 mb-md-0">
+                                <form asp-action="CartRemove" asp-controller="Cart" method="post">
+                                    <input type="hidden" name="RemovecartId" value="@cart.CartId" />
+                                    <input type="hidden" name="RemoveitemId" value="@item.CartItemId" />
+                                    <button type="submit" class="btn border-0" onclick="return confirm('Are you sure you want to remove this item from the cart?');">
+                                        <i class="fa-solid fa-xmark" style="transform:scale(1.8) !important"></i>
+                                    </button>
+                                </form>
+                            </div>
+                            <div class="text-center text-md-start col-12 col-sm-3 mb-1 mb-md-0 ps-0 ps-md-2">
+                                @if (item.Product.Images != null)
+                                {
+                                    @if (item.Product.Images.Image1 != null)
                                     {
-                                        @if (item.Product.Images.Image1 != null)
-                                        {
-                                            <img src="@($"data:image/png;base64,{Convert.ToBase64String(item.Product.Images.Image1)}")" alt="Image 1" class="img-fluid" style="width: 100px; height: 100px;" />
-                                        }
+                                        <img src="@($"data:image/png;base64,{Convert.ToBase64String(item.Product.Images.Image1)}")" alt="Image 1" class="product-img img-fluid" />
                                     }
-                                </td>
-                                <td>@Html.DisplayFor(model => item.Product.ProductName)</td>
-                                <td>
-                                    <div>
-                                        <form asp-action="UpdateQuantity" asp-controller="Cart" method="post" style="display: inline; border-none p-2">
-                                            <input type="hidden" name="productId" value="@item.Product.Id" />
-                                            <input type="hidden" name="action" value="decrease" />
-                                            <button type="submit">-</button>
-                                        </form>
-
-                                        <input type="text" value="@item.Quantity" readonly style="width: 50px; text-align: center;" />
-
-                                        <form asp-action="UpdateQuantity" asp-controller="Cart" method="post" style="display: inline; border-none p-2">
-                                            <input type="hidden" name="productId" value="@item.Product.Id" />
-                                            <input type="hidden" name="action" value="increase" />
-                                            <button type="submit">+</button>
-                                        </form>
-                                    </div>
-                                </td>
-                                <td>@Html.DisplayFor(model => item.TotalPrice)</td>
-                                <td>
-                                    <form asp-action="CartRemove" asp-controller="Cart" method="post">
-                                        <input type="hidden" name="RemovecartId" value="@cart.CartId" />
-                                        <input type="hidden" name="RemoveitemId" value="@item.CartItemId" />
-                                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you sure you want to remove this item from the cart?');">Remove</button>
+                                }
+                            </div>
+                            <div class="product-name text-center text-md-start fw-bold fs-4 col-12 col-sm-2 pe-2">@Html.DisplayFor(model => item.Product.ProductName)</div>
+                            <div class="col-12 col-sm-4">
+                                <div>
+                                    <form asp-action="UpdateQuantity" asp-controller="Cart" method="post" style="display: inline;">
+                                        <input type="hidden" name="productId" value="@item.Product.Id" />
+                                        <input type="hidden" name="action" value="decrease" />
+                                        <button type="submit" class="fs-3" style="border:none; background:none;">-</button>
                                     </form>
-                                </td>
-                            </tr>
-                        }
-                    }
-                </tbody>
-            </table>
-        </div>
-        <div class="right-column col-12 col-sm-6 p-2">
-            <div>
-                <strong>Total Amount: @Model.TotalAmount</strong>
-            </div>
-            @if (Model.DiscountedTotal > 0)
-            {
-                <div>
-                    <strong>Total after Discount: @Model.DiscountedTotal</strong>
-                </div>
-            }
 
-            <div>
-                <h5>Apply Discount Code:</h5>
-                <form asp-action="ApplyDiscount" method="post">
-                    <input type="text" asp-for="DiscountCode" placeholder="Enter discount code" id="Code" />
-                    <button type="submit">Apply Discount</button>
+                                    <input class="text-center fw-bold fs-4" type="text" value="@item.Quantity" readonly style="width: 50px; text-align: center; border:none;" />
+
+                                    <form asp-action="UpdateQuantity" asp-controller="Cart" method="post" style="display: inline;">
+                                        <input type="hidden" name="productId" value="@item.Product.Id" />
+                                        <input type="hidden" name="action" value="increase" />
+                                        <button type="submit" class="fs-3" style="border:none; background:none;">+</button>
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="text-center fw-bold fs-4 col-12 col-sm-2">@Html.DisplayFor(model => item.TotalPrice) ฿</div>
+                        </div>
+                    }
+                }
+            </div>
+        </div>
+        
+        <div class="container-fluid cart-right-column col-12 col-md-5 p-2">
+
+            <div class="mb-4 w-100">
+                <div class="fs-4 mt-1">Enter your code</div>
+                <form asp-action="ApplyDiscount" method="post" class="d-flex">
+                    <input type="text" asp-for="DiscountCode" placeholder="Coupon code" id="Code" class="discount-input fs-4" />
+                    <button type="submit" class="btn-apply bg-white fs-5">Apply</button>
                 </form>
             </div>
+
+            <div class="fs-4">
+                <div class="fs-3 fw-bold">Cart Totals</div>
+                <hr class="cart-total-line"/>
+                @foreach (var cart in Model.CartItemDetails)
+                {
+                    foreach (var item in cart.CartItems)
+                    {
+                        <div class="cart-cartlist d-flex flex-row justify-content-between align-items-center align-content-center pe-2 ps-2">
+                            <span class="text-start fw-bold">@Html.DisplayFor(model => item.Product.ProductName)<span class="fw-normal"> | @Html.DisplayFor(model => item.Product.Color)</span></span>
+                            <span class="text-end"><div>@item.TotalPrice.ToString("N2") ฿</div></span>
+                        </div>
+                    }
+                }
+                <div class="cart-coupon-discount d-flex flex-row justify-content-between align-items-center align-content-center pe-2 ps-2">
+                    <span class="text-start fw-bold">Coupon discount</span>
+                    <td class="text-end">
+                        @if (Model.DiscountedTotal > 0)
+                        {
+                            <div>
+                                <div class="">@Model.TotalDiscountAmount.ToString("N2") ฿</div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div>0.00 ฿</div>
+                        }
+                    </td>
+                </div>
+                <hr class="cart-total-line" />
+                <div class="d-flex flex-row justify-content-between align-items-center align-content-center pe-2 ps-2">
+                    <span class="text-start fw-bold">Totals</span>
+                    <td class="text-end">
+                        @if (Model.DiscountedTotal > 0)
+                        {
+                            <div>
+                                <div class="fw-bold">@Model.DiscountedTotal.ToString("N2") ฿</div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="fw-bold">@Model.TotalAmount.ToString("N2") ฿</div>
+                        }
+                    </td>
+                </div>
+            </div>
+
+            
 
             <!-- Check if there are items in the cart -->
             @if (Model.CartItemDetails.Any(cart => cart.CartItems.Any()))
             {
                 <!-- Go To Payment -->
-                <form asp-action="PaymentIndex" asp-controller="Payment">
+                <form asp-action="PaymentIndex" asp-controller="Payment" class="d-flex justify-content-center align-items-center align-content-center mt-4">
                     <input type="hidden" name="discountAmount" value="@Model.TotalDiscountAmount" readonly />
                     <input type="hidden" name="discountPrice" value="@(Model.DiscountedTotal > 0 ? Model.DiscountedTotal : Model.TotalAmount)" readonly />
-                    <button type="submit" class="btn btn-primary mt-2">Make a Payment</button>
+                    <button type="submit" class="btn-make-payment btn btn-primary mt-2 fs-5">Make a Payment</button>
                 </form>
             }
             else
@@ -98,6 +130,7 @@
                     Your cart is empty. Please add items to your cart before proceeding to payment.
                 </div>
             }
+            <div class="mt-3 text-center"><a class="text-decoration-none text-black" asp-action="ProductIndex" asp-controller="TestUserCreatingAccount"><i class="fa fa-angle-left"></i> <span class="fs-5">Continue your shopping</span></a></div>
         </div>
     </div>
 </div>
