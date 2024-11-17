@@ -1,0 +1,16 @@
+﻿
+
+.trackingIndex-input{
+    border-radius:15px;
+    padding: 10px 15px 10px 15px !important;
+    border: solid 1px #b7b7b7;
+}
+.trackingIndex-submit {
+    background: #C9F0F7;
+    color: #FFFFFF !important;
+}
+.trackingIndex-submit:hover{
+    background: #0e2ce1;
+    color : white !important;
+    transition: 0.3s ease-in-out;
+}

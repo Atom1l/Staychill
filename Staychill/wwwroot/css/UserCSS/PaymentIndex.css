@@ -3,7 +3,13 @@
     padding: 0;
     box-sizing: border-box;
 }
-
+.container {
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-width: 100%;
+    padding-right: 2rem;
+    padding-left: 2rem;
+}
 .payment-contain{
     margin-top:50px;
 }
@@ -78,6 +84,29 @@
     outline: none;
     border: none;
     color: #8F8F8F;
+}
+.btn-make-payment {
+    border:;
+    border-radius: 0px !important;
+    padding: 10px 20% 10px 20%;
+}
+
+.payment-sento-mail{
+    pointer-events:none;
+    margin-right: 5px;
+    padding: 0 10px 0 5px !important;
+
+}
+.payment-sento-mail:focus{
+    color: black !important;
+    border-bottom: solid 1px #b7b7b7;
+}
+.payment-edit-mail{
+    background:none;
+    color : #b7b7b7 !important;
+    border: solid 1px #b7b7b7;
+    padding: 3px 8px 3px 8px;
+    border-radius: 10px;
 }
 
 @media(max-width:1356px) {

@@ -40,6 +40,9 @@ namespace Staychill.Models.ProductModel
         public string? ProductName { get; set; }
 
         [Required]
+        public string? Color { get; set; }
+
+        [Required]
         public int Quantity { get; set; } // Quantity of the product in the cart
 
         [Required]

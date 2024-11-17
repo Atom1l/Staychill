@@ -22,11 +22,13 @@ namespace Staychill.Models.ProductModel.TrackingModel
         public List<string> Statusoptions { get; } = new List<string> // List of Status //
         {
             "Pending",
-            "Confirmed Order",
-            "Delivered",
+            "Confirm order",
+            "Delivering",
             "Sucessfully",
             "Cancelled"
         };
+
+        public byte[]? Invoice { get; set; }
 
         public virtual ICollection<RetainCarts> RetainCarts { get; set; } = new List<RetainCarts>(); // Define RetainCarts to Include //
 

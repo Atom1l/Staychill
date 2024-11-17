@@ -1,0 +1,50 @@
+﻿@model IEnumerable<Staychill.Models.ProductModel.TrackingModel.Tracking>
+
+@{
+    Layout = "_AdminLayout";
+}
+
+<link href="/css/AdminCSS/AdminTracking.css" rel="stylesheet" asp-append-version="true" />
+
+<div class="container-fluid mt-4" style="overflow-x:hidden;">
+    <h1 class="fw-bold text-center">Tracking-controller</h1>
+    <hr class="mb-4" />
+    <div class="tracking-search-container w-100 d-flex justify-content-end align-items-center mt-4">
+        <form asp-action="Tracking" class="d-flex align-items-center">
+            <label for="trackingquery" class="tracking-search-label fs-5 fw-bold me-2">Search : </label>
+            <div class="tracking-searchbar-container">
+                <input class="tracking-searchbar fs-6 rounded-3 p-1 me-2" type="text" name="trackingquery" value="" placeholder="" />
+                <button type="submit" class="btn-warning p-1 pe-2 ps-2 rounded-3">Search!</button>
+            </div>
+        </form>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-bordered fs-5 mt-3">
+            <thead>
+                <tr>
+                    <th>@Html.DisplayNameFor(model => model.UserId)</th>
+                    <th>@Html.DisplayNameFor(model => model.User)</th>
+                    <th>@Html.DisplayNameFor(model => model.ShipmentCode)</th>
+                    <th>@Html.DisplayNameFor(model => model.Status)</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="fw-bold truncate-text">@Html.DisplayFor(modelItem => item.UserId)</td>
+                        <td class="fw-bold truncate-text">@Html.DisplayFor(modelItem => item.User)</td>
+                        <td class="fw-bold truncate-text">@Html.DisplayFor(modelItem => item.ShipmentCode)</td>
+                        <td class="truncate-text">@Html.DisplayFor(modelItem => item.Status)</td>
+                        <td class="d-flex justify-content-center align-items-center">
+                            <a asp-action="TrackingEdit" asp-route-shipmentCode="@item.ShipmentCode" class="tracking-edit-btn btn btn-sm btn-primary me-2">Edit</a> |
+                            <a asp-action="TrackingDetail" asp-route-paymentmethodId="@item.PaymentMethod.PaymentmethodId" class="tracking-edit-btn btn btn-sm btn-primary ms-2">Detail</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+</div>

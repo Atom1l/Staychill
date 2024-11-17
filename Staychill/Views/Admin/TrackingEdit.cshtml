@@ -1,0 +1,36 @@
+﻿@model Staychill.Models.ProductModel.TrackingModel.Tracking
+
+@{
+    Layout = "_AdminLayout";
+}
+
+<div class="container-fluid w-100 mt-4" style="overflow-x:hidden; min-height:80vh">
+    <h1 class="text-center fw-bold">Tracking-controller</h1>
+    <hr class="mb-4" />
+    <div class="row d-flex justify-content-center align-items-center align-content-center" style="margin-top:100px;">
+        <div class="col-md-4 shadow h-auto" style="padding:30px 30px 50px 30px;">
+            <div class="fs-2 fw-bold text-center mb-3">Edit tracking status</div>
+            <form asp-action="TrackingEdit" method="post" class="fs-4 text-center">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input asp-for="ShipmentCode" type="hidden" class="form-control fs-5 mt-1" />
+                <div class="form-group">
+                    <div class="text-center fw-bold text-decoration-underline">@Html.DisplayFor(Model => Model.ShipmentCode)</span></div>
+                </div>
+                <div class="form-group mt-3">
+                    <label asp-for="Status" class="control-label fw-bold">Status: </label>
+                    <select asp-for="Status" class="control-label p-1 rounded-3" asp-items="@(new SelectList(Model.Statusoptions))"></select>
+                    <span asp-validation-for="Status" class="text-danger"></span>
+                </div>
+                <div class="form-group mt-3">
+                    <input type="submit" value="Edit!" class="btn btn-primary fs-5 p-2 w-100 fw-bold" />
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

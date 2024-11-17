@@ -91,35 +91,26 @@ document.getElementById('bankNumber').addEventListener('input', function (e) {
 
 // =============================================================== Handle Text Typing Method =============================================================== //
 
-//document.querySelector('form').addEventListener('submit', (event) => {
-//    // Reset all required attributes before setting the relevant ones
-//    clearAllRequiredFields();
+document.getElementById('toggleeditmail').addEventListener('click', function () {
+    var emailInput = document.getElementById('emailInput');
+    var button = document.getElementById('toggleeditmail');
 
-//    const selectedMethod = document.getElementById("SelectedPaymethod").value;
+    // Get the computed style of the emailInput element
+    var inputStyle = window.getComputedStyle(emailInput);
 
-//    // Set required fields only for the active method section
-//    if (selectedMethod === 'Credit Card') {
-//        setRequiredFields(['creditcardName', 'creditcardNumber', 'creditcardExp', 'creditcardCvv']);
-//    } else if (selectedMethod === 'Bank transfer') {
-//        setRequiredFields(['bankaccselect', 'bankNumber']);
-//    } else if (selectedMethod === 'Prompt Pay') {
-//        setRequiredFields(['uploadedPic']);
-//    }
-//});
+    if (inputStyle.pointerEvents === 'none') {
+        // Change pointer-events to auto (editable)
+        emailInput.style.pointerEvents = 'auto';
+        // Change button text to Save
+        button.textContent = 'Save';
+        emailInput.focus();
+    } else {
+        // Change pointer-events back to none (non-editable)
+        emailInput.style.pointerEvents = 'none';
+        // Change button text back to Edit
+        button.textContent = 'Edit';
+    }
+});
 
-//function clearAllRequiredFields() {
-//    document.querySelectorAll('[required]').forEach(field => {
-//        field.removeAttribute('required');
-//    });
-//}
-
-//function setRequiredFields(fieldIds) {
-//    fieldIds.forEach(id => {
-//        const field = document.getElementById(id);
-//        if (field) {
-//            field.setAttribute('required', 'required');
-//        }
-//    });
-//}
 
 // =============================================================== Button Color Selected =============================================================== //
