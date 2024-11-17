@@ -1,26 +1,26 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Xml.Linq;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Staychill.Data;
 using Staychill.Models.BankModel;
 using Staychill.Models.ProductModel;
 using Staychill.Models.ProductModel.TrackingModel;
 using Staychill.ViewModel;
+using SelectPdf;
 
 namespace Staychill.Controllers.UserController
 {
     public class TrackingController : Controller
     {
         private readonly StaychillDbContext _db;
-        public TrackingController(StaychillDbContext db)
+        private readonly Email.IEmailSender _emailSender;
+        public TrackingController(Email.IEmailSender emailSender, StaychillDbContext db)
         {
+            _emailSender = emailSender;
             _db = db;
         }
 
         // ========== DISPLAY ========== //
-        public IActionResult TrackingResult(string shipmentCode= "WA45WbBt") // Display an items and it status after User fill the input in TrackingIndex or Clicked Payment //
+        public IActionResult TrackingResult(string shipmentCode) // Display an items and it status after User fill the input in TrackingIndex or Clicked Payment //
         {
             // Retrieve the tracking entry based on the shipment code to a variable track //
             var track = _db.TrackingDB.Include(t => t.RetainCarts).ThenInclude(rc => rc.RetainCartItems).FirstOrDefault(t => t.ShipmentCode == shipmentCode);
@@ -67,7 +67,7 @@ namespace Staychill.Controllers.UserController
         [HttpPost]
         public async Task<IActionResult> CreateShipment(int[] cartIds, int[] quantities, float[] unitPrices, float discountAmount, float discountPrice, CartViewModel cartViewModel
             ,string SelectedPaymethod, string creditcardType, string creditcardName, string creditcardNumber, string creditcardExp , string creditcardCvv
-            ,string bankAcc, string bankNumber, IFormFile uploadedPic, byte[] productImgbytes, string[] productName) // the reasoned to use a lot of these parameters is because I can declare CartViewModel and transfer the data to this action //
+            ,string bankAcc, string bankNumber, IFormFile uploadedPic, byte[][] productImgbytes, string[] productName, string[] productColor, string usermail) // the reasoned to use a lot of these parameters is because I can declare CartViewModel and transfer the data to this action //
         {
             // Check if any items are selected //
             if (cartIds == null || cartIds.Length == 0)
@@ -119,9 +119,11 @@ namespace Staychill.Controllers.UserController
                 {
                     ProductId = cartItem.CartItems.FirstOrDefault()?.ProductId ?? 0,
                     ProductName = productName[i],
+                    Color = productColor[i],
                     Quantity = quantities[i],
                     UnitPrice = unitPrices[i],
-                    ProductIMG = productImgbytes,
+                    TotalPrice = unitPrices[i] * quantities[i],
+                    ProductIMG = productImgbytes[i],
                     DiscountAmount = discountAmount, // discount amount for total price of the products not each item discount amount //
                     TotalDiscountedPrice = discountPrice, // Sum of the total price of products subtract by the discountamount //
 
@@ -158,6 +160,7 @@ namespace Staychill.Controllers.UserController
                 } : null,
                 CreditCard = SelectedPaymethod == "Credit Card" ? new CreditCard // Create a new data inside CreditCard database //
                 {
+                    CardType = creditcardType,
                     NameOnCard = creditcardName, // Name on card //
                     CardNumber = creditcardNumber,
                     ExpiredDate = creditcardExp,
@@ -173,6 +176,13 @@ namespace Staychill.Controllers.UserController
             await _db.PaymentDB.AddAsync(paymentMethod);
             await _db.SaveChangesAsync();
 
+            // Generate the PDF
+            string html = GeneratePdfHtml(retainCart, paymentMethod); // Use a method to generate the HTML with the cart data
+            HtmlToPdf oHtmlToPdf = new HtmlToPdf();
+            PdfDocument oPdfDocument = oHtmlToPdf.ConvertHtmlString(html);
+            byte[] pdf = oPdfDocument.Save();
+            oPdfDocument.Close();
+
             // Create tracking //
             var tracking = new Tracking
             {
@@ -180,11 +190,18 @@ namespace Staychill.Controllers.UserController
                 Status = "Pending", // First Status after done transaction with website //
                 RetainCarts = new List<RetainCarts> { retainCart }, // Assign List of RetainCarts to hold the values of retainCart to make Tracking can be associated with //
                 PaymentMethod = paymentMethod, // Assign PaymentMethod inside Tracking to hold the values of paymentMethod that we just create to make Tracking can be associated with //
+                Invoice = pdf,
             };
 
             // Save tracking //
             _db.TrackingDB.Add(tracking);
             _db.SaveChanges();
+
+            var receiver = usermail; // Replace with the user's email
+            var subject = "Receipt from Staychill";
+            var message = "Here is the receipt for your transaction with Staychill Shop.";
+
+            await _emailSender.SendEmailWithAttachmentAsync(receiver, subject, message, pdf, "Receipt.pdf");
 
             // Redirect to TrackingResult with parameter of shipmentCode that we just generated in this process to see the tracking result //
             return RedirectToAction("TrackingResult", new { shipmentCode });
@@ -204,14 +221,112 @@ namespace Staychill.Controllers.UserController
         // ========== Convert Image into Byte to keep in database ========== //
 
 
+        // ========== PDF Formatting ========== //
+        private string GeneratePdfHtml(RetainCarts retainCart, PaymentMethod paymentMethod)
+        {
+            string shipmentCode = Tracking.GenerateShipmentCode(); // Get the shipment code
+            string currentDateTime = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
+            var discountAmount = retainCart.RetainCartItems.FirstOrDefault()?.DiscountAmount.ToString("N2");
+            var totalPrice = retainCart.RetainCartItems.FirstOrDefault()?.TotalDiscountedPrice.ToString("N2");
 
+            string html = $@"
+            <div style=""padding: 10px 30px 10px 30px;  box-sizing: border-box;"">
+                <div style=""width:100%; padding-top:20px; text-align:center;"">
+                    <div style=""font-size:3.5rem;"">Staychill-Invoice</div>
+                    <div style=""display:flex; justify-content:space-between; align-items:center; font-size:1.2rem;"">
+                        <div>Date: {currentDateTime}</div>
+                        <div>Order Id: {shipmentCode}</div>
+                    </div>
+                    <hr />
+                    <div style=""width:100%; display:flex; justify-content:space-between; text-align:start"">
+                        <div style=""width:45%;"">
+                            <div style=""font-size:1.5rem; font-weight:bold; margin-bottom:5px; padding:5px;"">From:</div>
+                            <div style=""margin-left:10px; font-size:1.1rem;"">
+                                <div style=""font-size:1.3rem; margin-bottom:5px;"">Staychill Shop</div>
+                                <div style=""margin-bottom:5px;"">King Mongkut’s University of Technology Thonburi</div>
+                                <div style=""margin-bottom:5px;"">126 Pracha Uthit Rd., Bang Mod, Thung Khru, Bangkok 10140. Thailand</div>
+                                <div style=""margin-bottom:5px;"">Tel : 02-470-8333</div>
+                            </div>
+                        </div>
+                        <div style=""width:45%; text-align:end;"">
+                            <div style=""font-size:1.5rem; font-weight:bold; margin-bottom:5px; padding:5px;"">To:</div>
+                            <div style=""margin-right:10px; font-size:1.1rem;"">
+                                <div style=""font-size:1.3rem; margin-bottom:5px;"">Name and Surname</div>
+                                <div style=""margin-bottom:5px;"">address, address, address, address, postal zip</div>
+                                <div style=""margin-bottom:5px;"">Tel : 0123-456-7890</div>
+                            </div>
+                        </div>
+                    </div>
+                    <table style=""width:100%; border-collapse:collapse; text-align:center; margin-top:15px;"">
+                        <thead>
+                            <tr style=""font-size:1.2rem;"">
+                                <th style=""border:1px solid #b7b7b7; background:#b7b7b7; padding:15px;"">Name</th>
+                                <th style=""border:1px solid #b7b7b7; background:#b7b7b7; padding:15px;"">Color</th>
+                                <th style=""border:1px solid #b7b7b7; background:#b7b7b7; padding:15px;"">Quantity</th>
+                                <th style=""border:1px solid #b7b7b7; background:#b7b7b7; padding:15px;"">Unit Price</th>
+                                <th style=""border:1px solid #b7b7b7; background:#b7b7b7; padding:15px;"">Price</th>
+                            </tr>
+                        </thead>
+                        <tbody>";
 
+                        foreach (var item in retainCart.RetainCartItems)
+                        {
+                            html += $@"
+                            <tr>
+                                <td style=""border:1px solid #b7b7b7; padding:15px; text-align:start;"">{item.ProductName}</td>
+                                <td style=""border:1px solid #b7b7b7; padding:15px; text-align:start;"">{item.Color}</td>
+                                <td style=""border:1px solid #b7b7b7; padding:15px;"">{item.Quantity}</td>
+                                <td style=""border:1px solid #b7b7b7; padding:15px; text-align:end;"">{item.UnitPrice}</td>
+                                <td style=""border:1px solid #b7b7b7; padding:15px; text-align:end;"">{item.TotalPrice}</td>
+                            </tr>";
+                        }
 
+                        // Add the Total row here, after the foreach loop
+                        html += $@"
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td style=""border:1px solid #b7b7b7; background:#ebebeb; padding:10px; padding-right:15px; font-size:1rem; text-align:start; font-weight:bold;"">
+                                    Discount
+                                </td>
+                                <td style=""border:1px solid #b7b7b7; background:#ebebeb; padding:10px; padding-right:15px; font-size:1rem; text-align:end;"">
+                                    <div style=""display:flex; justify-content:space-between; align-items:center;"">
+                                        <div>฿</div>
+                                        <div>{discountAmount}</div>
+                                    </div>
+                                </td>
+                            </tr>";
 
+                        html += $@"
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td style=""border:1px solid #b7b7b7; background:#ebebeb; padding:10px; padding-right:15px; font-size:1rem; text-align:start; font-weight:bold;"">
+                                    Total
+                                </td>
+                                <td style=""border:1px solid #b7b7b7; background:#ebebeb; padding:10px; padding-right:15px; font-size:1rem; text-align:end; font-weight:bold"">
+                                    <div style=""display:flex; justify-content:space-between; align-items:center;"">
+                                        <div>฿</div>
+                                        <div>{totalPrice}</div>
+                                    </div>
+                                </td>
+                            </tr>";
 
+                    html += $@"
+                        </tbody>
+                    </table>
+                    <div style=""text-align:end; font-size:1.2rem; margin-top:15px;"">
+                        <div><span style=""font-weight:bold;"">Payment method:</span> {paymentMethod.PaymentmethodType}</div>
+                    </div>
+                    <hr style=""margin-top:10px;""/>
+                    <div style=""font-size:3rem; font-weight:bold; margin-top:35px;"">THANK YOU.</div>
+                </div>";
 
-
-
+            return html;
+        }
+        // ========== PDF Formatting ========== //
 
     }
 }

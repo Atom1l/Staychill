@@ -35,37 +35,30 @@
                             </button>
                             <!-- Home -->
                             <a class="nav-link text-dark fw-normal ms-3 ms-sm-2" asp-area="" asp-controller="User" asp-action="Index">Home</a>
-                            <!-- Products dropdown -->
-                            <div class="nav-item dropdown ms-3 ms-sm-2">
-                                <div class="nav-link text-dark fw-normal" id="productDropdown" role="button">
-                                    Products <span class="arrow-right" id="arrowIcon"><i class="fa-solid fa-angle-right"></i></span>
-                                </div>
-                                <ul class="dropdown-menu" id="productDropdownMenu" aria-labelledby="productDropdown">
-                                    <li><a class="dropdown-item dropline text-decoration-none text-black" asp-action="">All products</a></li>
-                                    <li><a class="dropdown-item dropline text-decoration-none text-black" asp-action="">Mug</a></li>
-                                    <li><a class="dropdown-item dropline text-decoration-none text-black" asp-action="">Steel Flask</a></li>
-                                    <li><a class="dropdown-item text-decoration-none text-black" asp-action="">Tumbler</a></li>
-                                </ul>
-                            </div>
-                            <!-- About us -->
-                            <a class="nav-link text-dark fw-normal ms-3 ms-sm-2" asp-controller="" asp-action="">About us</a>
+                            <!-- Products -->
+                            <a class="nav-link text-dark fw-normal ms-3 ms-sm-2" asp-controller="Admin" asp-action="Discount">Product</a>
+                            <!-- Discount -->
+                            <a class="nav-link text-dark fw-normal ms-3 ms-sm-2" asp-controller="Admin" asp-action="Discount">Discount</a>
+                            <!-- Payment -->
+                            <a class="nav-link text-dark fw-normal ms-3 ms-sm-2" asp-controller="Admin" asp-action="Payment">Payment</a>
                             <!-- Tracking -->
-                            <a class="nav-link text-dark fw-normal ms-3 ms-sm-2" asp-area="" asp-controller="Tracking" asp-action="TrackingIndex">Tracking</a>
+                            <a class="nav-link text-dark fw-normal ms-3 ms-sm-2" asp-area="" asp-controller="Admin" asp-action="Tracking">Tracking</a>
                         </li>
                     </ul>
                     <!-- Unorder List of navigation links -->
-                </div>              
+                </div>
                 <!-- Cart & User -->
                 <div class="d-flex ms-auto align-items-center align-content-start align-content-sm-center me-3">
                     <a class="searchnav text-decoration-none" href="#"><i class="bi bi-search"></i></a>
-                    <a class="cartnav" asp-controller="Cart" asp-action="CartIndex"><i class="bi bi-cart2"></i></a>       
+                    <a class="cartnav" asp-controller="TestUserCreatingAccount" asp-action="ProductIndex"><i class="bi bi-cart2"></i></a>
                     <!-- User dropdown -->
                     <div class="nav-item dropdown">
                         <div class="nav-link text-dark fw-normal  usernav" id="userDropdown" role="button">
                             <i class="bi bi-person"></i>
                         </div>
                         <ul class="dropdown-user" aria-labelledby="userDropdown">
-                            <li><a class="dropdown-item text-decoration-none text-black" asp-action="">Log In / Sign-Up</a></li>
+                            <li><a class="dropdown-item dropline text-decoration-none text-black" asp-action="">Edit Profile</a></li>
+                            <li><a class="dropdown-item dropline text-decoration-none text-black" asp-action="">Log Out</a></li>
                         </ul>
                     </div>
                 </div>
@@ -74,7 +67,6 @@
         </nav>
     </header>
     <!-- === Header === -->
-
     <!-- === Body === -->
     <div class="container">
         <main role="main" class="pb-3">
@@ -82,7 +74,6 @@
         </main>
     </div>
     <!-- === Body === -->
-
     <!-- === Footer === -->
     <footer class="border-top footer text-muted">
         <div class="container">

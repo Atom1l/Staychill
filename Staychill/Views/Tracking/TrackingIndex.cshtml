@@ -2,15 +2,17 @@
 @{
 }
 
+<link rel="stylesheet" href="~/css/UserCSS/TrackingIndex.css" asp-append-version="true" />
+
 <div class="container-fluid d-flex justify-content-center align-items-center" style="min-height:80vh;">
     <div class="w-100 h-auto d-flex justify-content-center align-items-center align-content-center text-center">
         <form asp-action="TrackingResult" class="fs-3 p-5 shadow">
             <div class="w-100" style="">
                 <img src="/pic/StayChill logo.png" width="200px" height="200px" class="mb-4" />
-                <div class="mb-2">Tracking Shipment</div>
-                <input type="text" class="fs-5 p-2 w-100" name="shipmentCode" placeholder="Shipment Code.." />
+                <div class="mb-2 fw-bold">Tracking Shipment</div>
+                <input type="text" class="trackingIndex-input fs-5 p-2 w-100" name="shipmentCode" placeholder="Shipment Code.." />
             </div>
-            <button type="submit" class="w-100 btn btn-primary mt-2 p-2 fs-5 text-white">Track!</button>
+            <button type="submit" class="trackingIndex-submit w-100 btn mt-3 p-2 fs-5 text-white">Track!</button>
         </form>
     </div>
 </div>

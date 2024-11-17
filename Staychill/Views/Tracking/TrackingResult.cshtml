@@ -1,52 +1,99 @@
 ﻿@model Staychill.ViewModel.TrackingResultViewModel
 
+<link rel="stylesheet" href="~/css/UserCSS/TrackingResult.css" asp-append-version="true"/>
+
 <div class="container">
     <div class="tracking-contain row mt-3">
+        <div class="tracking-left-column d-flex flex-column justify-content-start align-items-center align-items-md-start align-conten-center col-12 col-md-5 px-0 px-md-4">
+            <div class="tracking-status-container col-12 col-md-9 p-3 pb-5">
+                <div class="select-payment col-12 text-start fs-3 fw-bold mt-3 ms-3">Tracking</div>
+                <div class="tracking-status-display w-75 d-flex flex-column justify-content-start mt-5">
+                    <!--Pending-->
+                    <div class="tracking-pending d-flex flex-row" data-status="Pending">
+                        <div class="icon-line-container d-flex flex-column align-items-center">
+                            <i class="fas fa-clock tracking-icon-background"></i>
+                            <div class="tracking-vertical-line"></div>
+                        </div>
+                        <div class="tracking-status-text fs-3 fw-bold ms-3">Pending</div>
+                    </div>
 
-        <div class="tracking-left-column col-6 border">
-            <div class="row mt-3">
-                <div class="select-payment col-12 text-center text-md-start fs-3 fw-bold me-3">Tracking</div>
+                    <!-- Confirm order -->
+                    <div class="tracking-pending d-flex flex-row" data-status="Confirm order">
+                        <div class="icon-line-container d-flex flex-column align-items-center">
+                            <i class="fas fa-box tracking-icon-background"></i>
+                            <div class="tracking-vertical-line"></div>
+                        </div>
+                        <div class="tracking-status-text fs-3 fw-bold ms-3">Confirm order</div>
+                    </div>
+
+                    <!-- Delivering -->
+                    <div class="tracking-pending d-flex flex-row" data-status="Delivering">
+                        <div class="icon-line-container d-flex flex-column align-items-center">
+                            <i class="fas fa-truck tracking-icon-background"></i>
+                            <div class="tracking-vertical-line2"></div>
+                        </div>
+                        <div class="tracking-status-text fs-3 fw-bold ms-3">Delivering</div>
+                    </div>
+
+                    <!-- Complete -->
+                    <div class="tracking-pending d-flex flex-row" data-status="Complete">
+                        <div class="icon-line-container d-flex flex-column align-items-start">
+                            <i class="fas fa-check-circle tracking-icon-background"></i>
+                        </div>
+                        <div class="tracking-status-text fs-3 fw-bold ms-3">Complete</div>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="tracking-right-column col-6 border">
+        <div class="tracking-right-column d-flex flex-column col-12 col-md-7">
 
             <div class="row mt-3">
-                <div class="fs-3">Order Id : <span>@Model.ShipmentCode</span></div>
+                <div class="fs-3 fw-bold">Order Id : <span>@Model.ShipmentCode</span></div>
+                <input id="tracking-status-input" type="hidden" value="@Model.Status" readonly />
             </div>
-            <hr />
-            <div class=" d-flex flex-column justify-content-center align-items-center align-content-center">
+            <hr class="tracking-singles-line" />
+            <div class=" d-flex flex-column justify-content-center align-items-center align-content-center mt-3">
                 @foreach (var shipment in Model.RetainCartItems)
                 {
-                    <div class="cartitem-cartIndex container-fluid align-middle d-flex flex-column flex-sm-row justify-content-center justify-content-md-start align-items-center align-content-center mb-3 p-2 p-md-4 text-center col-12">
+                    <div class="tracking-shipment container-fluid align-middle d-flex flex-row justify-content-start align-items-center align-content-center mb-3 p-2 p-md-3 text-center col-12">
                         
-                        <div class="text-center text-md-start col-12 col-sm-3 mb-1 mb-md-0 ps-0 ps-md-2">
+                        <div class="text-center text-md-start col-2 mb-1 mb-md-0 ps-0 ps-md-3">
                             @if (shipment.ProductIMG != null)
                             {
-                                @if (shipment.ProductIMG != null)
-                                {
-                                    <img src="@($"data:image/png;base64,{Convert.ToBase64String(shipment.ProductIMG)}")" alt="Image 1" class="product-img img-fluid" />
-                                }
+                                <img src="@($"data:image/png;base64,{Convert.ToBase64String(shipment.ProductIMG)}")" alt="Image 1" class="tracking-product-img img-fluid" />
                             }
                         </div>
-                        <div class="product-name text-center text-md-start fw-bold fs-4 col-12 col-sm-2 pe-2">@Html.DisplayFor(model => shipment.ProductName)</div>
-                       
-                        <div class="text-center fw-bold fs-4 col-12 col-sm-2">@Html.DisplayFor(model => shipment.TotalPrice) ฿</div>
+                        <div class="tracking-product-name text-start fw-bold fs-4 col-2 pe-2">@Html.DisplayFor(model => shipment.ProductName)</div>
+                        <div class="col"></div>
+                        <div class="tracking-totalprice text-center fw-bold fs-4 col-2">@Html.DisplayFor(model => shipment.TotalPrice) ฿</div>
                     </div>
                 }
             </div>
-            <hr />
-            <div class="d-flex flex-row justify-content-between align-items-center align-content-center pe-2 ps-2 fs-5">
+            <hr class="tracking-double-line" />
+            <div class="d-flex flex-row justify-content-between align-items-center align-content-center pe-3 ps-3 fs-4">
                 <span class="text-start fw-bold">Totals</span>
-                <td class="text-end">  
-                    @foreach (var item in Model.RetainCartItems)
-                    {
-                        <div class="fw-bold">@item.TotalDiscountedPrice?.ToString("N2") ฿</div>
-                    }
+                <td class="text-end">
+                    <div class="fw-bold">@Model.RetainCartItems.FirstOrDefault()?.TotalDiscountedPrice?.ToString("N2")฿</div>
                 </td>
             </div>
-            <div class="mt-3 text-center"><a class="text-decoration-none text-black" asp-action="ProductIndex" asp-controller="TestUserCreatingAccount"><i class="fa fa-angle-left"></i> <span class="fs-5">Continue your shopping</span></a></div>
+            <div class="mt-3 text-center tracking-continue-shopping mt-auto mb-5">
+                <a class="text-decoration-none text-black " asp-action="ProductIndex" asp-controller="TestUserCreatingAccount">
+                    <i class="fa fa-angle-left me-0 me-sm-2"></i> <span class="fs-5">Continue your shopping</span>
+                </a>
+            </div>
         </div>
-
     </div>
 </div>
+
+<script src="/js/Tracking.js"></script>
+
+<script>
+    // When the download PDF button is clicked
+    document.getElementById('download-pdf').addEventListener('click', function () {
+        var shipmentCode = '@Model.ShipmentCode';
+
+        // Redirect to the action that will serve the PDF for download
+        window.location.href = '@Url.Action("DownloadPdf", "Tracking", new { shipmentCode = "__shipmentCode__" })'.replace('__shipmentCode__', shipmentCode);
+    });
+</script>               
