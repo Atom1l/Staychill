@@ -65,7 +65,7 @@ namespace Staychill.Controllers.UserController
 
         // ========== MERGE CART ITEMS TO TRACKINGDB ========== //
         [HttpPost]
-        public async Task<IActionResult> CreateShipment(int[] cartIds, int[] quantities, float[] unitPrices, float discountAmount, float discountPrice, CartViewModel cartViewModel
+        public async Task<IActionResult> CreateShipment(int[] cartIds, int[] quantities, float[] unitPrices, float discountAmount, float totalamountbefore, float discountPrice, CartViewModel cartViewModel
             ,string SelectedPaymethod, string creditcardType, string creditcardName, string creditcardNumber, string creditcardExp , string creditcardCvv
             ,string bankAcc, string bankNumber, IFormFile uploadedPic, byte[][] productImgbytes, string[] productName, string[] productColor, string usermail) // the reasoned to use a lot of these parameters is because I can declare CartViewModel and transfer the data to this action //
         {
@@ -126,7 +126,7 @@ namespace Staychill.Controllers.UserController
                     ProductIMG = productImgbytes[i],
                     DiscountAmount = discountAmount, // discount amount for total price of the products not each item discount amount //
                     TotalDiscountedPrice = discountPrice, // Sum of the total price of products subtract by the discountamount //
-
+                    TotalAmount = totalamountbefore,
                 };
 
                 // Add the retain cart item to the RetainCarts instance //
@@ -177,7 +177,7 @@ namespace Staychill.Controllers.UserController
             await _db.SaveChangesAsync();
 
             // Generate the PDF
-            string html = GeneratePdfHtml(retainCart, paymentMethod); // Use a method to generate the HTML with the cart data
+            string html = GeneratePdfHtml(shipmentCode, retainCart, paymentMethod); // Use a method to generate the HTML with the cart data
             HtmlToPdf oHtmlToPdf = new HtmlToPdf();
             PdfDocument oPdfDocument = oHtmlToPdf.ConvertHtmlString(html);
             byte[] pdf = oPdfDocument.Save();
@@ -222,10 +222,11 @@ namespace Staychill.Controllers.UserController
 
 
         // ========== PDF Formatting ========== //
-        private string GeneratePdfHtml(RetainCarts retainCart, PaymentMethod paymentMethod)
+        private string GeneratePdfHtml(string shipmentCode, RetainCarts retainCart, PaymentMethod paymentMethod)
         {
-            string shipmentCode = Tracking.GenerateShipmentCode(); // Get the shipment code
+            string shipmentcode = shipmentCode; // Get the shipment code
             string currentDateTime = DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss");
+            var totalamount = retainCart.RetainCartItems.FirstOrDefault()?.TotalAmount.ToString("N2");
             var discountAmount = retainCart.RetainCartItems.FirstOrDefault()?.DiscountAmount.ToString("N2");
             var totalPrice = retainCart.RetainCartItems.FirstOrDefault()?.TotalDiscountedPrice.ToString("N2");
 
@@ -245,7 +246,7 @@ namespace Staychill.Controllers.UserController
                                 <div style=""font-size:1.3rem; margin-bottom:5px;"">Staychill Shop</div>
                                 <div style=""margin-bottom:5px;"">King Mongkut’s University of Technology Thonburi</div>
                                 <div style=""margin-bottom:5px;"">126 Pracha Uthit Rd., Bang Mod, Thung Khru, Bangkok 10140. Thailand</div>
-                                <div style=""margin-bottom:5px;"">Tel : 02-470-8333</div>
+                                <div style=""margin-bottom:5px;"">Tel : 01-234-5678</div>
                             </div>
                         </div>
                         <div style=""width:45%; text-align:end;"">
@@ -288,12 +289,27 @@ namespace Staychill.Controllers.UserController
                                 <td></td>
                                 <td></td>
                                 <td style=""border:1px solid #b7b7b7; background:#ebebeb; padding:10px; padding-right:15px; font-size:1rem; text-align:start; font-weight:bold;"">
+                                    Subtotal
+                                </td>
+                                <td style=""border:1px solid #b7b7b7; background:#ebebeb; padding:10px; padding-right:15px; font-size:1rem; text-align:end;"">
+                                    <div style=""display:flex; justify-content:space-between; align-items:center;"">
+                                        <div>฿</div>
+                                        <div>{totalamount}</div>
+                                    </div>
+                                </td>
+                            </tr>";
+                        html += $@"
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td style=""border:1px solid #b7b7b7; background:#ebebeb; padding:10px; padding-right:15px; font-size:1rem; text-align:start; font-weight:bold;"">
                                     Discount
                                 </td>
                                 <td style=""border:1px solid #b7b7b7; background:#ebebeb; padding:10px; padding-right:15px; font-size:1rem; text-align:end;"">
                                     <div style=""display:flex; justify-content:space-between; align-items:center;"">
                                         <div>฿</div>
-                                        <div>{discountAmount}</div>
+                                        <div>-{discountAmount}</div>
                                     </div>
                                 </td>
                             </tr>";

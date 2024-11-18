@@ -301,6 +301,9 @@
         width: 100%;
         margin-left: 1px;
     }
+    .qrcode-item{
+        text-align:center;
+    }
 
     .payment-right-column .fs-4 {
         font-size: 1.1rem !important;
@@ -373,5 +376,9 @@
     }
     .payment-cartlist, .payment-coupon-discount {
         font-size: 0.55rem !important;
+    }
+    .qrcode-item img{
+        width:100px;
+        height:100px;
     }
 }

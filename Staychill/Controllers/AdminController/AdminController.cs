@@ -14,7 +14,7 @@ namespace Staychill.Controllers.AdminController
     public class AdminController : Controller
     {
         private readonly StaychillDbContext _db;
-        public AdminController(StaychillDbContext db) 
+        public AdminController(StaychillDbContext db)
         {
             _db = db;
         }
@@ -31,7 +31,7 @@ namespace Staychill.Controllers.AdminController
             {
                 string normalizedQuery = discountquery.Replace("%", "").Trim();
 
-                if(normalizedQuery == "0") // To prevent searching 0% and the other like 80%,20% is showing //
+                if (normalizedQuery == "0") // To prevent searching 0% and the other like 80%,20% is showing //
                 {
                     return View("Discount", new List<Discount>());
                 }
@@ -42,7 +42,7 @@ namespace Staychill.Controllers.AdminController
                     discountCode.DiscountAmount.ToString() == normalizedQuery
                 ).ToList();
                 return View("Discount", filtereddiscountCode);
-            }       
+            }
         }
 
         [HttpGet]
@@ -67,7 +67,7 @@ namespace Staychill.Controllers.AdminController
         [HttpGet]
         public IActionResult DiscountEdit(int id) // Admin-Discount-Edit(GET) //
         {
-            var discountId = _db.DiscountDB.FirstOrDefault( d => d.Id == id);
+            var discountId = _db.DiscountDB.FirstOrDefault(d => d.Id == id);
             if (discountId == null)
             {
                 return RedirectToAction("Discount");
@@ -96,7 +96,7 @@ namespace Staychill.Controllers.AdminController
         public IActionResult DiscountDelete(int id) // Admin-Discount-Delete // 
         {
             var existingDiscount = _db.DiscountDB.FirstOrDefault(d => d.Id == id);
-            if(existingDiscount == null)
+            if (existingDiscount == null)
             {
                 return RedirectToAction("Discount");
             }
@@ -110,16 +110,16 @@ namespace Staychill.Controllers.AdminController
         // ============================================= Tracking ============================================= //
         public IActionResult Tracking(string trackingquery) // Admin-Tracking-Index //
         {
-            if (string.IsNullOrEmpty(trackingquery)) 
-            { 
-                return View("Tracking", _db.TrackingDB.Include(t => t.PaymentMethod).ToList()); 
+            if (string.IsNullOrEmpty(trackingquery))
+            {
+                return View("Tracking", _db.TrackingDB.Include(t => t.PaymentMethod).ToList());
             }
             else
             {
                 var tracking = _db.TrackingDB.Include(t => t.PaymentMethod).ToList();
                 var filteredTracking = tracking.Where(tracking => tracking.ShipmentCode.Contains(trackingquery) ||
                 tracking.Status.Contains(trackingquery)).ToList();
-                return View("Tracking",filteredTracking);
+                return View("Tracking", filteredTracking);
             }
         }
 
@@ -138,7 +138,7 @@ namespace Staychill.Controllers.AdminController
         public async Task<IActionResult> TrackingEdit(Tracking editTracking) // Admin-Tracking-Edit(POST) //
         {
             var existingTracking = _db.TrackingDB.FirstOrDefault(t => t.ShipmentCode == editTracking.ShipmentCode);
-            if(existingTracking == null)
+            if (existingTracking == null)
             {
                 return RedirectToAction("Tracking");
             }
@@ -146,7 +146,7 @@ namespace Staychill.Controllers.AdminController
             await _db.SaveChangesAsync();
             return RedirectToAction("Tracking");
         }
-        public IActionResult TrackingDetail(int paymentmethodId)
+        public IActionResult TrackingDetail(int paymentmethodId) // Admin-Tracking-Detail //
         {
             var tracking = _db.TrackingDB.Include(t => t.PaymentMethod)
                 .ThenInclude(tc => tc.CreditCard).Include(t => t.PaymentMethod).ThenInclude(tb => tb.BankTransfer)
@@ -156,7 +156,7 @@ namespace Staychill.Controllers.AdminController
                 return RedirectToAction("Payment");
             }
             tracking.RetainCarts = _db.RetaincartsDB
-            .Where(rc => rc.Tracking.PaymentMethod.PaymentmethodId == paymentmethodId)  // or however you link retain carts
+            .Where(rc => rc.Tracking.PaymentMethod.PaymentmethodId == paymentmethodId)
             .Include(rc => rc.RetainCartItems)
             .ToList();
             return View(tracking);
@@ -167,7 +167,7 @@ namespace Staychill.Controllers.AdminController
             var exisitingTracking = _db.TrackingDB.FirstOrDefault(t => t.ShipmentCode == ShipmentCode);
             if (exisitingTracking == null)
             {
-                return RedirectToAction("Tracking");            
+                return RedirectToAction("Tracking");
             }
             _db.Remove(exisitingTracking);
             await _db.SaveChangesAsync();
@@ -176,11 +176,180 @@ namespace Staychill.Controllers.AdminController
         // ============================================= Tracking ============================================= //
 
         // ============================================= Payment ============================================= //
-        public IActionResult Payment()
+        public IActionResult Payment() // Admin-Payment-Index //
         {
-            var tracking = _db.TrackingDB.Include(t => t.PaymentMethod).ToList();
-            return View(tracking);
+            var payment = _db.PaymentDB.Include(t => t.CreditCard).Include(t => t.BankTransfer).Include(t => t.QRData).ToList();
+            var cardOptions = _db.CardOptDB.ToList();
+
+            return View(payment);
         }
+
+        // ========== Payment-CreditcardType-Controller ========== //
+        public IActionResult PaymentCardOpt(string cardtypequery) // Admin-Payment-Cardtype-Index //
+        {
+            if (string.IsNullOrEmpty(cardtypequery))
+            {
+                return View("PaymentCardOpt", _db.CardOptDB.ToList());
+            }
+            else
+            {
+                var cardtype = _db.CardOptDB.ToList();
+                var filteredcardType = cardtype.Where(searchcardType => searchcardType.CreditcardOpt.Contains(cardtypequery)).ToList();
+                return View("PaymentCardOpt", filteredcardType);
+            }
+        }
+
+        [HttpGet]
+        public IActionResult PaymentCardOptCreate() // Admin-Payment-Cardtype-Create(GET) //
+        {
+            var cardtype = new CreditcardType();
+            return View(cardtype);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken] // Admin-Payment-Cardtype-Create(POST) //
+        public async Task<IActionResult> PaymentCardOptCreate(CreditcardType model)
+        {
+            if (ModelState.IsValid)
+            {
+                _db.CardOptDB.Add(model);
+                await _db.SaveChangesAsync();
+                return RedirectToAction("PaymentCardOpt");
+            }
+            return View(model);
+        }
+
+        public IActionResult PaymentCardOptDelete(int id) // Admin-Payment-Cardtype-Delete //
+        {
+            var existcreditcardtype = _db.CardOptDB.FirstOrDefault(c => c.Id == id);
+            if (existcreditcardtype == null)
+            {
+                return RedirectToAction("PaymentCardOpt");
+            }
+            _db.Remove(existcreditcardtype);
+            _db.SaveChanges();
+            return RedirectToAction("PaymentCardOpt");
+        }
+        // ========== Payment-CreditcardType-Controller ========== //
+
+        // ========== Payment-Bankaccount-Controller ========== //
+        public IActionResult PaymentBankAcc(string bankaccquery) // Admin-Payment-Bankacc-Index //
+        {
+            if (string.IsNullOrEmpty(bankaccquery))
+            {
+                return View("PaymentBankAcc", _db.BankAccDB.ToList());
+            }
+            else
+            {
+                var bankacc = _db.BankAccDB.ToList();
+                var filteredBankacc = bankacc.Where(bankAccount => bankAccount.BankName.Contains(bankaccquery)).ToList();
+                return View("PaymentBankAcc", filteredBankacc);
+            }
+        }
+
+        [HttpGet]
+        public IActionResult PaymentBankAccCreate() // Admin-Payment-Bankacc-Create(GET) //
+        {
+            var bankacc = new BankAccount();
+            return View(bankacc);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult PaymentBankAccCreate(BankAccount model) // Admin-Payment-Bankacc-Create(POST) //
+        {
+            if (ModelState.IsValid)
+            {
+                _db.Add(model);
+                _db.SaveChanges();
+                return RedirectToAction("PaymentBankAcc");
+            }
+            else
+            {
+                return RedirectToAction("PaymentBankAccCreate");
+            }               
+        }
+
+        public IActionResult PaymentBankAccDelete(int id) // Admin-Payment-Bankacc-Delete //
+        {
+            var existingBankaccount = _db.BankAccDB.FirstOrDefault(ba => ba.Id == id);
+            if (existingBankaccount != null) 
+            {
+                _db.Remove(existingBankaccount);
+                _db.SaveChanges();
+                return RedirectToAction("PaymentBankAcc");
+            }
+            else
+            {
+                return RedirectToAction("PaymentBankAcc");
+            }
+        }
+        // ========== Payment-Bankaccount-Controller ========== //
+
+        // ========== Payment-Promptpay-Controller ========== //
+        public IActionResult PaymentPromptpay(string Qrquery) 
+        {
+            if (string.IsNullOrEmpty(Qrquery)) 
+            {
+                return View("PaymentPromptpay", _db.StaychillQRDB.ToList());
+            }
+            else
+            {
+                var promptpay = _db.StaychillQRDB.ToList();
+                var filteredpromptpay = promptpay.Where(qr => qr.Id.ToString().Contains(Qrquery)).ToList();
+                return View("PaymentPromptpay", filteredpromptpay);
+            }
+        }
+
+        [HttpGet]
+        public IActionResult PaymentPromptpayEdit(int id)
+        {
+            var existingQR = _db.StaychillQRDB.FirstOrDefault(qr => qr.Id == id);
+            if (existingQR != null)
+            {
+                return View(existingQR);
+            }
+            return RedirectToAction("PaymentPromptpay");
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> PaymentPromptpayEdit(StaychillQR model, IFormFile QR)
+        {
+            var existingQR = _db.StaychillQRDB.FirstOrDefault(qr => qr.Id == model.Id);
+            if (QR != null && QR.Length>0)
+            {
+                existingQR.StoreQRData = await ConvertToBytes(QR);
+            }
+            await _db.SaveChangesAsync();
+            return RedirectToAction("PaymentPromptpay");
+        }
+
+        public IActionResult PaymentPromptPayDelete(int id)
+        {
+            var existingQR = _db.StaychillQRDB.FirstOrDefault(qr => qr.Id == id);
+            if (existingQR != null)
+            {
+                _db.Remove(existingQR);
+                _db.SaveChanges();
+                return RedirectToAction("PaymentPromptpay");
+            }
+            else
+            {
+                return RedirectToAction("PaymentPromptpay");
+            }
+        }
+
+        // ========== Payment-Promptpay-Controller ========== //
+
+        // ========== Convert Image into Byte to keep in database ========== //
+        private async Task<byte[]> ConvertToBytes(IFormFile file) // Retrieve a parameter as a file type //
+        {
+
+            using (var memoryStream = new MemoryStream())
+            {
+                await file.CopyToAsync(memoryStream);
+                return memoryStream.ToArray();
+            }
+        }
+        // ========== Convert Image into Byte to keep in database ========== //
 
 
     }

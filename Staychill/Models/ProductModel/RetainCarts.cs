@@ -49,6 +49,7 @@ namespace Staychill.Models.ProductModel
         public float UnitPrice { get; set; } // Unit price of the product
 
         public float TotalPrice { get; set; } // Calculated total price
+        public float TotalAmount { get; set; } // Total amount before calculate with discount
 
         public float DiscountAmount { get; set; }
 

@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Staychill.Data;
 
@@ -10,9 +11,11 @@ using Staychill.Data;
 namespace Staychill.Migrations
 {
     [DbContext(typeof(StaychillDbContext))]
-    partial class StaychillDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241118043521__addDatabaseforStoreQR")]
+    partial class _addDatabaseforStoreQR
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -361,9 +364,6 @@ namespace Staychill.Migrations
 
                     b.Property<int>("RetainCartId")
                         .HasColumnType("int");
-
-                    b.Property<float>("TotalAmount")
-                        .HasColumnType("real");
 
                     b.Property<float>("TotalDiscountedPrice")
                         .HasColumnType("real");

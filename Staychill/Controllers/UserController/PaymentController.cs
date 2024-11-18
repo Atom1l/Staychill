@@ -19,11 +19,15 @@ namespace Staychill.Controllers.UserController
         public IActionResult PaymentIndex(float discountAmount, float discountPrice)
         {
             var bankAccounts = _db.BankAccDB.ToList(); // Make BankAccount into list to be able to see the data inside it //
+            var cardOpt = _db.CardOptDB.ToList();
+
 
             var cart = _db.CartDB.Include(c => c.CartItems).ThenInclude(c => c.Discount)
                                  .Include(c => c.CartItems).ThenInclude(c => c.Discount)
                                  .Include(c => c.CartItems).ThenInclude(c => c.Product)
                                  .Include(c => c.CartItems).ThenInclude(c => c.Product.Images).ToList(); // Make CartDB into list to make a display of the data inside this DB //
+            
+            var qr = _db.StaychillQRDB.ToList();
 
             var viewModel = new CartViewModel
             {
@@ -36,9 +40,13 @@ namespace Staychill.Controllers.UserController
                     BankTransfer = new BankTransfer
                     {
                         Accounts = bankAccounts, // To make <Select> be able to track into BankAccDB and use it value to make user choose his/her bank account //
+                    },
+                    CreditCard = new CreditCard()
+                    {
+                        CardTypeOpt = cardOpt,
                     }
-                }
-                
+                },
+                StaychillQR = qr,
             };
             return View(viewModel); // return the value with viewModel //
         }

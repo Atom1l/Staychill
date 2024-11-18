@@ -36,9 +36,10 @@
                                     <select class="fs-5" name="selectedCardtype" id="cardTypeSelect" onchange="updateCreditCardType()">
                                         <optgroup>
                                             <option>-None-</option>
-                                            <option>VISA</option>
-                                            <option>MasterCard</option>
-                                            <option>TrueMoney</option>
+                                            @foreach (var account in Model.PaymentViewModel.CreditCard?.CardTypeOpt ?? null!)
+                                            {
+                                                <option value="@account.CreditcardOpt">@account.CreditcardOpt</option>
+                                            }
                                         </optgroup>
                                     </select>
                                     <input type="hidden" name="creditcardType" id="SelectedCardType"  />
@@ -98,7 +99,26 @@
                             <div class="row d-flex flex-column justify-content-center align-items-center">
                                 <div class="qrcode col-12 fs-4">
                                     <label for="staychillQR" class="mt-2">QR Code Prompt Pay</label>
-                                    <img src="/pic/StayChill logo.png" alt="staychillQR" name="staychillQR" width="200px" height="200px" class="border" />
+                                    @if (Model.StaychillQR != null && Model.StaychillQR.Any())
+                                    {
+                                        @foreach (var qr in Model.StaychillQR)
+                                        {
+                                            <div class="qrcode-item">
+                                                @if (qr.StoreQRData != null && qr.StoreQRData.Length > 0)
+                                                {
+                                                    <img src="data:image/png;base64,@Convert.ToBase64String(qr.StoreQRData)" alt="QR Code" width="150px" height="150px" />
+                                                }
+                                                else
+                                                {
+                                                    <div>No QR Code available</div>
+                                                }
+                                            </div>
+                                        }
+                                    }
+                                    else
+                                    {
+                                        <div>No QR Codes available</div>
+                                    }
                                 </div>
                                 <div class="user-uploaded col-12 fs-4">
                                     <label for="uploadedPic">Evidence</label>
@@ -154,11 +174,13 @@
                                 @if (Model.DiscountedTotal > 0)
                                 {
                                     <div>
+                                        <input type="hidden" name="totalamountbefore" value="@Model.TotalAmount" />
                                         <div class="fw-bold">@Model.DiscountedTotal.ToString("N2") ฿</div>
                                     </div>
                                 }
                                 else
                                 {
+                                    <input type="hidden" name="totalamountbefore" value="@Model.TotalAmount" />
                                     <div class="fw-bold">@Model.TotalAmount.ToString("N2") ฿</div>
                                 }
                             </td>

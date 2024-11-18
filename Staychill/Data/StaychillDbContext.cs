@@ -33,10 +33,12 @@ namespace Staychill.Data
 
         // Payment DbSet ----- //
         public DbSet<Staychill.Models.BankModel.BankAccount> BankAccDB { get; set; }
+        public DbSet<Staychill.Models.BankModel.CreditcardType> CardOptDB { get; set; }
         public DbSet<Staychill.Models.BankModel.BankTransfer> BankTransferDB { get; set; }
         public DbSet<Staychill.Models.BankModel.QRData> QRDataDB { get; set; }
         public DbSet<Staychill.Models.BankModel.CreditCard> CreditCardsDB { get; set; }
         public DbSet<Staychill.Models.BankModel.PaymentMethod> PaymentDB { get; set; }
+        public DbSet<Staychill.Models.BankModel.StaychillQR> StaychillQRDB { get; set; }
 
 
 

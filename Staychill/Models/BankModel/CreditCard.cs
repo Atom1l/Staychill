@@ -14,12 +14,8 @@ namespace Staychill.Models.BankModel
 
         [Required]
         public string? CardType { get; set; }
-        public List<string> CardTypeOpt { get; } = new List<string>
-        {
-            "VISA",
-            "MasterCard",
-            "TrueMoney",
-        };
+        
+        public List<CreditcardType>? CardTypeOpt { get; set; } = new List<CreditcardType>();
 
         public string? NameOnCard { get; set; } // Name of the holder of the card //
 
