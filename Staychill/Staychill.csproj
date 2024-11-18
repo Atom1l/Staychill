@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <_ContentIncludedByDefault Remove="wwwroot\css\AdminCSS\AdminPaymentforMethod.css" />
     <_ContentIncludedByDefault Remove="wwwroot\css\cartIndex.css" />
     <_ContentIncludedByDefault Remove="wwwroot\js\navbar.js" />
   </ItemGroup>

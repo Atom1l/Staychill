@@ -137,10 +137,12 @@ namespace Staychill.Controllers.UserController
                 if (action == "increase" && item.Quantity <= item.Product.Instock) // button with action "increase" and the amount of quantity still not more that inStock //
                 {
                     item.Quantity ++;
+                    item.Product.Instock--;
                 }
                 else if (action == "decrease" && item.Quantity > 1) // button with action "decrease" and the amount of quantity still not less than 1 //
                 {
                     item.Quantity --;
+                    item.Product.Instock++;
                 }
                 _db.SaveChanges();
             }

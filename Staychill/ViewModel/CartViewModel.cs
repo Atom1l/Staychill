@@ -20,5 +20,6 @@ namespace Staychill.ViewModel
 
         // Paymentmethod //
         public PaymentViewModel? PaymentViewModel { get; set; }
+        public List<StaychillQR>? StaychillQR { get; set; }
     }
 }

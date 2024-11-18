@@ -26,7 +26,7 @@
                     <th>@Html.DisplayNameFor(model => model.User)</th>
                     <th>@Html.DisplayNameFor(model => model.ShipmentCode)</th>
                     <th>@Html.DisplayNameFor(model => model.Status)</th>
-                    <th></th>
+                    <th>Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -38,8 +38,8 @@
                         <td class="fw-bold truncate-text">@Html.DisplayFor(modelItem => item.ShipmentCode)</td>
                         <td class="truncate-text">@Html.DisplayFor(modelItem => item.Status)</td>
                         <td class="d-flex justify-content-center align-items-center">
-                            <a asp-action="TrackingEdit" asp-route-shipmentCode="@item.ShipmentCode" class="tracking-edit-btn btn btn-sm btn-primary me-2">Edit</a> |
-                            <a asp-action="TrackingDetail" asp-route-paymentmethodId="@item.PaymentMethod.PaymentmethodId" class="tracking-edit-btn btn btn-sm btn-primary ms-2">Detail</a>
+                            <a asp-action="TrackingEdit" asp-route-shipmentCode="@item.ShipmentCode" class="tracking-edit-btn me-2">Edit</a> |
+                            <a asp-action="TrackingDetail" asp-route-paymentmethodId="@item.PaymentMethod.PaymentmethodId" class="tracking-edit-btn ms-2">Detail</a>
                         </td>
                     </tr>
                 }

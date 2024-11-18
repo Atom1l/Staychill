@@ -1,0 +1,69 @@
+﻿body {
+}
+.tracking-shipment {
+    border: solid 1px #b7b7b7;
+    border-radius: 20px !important;
+}
+
+@media(max-width:1200px){
+    .tracking-left-column p {
+        font-size: 1.15rem !important;
+    }
+    .tracking-right-column p{
+        font-size: 1.15rem !important;
+    }
+    .tracking-shipment div{
+        font-size:1.5rem !important;
+    }
+}
+
+@media(max-width:990px){
+    .tracking-left-column p {
+        display:flex;
+        flex-direction:column;
+        font-size: 1.15rem !important;
+    }
+    .tracking-right-column p {
+        display:flex;
+        flex-direction:column;
+        font-size: 1.15rem !important;
+    }
+    .tracking-shipment div {
+        font-size: 1.5rem !important;
+    }
+}
+
+@media(max-width:555px) {
+
+    .tracking-left-column p {
+        display: flex;
+        flex-direction: column;
+        font-size: 0.95rem !important;
+    }
+
+    .tracking-right-column p {
+        display: flex;
+        flex-direction: column;
+        font-size: 0.95rem !important;
+    }
+
+    .tracking-shipment div {
+        font-size: 1.25rem !important;
+    }
+}
+
+@media(max-width:375px){
+    .tracking-shipment div{
+        font-size: 1rem !important;
+    }
+}
+
+@media(max-width:320px) {
+    .tracking-shipment img{
+        width:50px;
+        height:50px;
+    }
+    .tracking-shipment div {
+        font-size: 0.9rem !important;
+    }
+}

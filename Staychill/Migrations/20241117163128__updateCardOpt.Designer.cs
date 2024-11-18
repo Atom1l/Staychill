@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Staychill.Data;
 
@@ -10,9 +11,11 @@ using Staychill.Data;
 namespace Staychill.Migrations
 {
     [DbContext(typeof(StaychillDbContext))]
-    partial class StaychillDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241117163128__updateCardOpt")]
+    partial class _updateCardOpt
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -176,22 +179,6 @@ namespace Staychill.Migrations
                         .HasFilter("[PaymentMethodId] IS NOT NULL");
 
                     b.ToTable("QRDataDB");
-                });
-
-            modelBuilder.Entity("Staychill.Models.BankModel.StaychillQR", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<byte[]>("StoreQRData")
-                        .HasColumnType("varbinary(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("StaychillQRDB");
                 });
 
             modelBuilder.Entity("Staychill.Models.ProductModel.Cart", b =>
@@ -361,9 +348,6 @@ namespace Staychill.Migrations
 
                     b.Property<int>("RetainCartId")
                         .HasColumnType("int");
-
-                    b.Property<float>("TotalAmount")
-                        .HasColumnType("real");
 
                     b.Property<float>("TotalDiscountedPrice")
                         .HasColumnType("real");

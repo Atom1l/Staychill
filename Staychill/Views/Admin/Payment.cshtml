@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Staychill.Models.ProductModel.TrackingModel.Tracking>
+﻿@model IEnumerable<Staychill.Models.BankModel.PaymentMethod>
 
 @{
     Layout = "_AdminLayout";
@@ -8,42 +8,11 @@
 
 <div class="container-fluid mt-4" style="overflow-x:hidden;">
     <h1 class="fw-bold text-center">Payment-controller</h1>
-    <hr class="mb-4" />
-    <div class="tracking-search-container w-100 d-flex justify-content-end align-items-center mt-4">
-        <form asp-action="Tracking" class="d-flex align-items-center">
-            <label for="trackingquery" class="tracking-search-label fs-5 fw-bold me-2">Search : </label>
-            <div class="tracking-searchbar-container">
-                <input class="tracking-searchbar fs-6 rounded-3 p-1 me-2" type="text" name="trackingquery" value="" placeholder="" />
-                <button type="submit" class="btn-warning p-1 pe-2 ps-2 rounded-3">Search!</button>
-            </div>
-        </form>
+    <hr class="mb-5" />
+    <div class="payment-method d-flex flex-row justify-content-evenly align-items-center align-content-center fs-3">
+        <a asp-action="PaymentCardOpt"><button class="btn btn-primary fs-4 p-3">Card types</button></a>
+        <a asp-action="PaymentBankAcc"><button class="btn btn-primary fs-4 p-3">Bank accounts</button></a>
+        <a asp-action="PaymentPromptpay"><button class="btn btn-primary fs-4 p-3">QR code</button></a>
     </div>
-    <div class="table-responsive">
-        <table class="table table-bordered fs-5 mt-3">
-            <thead>
-                <tr>
-                    <th>UserId</th>
-                    <th>User</th>
-                    <th>ShipmentCode</th>
-                    <th>PaymentType</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach (var item in Model)
-                {
-                    <tr>
-                        <td class="fw-bold truncate-text">@item.UserId</td>
-                        <td class="fw-bold truncate-text">@item.User</td>
-                        <td class="fw-bold truncate-text">@item.ShipmentCode</td>
-                        <td class="fw-bold truncate-text">@item.PaymentMethod?.PaymentmethodType</td>
-                        <td class="d-flex justify-content-center align-items-center">
-                            <a asp-action="PaymentDetail" asp-route-paymentmethodId="@item.PaymentMethod.PaymentmethodId" class="tracking-edit-btn btn btn-primary">Detail</a>
-                        </td>
-                    </tr>
-                }
-            </tbody>
-        </table>
-    </div>
-
 </div>
+

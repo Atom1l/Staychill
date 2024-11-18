@@ -103,6 +103,7 @@
                         @if (Model.DiscountedTotal > 0)
                         {
                             <div>
+                                <input type="hidden" name="totalamountbefore" value="@Model.TotalAmount" />
                                 <div class="fw-bold">@Model.DiscountedTotal.ToString("N2") ฿</div>
                             </div>
                         }
