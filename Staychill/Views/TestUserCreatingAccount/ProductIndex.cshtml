@@ -37,8 +37,7 @@
             <th>
                 Pics
             </th>
-
-            <th></th>
+            <th>Actions</th>
         </tr>
     </thead>
     <tbody>
@@ -72,7 +71,7 @@
                         <div>
                             @if (product.Images.Image1 != null)
                             {
-                                <img src="@($"data:image/png;base64,{Convert.ToBase64String(product.Images.Image1)}")" alt="Image 1" style="width: 50px; height: 50px;"/>
+                                <img src="@($"data:image/png;base64,{Convert.ToBase64String(product.Images.Image1)}")" alt="Image 1" style="width: 50px; height: 50px;" />
                             }
                             @if (product.Images.Image2 != null)
                             {
@@ -80,28 +79,33 @@
                             }
                             @if (product.Images.Image3 != null)
                             {
-                                <img src="@($"data:image/png;base64,{Convert.ToBase64String(product.Images.Image3)}")" alt="Image 3" style="width: 50px; height: 50px;"/>
+                                <img src="@($"data:image/png;base64,{Convert.ToBase64String(product.Images.Image3)}")" alt="Image 3" style="width: 50px; height: 50px;" />
                             }
                             @if (product.Images.Image4 != null)
                             {
-                                <img src="@($"data:image/png;base64,{Convert.ToBase64String(product.Images.Image4)}")" alt="Image 4" style="width: 50px; height: 50px;"/>
+                                <img src="@($"data:image/png;base64,{Convert.ToBase64String(product.Images.Image4)}")" alt="Image 4" style="width: 50px; height: 50px;" />
                             }
                         </div>
                     }
                 </td>
                 <td>
+                    <!-- ปุ่ม Add to Cart -->
                     <form asp-action="CartIndex" asp-controller="Cart" method="post">
                         <input type="hidden" name="productId" value="@product.Id" />
                         <input type="number" name="quantity" value="1" min="1" />
                         <button type="submit">Add to Cart</button>
                     </form>
 
-                    <a asp-action="ProductDelete" asp-route-id="@product.Id">Delete</a>
-                </td>
+                    <!-- ปุ่ม Details -->
+                    <a asp-action="ProductDetails" asp-route-id="@product.Id" class="btn btn-info">Details</a>
 
+                    <!-- ปุ่ม Edit -->
+                    <a asp-action="ProductEdit" asp-route-id="@product.Id" class="btn btn-warning">Edit</a>
+
+                    <!-- ปุ่ม Delete -->
+                    <a asp-action="ProductDelete" asp-route-id="@product.Id" class="btn btn-danger">Delete</a>
+                </td>
             </tr>
         }
     </tbody>
 </table>
-
-
