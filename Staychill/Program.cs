@@ -33,6 +33,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Feedback}/{action=FeedbackIndex}/{id?}");
+    pattern: "{controller=TestUserCreatingAccountController}/{action=Index}/{id?}");
 
 app.Run();
