@@ -351,6 +351,14 @@ namespace Staychill.Controllers.AdminController
         }
         // ========== Convert Image into Byte to keep in database ========== //
 
+        // ============================================= Feedback ============================================= //
+
+        public IActionResult Feedback()
+        {
+            var feedback = _db.FeedbackDB.ToList();
+            return View(feedback);
+        }
+
 
     }
 }

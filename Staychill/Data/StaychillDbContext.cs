@@ -20,6 +20,7 @@ namespace Staychill.Data
         // User DbSet ----- //
         public DbSet<Staychill.Models.UserModel.User> UserDB { get; set; }
         public DbSet<Staychill.Models.UserModel.Address> AddressDB { get; set; }
+        public DbSet<Staychill.Models.UserModel.Feedback> FeedbackDB { get; set; }
 
         // Product DbSet ----- //
         public DbSet<Staychill.Models.ProductModel.Product> ProductDB { get; set; }
