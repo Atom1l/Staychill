@@ -85,10 +85,12 @@ namespace Staychill.Controllers.UserController
                 return BadRequest("Selected payment method is required.");
             }
 
+            var currentUser = User.Identity.Name; // Define the user account //
 
             // Create a new RetainCarts variable to store RetainCartItems
             var retainCart = new RetainCarts
             {
+                Username = currentUser,
                 RetainCartItems = new List<RetainCartItem>()
             };
 

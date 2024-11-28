@@ -147,7 +147,8 @@ namespace Staychill.Controllers.UserController
         [HttpPost]
         public IActionResult UpdateQuantity(int productId, string action) // To make user can edit quantities of the product at CartIndex //
         {
-            var cart = _db.CartDB.Include(c => c.CartItems).ThenInclude(c => c.Product).FirstOrDefault(); // Retrieve the Cartitem data //
+            var currentUser = User.Identity.Name;
+            var cart = _db.CartDB.Include(c => c.CartItems).ThenInclude(c => c.Product).FirstOrDefault(c => c.Username == currentUser); // Retrieve the Cartitem data //
             var item = cart.CartItems.FirstOrDefault(c => c.ProductId == productId); // Find if the Id parameter that we send through is matching with CartItem Id //
             if (item != null) // If item not null //
             {
