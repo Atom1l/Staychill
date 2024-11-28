@@ -1,5 +1,14 @@
 ﻿@model Staychill.Models.UserModel.Feedback
+
 @{
+    @if (User.Identity.IsAuthenticated)
+    {
+        Layout = "_Logged-In_Layout";
+    }
+    else
+    {
+        Layout = "_Layout";
+    }
 }
 
 <link rel="stylesheet" href="~/css/UserCSS/FeedbackIndex.css" asp-append-version="true" />

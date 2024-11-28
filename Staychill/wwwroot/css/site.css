@@ -197,7 +197,7 @@ body {
 
 
 /* === SM-SIZE === */
-@media (max-width: 576px) {
+@media (max-width: 768px) {
     .collapse-2 {
         display:block !important;
         position:absolute;

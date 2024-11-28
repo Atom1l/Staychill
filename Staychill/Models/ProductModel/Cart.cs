@@ -10,6 +10,8 @@ namespace Staychill.Models.ProductModel
         [Key]
         public int CartId { get; set; } // Primary key for the Cart
 
+        public string? Username { get; set; }
+
         public ICollection<CartItem> CartItems { get; set; } = new List<CartItem>();
         public int GenerateCartId()
         {
@@ -17,6 +19,11 @@ namespace Staychill.Models.ProductModel
             // Generate a random integer between 1 and 99999999 (8 digits)
             int cartitemId = random.Next(1, 100000000);
             return cartitemId; // Return the generated integer | not the same with CartitemsId //
+        }
+
+        internal IEnumerable<object> SelectMany(Func<object, object> value)
+        {
+            throw new NotImplementedException();
         }
     }
     public class CartItem
@@ -64,9 +71,6 @@ namespace Staychill.Models.ProductModel
 
             return totalPrice;
         }
-
-
-
 
     }
 

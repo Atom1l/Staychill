@@ -83,7 +83,7 @@ namespace Staychill.Data
             // RetainCart to RetainCartItem relationship
             modelBuilder.Entity<RetainCarts>()
                 .HasMany(rc => rc.RetainCartItems)
-                .WithOne(rci => rci.RetainCart) // Assuming RetainCartItem has a property named RetainCart
+                .WithOne(rci => rci.RetainCart) 
                 .HasForeignKey(rci => rci.RetainCartId) // Foreign key in RetainCartItem
                 .OnDelete(DeleteBehavior.Restrict); // Optional: specify delete behavior
 

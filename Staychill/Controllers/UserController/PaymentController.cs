@@ -18,6 +18,10 @@ namespace Staychill.Controllers.UserController
         // ========== DISPLAY ========== //
         public IActionResult PaymentIndex(float discountAmount, float discountPrice)
         {
+            var currentUser = User.Identity.Name;
+
+            var user = _db.UserDB.FirstOrDefault(u => u.Username == currentUser);
+
             var bankAccounts = _db.BankAccDB.ToList(); // Make BankAccount into list to be able to see the data inside it //
             var cardOpt = _db.CardOptDB.ToList();
 
@@ -25,12 +29,14 @@ namespace Staychill.Controllers.UserController
             var cart = _db.CartDB.Include(c => c.CartItems).ThenInclude(c => c.Discount)
                                  .Include(c => c.CartItems).ThenInclude(c => c.Discount)
                                  .Include(c => c.CartItems).ThenInclude(c => c.Product)
-                                 .Include(c => c.CartItems).ThenInclude(c => c.Product.Images).ToList(); // Make CartDB into list to make a display of the data inside this DB //
+                                 .Include(c => c.CartItems).ThenInclude(c => c.Product.Images).Where(c => c.Username == currentUser)
+                                 .ToList(); // Make CartDB into list to make a display of the data inside this DB //
             
             var qr = _db.StaychillQRDB.ToList();
 
             var viewModel = new CartViewModel
             {
+                UserEmail = user.Email,
                 CartItemDetails = cart, // CartItemDetails as a list<> will contain "cart" data that include all data from CartDb //
                 TotalAmount = cart.SelectMany(c => c.CartItems).Select(item => item.TotalPrice - (item.Discount?.DiscountAmount ?? 0)).Sum(),
                 TotalDiscountAmount = discountAmount, // Total of the sum of discountamount and total price of product(s) before subtract again //
