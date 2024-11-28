@@ -22,15 +22,19 @@
         <h2>@Model.ProductName</h2>
         <p>@Model.Description</p>
 
+        <!-- โซนกรองสี -->
         <p><strong>Color:</strong></p>
-        <div>
-            @for (int i = 0; i < 6; i++) // จำลองวงแสดงวงกลมสี
+        <div style="display: flex; gap: 10px;">
+            @if (ViewBag.RelatedColors != null)
             {
-                <span style="display: inline-block; width: 20px; height: 20px; background-color: gray; border-radius: 50%; margin-right: 10px;"></span>
+                foreach (var colorItem in ViewBag.RelatedColors)
+                {
+                    <a asp-action="ProductDetails" asp-route-id="@colorItem.Id" style="text-decoration: none;">
+                        <span style="display: inline-block; width: 20px; height: 20px; background-color: @colorItem.Color; border-radius: 50%; border: 1px solid #000; cursor: pointer;" title="@colorItem.Color"></span>
+                    </a>
+                }
             }
         </div>
-
-        <p><strong>Price:</strong> @String.Format("{0:C}", Model.Price)</p>
 
         <!-- ฟอร์มเพิ่มสินค้า -->
         <div style="margin-top: 20px;">
@@ -48,7 +52,6 @@
 
 <!-- โซนแสดงภาพเพิ่มเติม -->
 <div style="margin-top: 30px;">
-    <h3>Additional Images</h3>
     <div style="display: flex; gap: 10px;">
         @if (Model.Images != null)
         {
@@ -68,4 +71,38 @@
     </div>
 </div>
 
-<a asp-action="ProductIndex" style="margin-top: 20px; display: block;">Back to List</a>
+<!-- โซนแสดงสินค้าอื่นๆ ที่สุ่มมา -->
+<div style="margin-top: 30px;">
+    <h3>Others</h3>
+    <div style="display: flex; gap: 10px;">
+        @if (ViewBag.OtherProducts != null)
+        {
+            foreach (var otherProduct in ViewBag.OtherProducts)
+            {
+                <div style="flex: 1; text-align: center;">
+                    <!-- คลิกที่รูปภาพเพื่อไปที่หน้ารายละเอียดสินค้า -->
+                    @if (otherProduct.Images != null && otherProduct.Images.Image1 != null)
+                    {
+                        var base64Image = Convert.ToBase64String(otherProduct.Images.Image1);
+                        <a href="@Url.Action("ProductDetails", "Product", new { id = otherProduct.Id })">
+                            <!-- แสดงรูปภาพโดยไม่มีกรอบ -->
+                            <img src="@($"data:image/png;base64,{base64Image}")" alt="Image1" style="width: 100px; height: auto;" />
+                        </a>
+                    }
+                    else
+                    {
+                        <p>No Image Available</p> <!-- แสดงข้อความหากไม่มีรูปภาพ -->
+                    }
+                </div>
+            }
+        }
+        else
+        {
+            <p>No other products available.</p>
+        }
+    </div>
+</div>
+
+
+
+<a asp-action="ProductMainPage" style="margin-top: 20px; display: block;">Back</a> 

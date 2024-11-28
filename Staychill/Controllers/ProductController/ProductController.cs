@@ -192,15 +192,6 @@ namespace Staychill.Controllers.ProductController
 
             return RedirectToAction("ProductAddCart"); // Redirect to the appropriate action
         }
-        public async Task<IActionResult> ProductDetails(int id)
-        {
-            var product = await _db.ProductDB.Include(p => p.Images).FirstOrDefaultAsync(p => p.Id == id); // Load Product with Images
-            if (product == null)
-            {
-                return NotFound();
-            }
-            return View(product);
-        }
         public async Task<IActionResult> ProductDetailsAdmin(int id)
         {
             var product = await _db.ProductDB.Include(p => p.Images).FirstOrDefaultAsync(p => p.Id == id); // Load Product with Images
@@ -251,23 +242,102 @@ namespace Staychill.Controllers.ProductController
             }
             return View(updatedProduct);
         }
-
-        public async Task<IActionResult> ProductMainPage()
+        public async Task<IActionResult> ProductMainPage(string category, string price, string color = "White")
         {
-            // กรองสินค้าที่มีสี Black, White, Green เท่านั้น
-            var filteredProducts = await _db.ProductDB
-                .Include(p => p.Images)
-                .Where(p => p.Color == "White")
-                .ToListAsync();
+            // ดึงข้อมูลประเภทสินค้าทั้งหมด (ProductType) สำหรับ filter
+            ViewBag.Categories = await _db.ProductDB
+                                               .Select(p => p.ProductType)
+                                               .Distinct()
+                                               .ToListAsync();
 
-            // ส่งข้อมูลไปยัง View
+            // ดึงข้อมูลสีทั้งหมด (Color) สำหรับ filter
+            ViewBag.Colors = await _db.ProductDB
+                                           .Select(p => p.Color)
+                                           .Distinct()
+                                           .ToListAsync();
+
+            // เริ่มต้นกรองสินค้าตามเงื่อนไข
+            var products = _db.ProductDB.AsQueryable();
+
+            if (!string.IsNullOrEmpty(category))
+            {
+                products = products.Where(p => p.ProductType == category);
+            }
+
+            if (!string.IsNullOrEmpty(price))
+            {
+                var priceRange = price.Split('-');
+                if (priceRange.Length == 2)
+                {
+                    // แปลงราคาจาก string เป็น float
+                    var minPrice = float.Parse(priceRange[0]);
+                    var maxPrice = float.Parse(priceRange[1]);
+                    products = products.Where(p => p.Price >= minPrice && p.Price <= maxPrice);
+                }
+            }
+
+            // กรองสินค้าตามสี (เริ่มต้นเป็น White)
+            if (!string.IsNullOrEmpty(color))
+            {
+                products = products.Where(p => p.Color == color);
+            }
+
+            // ดึงสินค้าทั้งหมดที่ตรงกับตัวกรอง
+            var filteredProducts = await products
+         .Include(p => p.Images)  // แน่ใจว่าโหลดข้อมูล Images ด้วย
+         .ToListAsync();
+
+
             return View(filteredProducts);
         }
+
+        public async Task<IActionResult> ProductDetails(int id)
+        {
+            // โหลดสินค้าตัวปัจจุบันพร้อมข้อมูลรูปภาพ
+            var product = await _db.ProductDB
+                .Include(p => p.Images) // รวมข้อมูลรูปภาพของสินค้า
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            // ค้นหาสินค้าเฉพาะที่ ProductName เดียวกันและสีต่างกัน
+            var relatedProducts = await _db.ProductDB
+                .Where(p => p.ProductName == product.ProductName && p.Id != id) // เงื่อนไข: ชื่อสินค้าเดียวกันและไม่ใช่สินค้าปัจจุบัน
+                .GroupBy(p => p.Color) // จัดกลุ่มตาม Color
+                .Select(g => new
+                {
+                    Id = g.First().Id,   // ดึง Id ของสินค้าตัวแรกในกลุ่ม
+                    Color = g.Key        // ดึงสีของกลุ่ม
+                })
+                .ToListAsync();
+
+            // เก็บรายการสินค้าที่เกี่ยวข้องใน ViewBag เพื่อส่งไปยัง View
+            ViewBag.RelatedColors = relatedProducts;
+
+            // ดึงสินค้าจากฐานข้อมูลทั้งหมดและสุ่ม 3 ชิ้น (ยกเว้นสินค้าปัจจุบัน)
+            var otherProducts = await _db.ProductDB
+                .Include(p => p.Images)
+                .Where(p => p.Id != id) // ไม่ให้ดึงสินค้าตัวปัจจุบัน
+                .OrderBy(r => Guid.NewGuid()) // ใช้ Guid.NewGuid() เพื่อสุ่ม
+                .Take(3) // เลือกแค่ 3 ชิ้น
+                .ToListAsync();
+
+            // เก็บสินค้าที่สุ่มใน ViewBag
+            ViewBag.OtherProducts = otherProducts;
+
+            return View(product); // ส่งสินค้าตัวปัจจุบันไปยัง View
+        }
+
 
         // Check if Product exists
         private bool ProductExists(int id)
         {
             return _db.ProductDB.Any(e => e.Id == id);
         }
+
+
     }
 }
