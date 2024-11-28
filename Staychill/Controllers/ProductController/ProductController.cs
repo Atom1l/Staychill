@@ -1,47 +1,56 @@
-using Microsoft.AspNetCore.Mvc;
-using Staychill.Data;
-using Microsoft.EntityFrameworkCore;
-using Staychill.Models.ProductModel;
-using Staychill.Models.ProductModel.DiscountModel;
-using Staychill.Models.ProductModel.TrackingModel;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.Pkcs;
+using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
+using NuGet.DependencyResolver;
+using Staychill.Data;
+using Staychill.Models;
+using Staychill.Models.ProductModel;
 using Staychill.ViewModel;
 
-namespace Staychill.Controllers
+namespace Staychill.Controllers.ProductController
 {
     public class ProductController : Controller
     {
         private readonly StaychillDbContext _db;
 
-        public ProductController(StaychillDbContext db)
+        public ProductController(StaychillDbContext context)
         {
-            _db = db;
+            _db = context;
+        }
+
+        public IActionResult Index()
+        {
+            return View();
         }
 
         public async Task<IActionResult> ProductIndex()
         {
-            var model = await _db.ProductDB.Include(p => p.Images).ToListAsync(); // ‡∏î‡∏∂‡∏á‡∏Ç‡πâ‡∏≠‡∏°‡∏π‡∏•‡∏ú‡∏•‡∏¥‡∏ï‡∏†‡∏±‡∏ì‡∏ë‡πå‡πÅ‡∏•‡∏∞‡∏£‡∏π‡∏õ‡∏†‡∏≤‡∏û
+            var model = await _db.ProductDB.Include(p => p.Images).ToListAsync(); // Include Images from productImage to ProductDB //
             return View(model);
         }
 
         public IActionResult ProductCreate()
         {
-            var product = new Product(); // ‡∏™‡∏£‡πâ‡∏≤‡∏á‡∏≠‡πá‡∏≠‡∏ö‡πÄ‡∏à‡πá‡∏Å‡∏ï‡πå product
+            var product = new Product(); // make a new object name product using attributes from Product.cs //
             return View(product);
         }
 
+        // POST:(CREATE) //
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ProductCreate(Product product, IFormFile image1, IFormFile image2, IFormFile image3, IFormFile image4)
         {
             if (ModelState.IsValid)
             {
-                _db.ProductDB.Add(product); // ‡∏ö‡∏±‡∏ô‡∏ó‡∏∂‡∏Å‡∏Ç‡πâ‡∏≠‡∏°‡∏π‡∏•‡∏ú‡∏•‡∏¥‡∏ï‡∏†‡∏±‡∏ì‡∏ë‡πå
+                _db.ProductDB.Add(product); // Save the data from product that have Product.cs attributes //
                 await _db.SaveChangesAsync();
 
-                var productImages = new ProductImages // ‡πÅ‡∏õ‡∏•‡∏á‡∏£‡∏π‡∏õ‡∏†‡∏≤‡∏û‡πÄ‡∏õ‡πá‡∏ô byte
+                var productImages = new ProductImages // Convert IMG to Bytes to save in database //
                 {
                     ProductId = product.Id,
                     Image1 = await ConvertToBytes(image1),
@@ -50,17 +59,27 @@ namespace Staychill.Controllers
                     Image4 = await ConvertToBytes(image4),
                 };
 
-                _db.ProductImagesDB.Add(productImages); // ‡∏ö‡∏±‡∏ô‡∏ó‡∏∂‡∏Å‡∏£‡∏π‡∏õ‡∏†‡∏≤‡∏û‡πÉ‡∏ô‡∏ê‡∏≤‡∏ô‡∏Ç‡πâ‡∏≠‡∏°‡∏π‡∏•
+                _db.ProductImagesDB.Add(productImages); // Save the byte type of data into database //
                 await _db.SaveChangesAsync();
 
                 return RedirectToAction("ProductIndex");
             }
             return View("Index_Product");
         }
+        private async Task<byte[]> ConvertToBytes(IFormFile file)
+        {
+
+            using (var memoryStream = new MemoryStream())
+            {
+                await file.CopyToAsync(memoryStream);
+                return memoryStream.ToArray();
+            }
+        }
 
         public async Task<IActionResult> ProductDelete(int id)
         {
-            var product = await _db.ProductDB.Include(m => m.Images).FirstOrDefaultAsync(p => p.Id == id); 
+            // Find ProductDB include ProductImages Id if matching with id //
+            var product = await _db.ProductDB.Include(m => m.Images).FirstOrDefaultAsync(p => p.Id == id);
             if (product == null)
             {
                 return NotFound();
@@ -68,81 +87,89 @@ namespace Staychill.Controllers
             return View(product);
         }
 
+        // POST:(DELETE) //
         [HttpPost, ActionName("ProductDelete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ProductDeleteConfirmed(int id)
-{
-    var product = await _db.ProductDB.Include(p => p.Images).FirstOrDefaultAsync(p => p.Id == id); 
-    if (product != null)
-    {
-        _db.ProductImagesDB.Remove(product.Images); // ‡∏•‡∏ö‡∏£‡∏π‡∏õ‡∏†‡∏≤‡∏û‡∏ó‡∏µ‡πà‡πÄ‡∏Å‡∏µ‡πà‡∏¢‡∏ß‡∏Ç‡πâ‡∏≠‡∏á
-        _db.ProductDB.Remove(product); // ‡∏•‡∏ö‡∏Ç‡πâ‡∏≠‡∏°‡∏π‡∏•‡∏ú‡∏•‡∏¥‡∏ï‡∏†‡∏±‡∏ì‡∏ë‡πå
-        await _db.SaveChangesAsync();
-        return RedirectToAction("ProductIndex");
-    }
-    return NotFound();
-}
-
-
+        {
+            var product = await _db.ProductDB.FindAsync(id); // If match and confirmed then proceed to delete the data that contain inside int id //
+            if (product != null)
+            {
+                _db.ProductDB.Remove(product);
+                await _db.SaveChangesAsync();
+                return RedirectToAction("ProductIndex");
+            }
+            return NotFound();
+        }
         public IActionResult ProductAddCart()
         {
             var cartItems = _db.CartDB
                 .Include(c => c.CartItems)
-                .ThenInclude(ci => ci.Product)
+                .ThenInclude(ci => ci.Product) // Load the Product for each CartItem
                 .ToList();
 
             var viewModel = new TrackingViewModel
             {
                 CartItemDetails = cartItems,
-                TotalAmount = cartItems.SelectMany(c => c.CartItems).Sum(item => item.TotalPrice)
+                TotalAmount = cartItems.SelectMany(c => c.CartItems).Sum(item => item.TotalPrice) // Calculate total from all CartItems
             };
 
             return View(viewModel);
         }
 
+
         [HttpPost]
         [Route("ProductAddToCart")]
         public IActionResult ProductAddToCart(int productId, int quantity)
         {
-            var product = _db.ProductDB.FirstOrDefault(p => p.Id == productId); 
+            var product = _db.ProductDB.FirstOrDefault(p => p.Id == productId); // Check if productId matches with ProductDB.Id
             if (product == null)
             {
-                return Json(new { success = false, message = "Product not found" });
+                return Json(new { success = false, message = "Product not found" }); // Return as JSON
             }
 
-            var cart = _db.CartDB.Include(c => c.CartItems).FirstOrDefault(); 
+            // Find the existing Cart (assuming there's only one cart on the website)
+            var cart = _db.CartDB.Include(c => c.CartItems)
+                                  .FirstOrDefault(); // Get the first Cart (since there is only one cart)
+
+            // If the cart does not exist, you might want to create one here or handle the scenario
             if (cart == null)
             {
-                cart = new Cart();
-                _db.CartDB.Add(cart);
-                _db.SaveChanges();
+                cart = new Cart(); // Create a new Cart if one doesn't exist
+                _db.CartDB.Add(cart); // Add it to the database
+                _db.SaveChanges(); // Save changes to generate CartId
             }
 
-            var cartItem = cart.CartItems.FirstOrDefault(ci => ci.ProductId == productId); 
+            // Check if the product is already in the cart
+            var cartItem = cart.CartItems.FirstOrDefault(ci => ci.ProductId == productId);
             if (cartItem != null)
             {
-                cartItem.Quantity += quantity;
+                cartItem.Quantity += quantity; // If matching, increase the quantity
             }
             else
             {
+                // Create a new CartItem
                 var newCartItem = new CartItem
                 {
                     ProductId = productId,
                     Quantity = quantity,
-                    UnitPrice = product.Price ?? 0,
-                    CartId = cart.CartId
+                    UnitPrice = product.Price ?? 0, // Use null-coalescing to set to 0 if null
+                    CartId = cart.CartId // Associate the CartItem with the existing Cart
                 };
-                cart.CartItems.Add(newCartItem);
+                cart.CartItems.Add(newCartItem); // Add new CartItem to the Cart
             }
 
-            _db.SaveChanges();
+            _db.SaveChanges(); // Save changes
 
-            return Json(new { success = true, message = "Product added to cart" });
+            return Json(new { success = true, message = "Product added to cart" }); // Return success response as JSON
         }
 
+
+        // POST:(CART.DELETE) //
         [HttpPost]
         public IActionResult ProductRemoveCart(int RemovecartId, int[] RemoveitemId)
         {
+            // Find the cart using the CartId
             var cart = _db.CartDB
                 .Include(c => c.CartItems)
                 .ThenInclude(c => c.Product)
@@ -150,92 +177,167 @@ namespace Staychill.Controllers
 
             if (cart != null)
             {
+                // Remove each CartItem that matches the provided CartItemIds
                 foreach (var itemId in RemoveitemId)
                 {
                     var itemToRemove = cart.CartItems.FirstOrDefault(ci => ci.CartItemId == itemId);
                     if (itemToRemove != null)
                     {
+                        // Remove the item from the cart
                         cart.CartItems.Remove(itemToRemove);
                     }
                 }
-                _db.SaveChanges();
+                _db.SaveChanges(); // Save changes to the database
             }
 
-            return RedirectToAction("ProductAddCart");
+            return RedirectToAction("ProductAddCart"); // Redirect to the appropriate action
         }
-
-        private async Task<byte[]> ConvertToBytes(IFormFile image)
+        public async Task<IActionResult> ProductDetailsAdmin(int id)
         {
-            if (image != null)
-            {
-                using (var memoryStream = new System.IO.MemoryStream())
-                {
-                    await image.CopyToAsync(memoryStream);
-                    return memoryStream.ToArray();
-                }
-            }
-            return null;
-        }
-
-        public async Task<IActionResult> ProductEdit(int id)
-{
-    var product = await _db.ProductDB.Include(p => p.Images).FirstOrDefaultAsync(p => p.Id == id);
-    if (product == null)
-    {
-        return NotFound();
-    }
-    return View(product);
-}
-
-[HttpPost]
-[ValidateAntiForgeryToken]
-public async Task<IActionResult> ProductEdit(int id, Product product, IFormFile image1, IFormFile image2, IFormFile image3, IFormFile image4)
-{
-    if (id != product.Id)
-    {
-        return NotFound();
-    }
-
-    if (ModelState.IsValid)
-    {
-        try
-        {
-            _db.Update(product);
-            await _db.SaveChangesAsync();
-
-            // Handle image update if new images are provided
-            var productImages = await _db.ProductImagesDB.FirstOrDefaultAsync(pi => pi.ProductId == product.Id);
-            if (productImages != null)
-            {
-                if (image1 != null) productImages.Image1 = await ConvertToBytes(image1);
-                if (image2 != null) productImages.Image2 = await ConvertToBytes(image2);
-                if (image3 != null) productImages.Image3 = await ConvertToBytes(image3);
-                if (image4 != null) productImages.Image4 = await ConvertToBytes(image4);
-
-                _db.Update(productImages);
-                await _db.SaveChangesAsync();
-            }
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            if (!ProductExists(product.Id))
+            var product = await _db.ProductDB.Include(p => p.Images).FirstOrDefaultAsync(p => p.Id == id); // Load Product with Images
+            if (product == null)
             {
                 return NotFound();
             }
-            else
-            {
-                throw;
-            }
+            return View(product);
         }
-        return RedirectToAction(nameof(ProductIndex));
-    }
-    return View(product);
-}
 
-private bool ProductExists(int id)
-{
-    return _db.ProductDB.Any(e => e.Id == id);
-}
+        public async Task<IActionResult> ProductEdit(int id)
+        {
+            var product = await _db.ProductDB.Include(p => p.Images).FirstOrDefaultAsync(p => p.Id == id); // Load Product with Images
+            if (product == null)
+            {
+                return NotFound();
+            }
+            return View(product);
+        }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ProductEdit(int id, Product updatedProduct)
+        {
+            if (id != updatedProduct.Id)
+            {
+                return BadRequest();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _db.ProductDB.Update(updatedProduct);
+                    await _db.SaveChangesAsync();
+                    return RedirectToAction(nameof(ProductIndex));
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!ProductExists(id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            }
+            return View(updatedProduct);
+        }
+        public async Task<IActionResult> ProductMainPage(string category, string price, string color = "White")
+        {
+            // ¥÷ß¢ÈÕ¡Ÿ≈ª√–‡¿∑ ‘π§È“∑—ÈßÀ¡¥ (ProductType)  ”À√—∫ filter
+            ViewBag.Categories = await _db.ProductDB
+                                               .Select(p => p.ProductType)
+                                               .Distinct()
+                                               .ToListAsync();
+
+            // ¥÷ß¢ÈÕ¡Ÿ≈ ’∑—ÈßÀ¡¥ (Color)  ”À√—∫ filter
+            ViewBag.Colors = await _db.ProductDB
+                                           .Select(p => p.Color)
+                                           .Distinct()
+                                           .ToListAsync();
+
+            // ‡√‘Ë¡µÈπ°√Õß ‘π§È“µ“¡‡ß◊ËÕπ‰¢
+            var products = _db.ProductDB.AsQueryable();
+
+            if (!string.IsNullOrEmpty(category))
+            {
+                products = products.Where(p => p.ProductType == category);
+            }
+
+            if (!string.IsNullOrEmpty(price))
+            {
+                var priceRange = price.Split('-');
+                if (priceRange.Length == 2)
+                {
+                    // ·ª≈ß√“§“®“° string ‡ªÁπ float
+                    var minPrice = float.Parse(priceRange[0]);
+                    var maxPrice = float.Parse(priceRange[1]);
+                    products = products.Where(p => p.Price >= minPrice && p.Price <= maxPrice);
+                }
+            }
+
+            // °√Õß ‘π§È“µ“¡ ’ (‡√‘Ë¡µÈπ‡ªÁπ White)
+            if (!string.IsNullOrEmpty(color))
+            {
+                products = products.Where(p => p.Color == color);
+            }
+
+            // ¥÷ß ‘π§È“∑—ÈßÀ¡¥∑’Ëµ√ß°—∫µ—«°√Õß
+            var filteredProducts = await products
+         .Include(p => p.Images)  // ·πË„®«Ë“‚À≈¥¢ÈÕ¡Ÿ≈ Images ¥È«¬
+         .ToListAsync();
+
+
+            return View(filteredProducts);
+        }
+
+        public async Task<IActionResult> ProductDetails(int id)
+        {
+            // ‚À≈¥ ‘π§È“µ—«ª—®®ÿ∫—πæ√ÈÕ¡¢ÈÕ¡Ÿ≈√Ÿª¿“æ
+            var product = await _db.ProductDB
+                .Include(p => p.Images) // √«¡¢ÈÕ¡Ÿ≈√Ÿª¿“æ¢Õß ‘π§È“
+                .FirstOrDefaultAsync(p => p.Id == id);
+
+            if (product == null)
+            {
+                return NotFound();
+            }
+
+            // §ÈπÀ“ ‘π§È“‡©æ“–∑’Ë ProductName ‡¥’¬«°—π·≈– ’µË“ß°—π
+            var relatedProducts = await _db.ProductDB
+                .Where(p => p.ProductName == product.ProductName && p.Id != id) // ‡ß◊ËÕπ‰¢: ™◊ËÕ ‘π§È“‡¥’¬«°—π·≈–‰¡Ë„™Ë ‘π§È“ª—®®ÿ∫—π
+                .GroupBy(p => p.Color) // ®—¥°≈ÿË¡µ“¡ Color
+                .Select(g => new
+                {
+                    Id = g.First().Id,   // ¥÷ß Id ¢Õß ‘π§È“µ—«·√°„π°≈ÿË¡
+                    Color = g.Key        // ¥÷ß ’¢Õß°≈ÿË¡
+                })
+                .ToListAsync();
+
+            // ‡°Á∫√“¬°“√ ‘π§È“∑’Ë‡°’Ë¬«¢ÈÕß„π ViewBag ‡æ◊ËÕ Ëß‰ª¬—ß View
+            ViewBag.RelatedColors = relatedProducts;
+
+            // ¥÷ß ‘π§È“®“°∞“π¢ÈÕ¡Ÿ≈∑—ÈßÀ¡¥·≈– ÿË¡ 3 ™‘Èπ (¬°‡«Èπ ‘π§È“ª—®®ÿ∫—π)
+            var otherProducts = await _db.ProductDB
+                .Include(p => p.Images)
+                .Where(p => p.Id != id) // ‰¡Ë„ÀÈ¥÷ß ‘π§È“µ—«ª—®®ÿ∫—π
+                .OrderBy(r => Guid.NewGuid()) // „™È Guid.NewGuid() ‡æ◊ËÕ ÿË¡
+                .Take(3) // ‡≈◊Õ°·§Ë 3 ™‘Èπ
+                .ToListAsync();
+
+            // ‡°Á∫ ‘π§È“∑’Ë ÿË¡„π ViewBag
+            ViewBag.OtherProducts = otherProducts;
+
+            return View(product); //  Ëß ‘π§È“µ—«ª—®®ÿ∫—π‰ª¬—ß View
+        }
+
+
+        // Check if Product exists
+        private bool ProductExists(int id)
+        {
+            return _db.ProductDB.Any(e => e.Id == id);
+        }
+
 
     }
 }

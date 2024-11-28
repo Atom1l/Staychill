@@ -1,0 +1,105 @@
+﻿@model IEnumerable<Staychill.Models.ProductModel.Product>
+
+@{
+    ViewData["Title"] = "Products";
+}
+
+<!-- สไลด์บาร์สำหรับแสดงรูปภาพโปรโมท -->
+<div id="promoCarousel" class="carousel slide" data-bs-ride="carousel" style="margin-bottom: 30px;">
+    <div class="carousel-inner">
+        <div class="carousel-item active">
+            <img src="https://via.placeholder.com/1200x400/FF5733/FFFFFF?text=Promo+Image+1" class="d-block w-100" alt="Promo Image 1">
+        </div>
+        <div class="carousel-item">
+            <img src="https://via.placeholder.com/1200x400/33CFFF/FFFFFF?text=Promo+Image+2" class="d-block w-100" alt="Promo Image 2">
+        </div>
+        <div class="carousel-item">
+            <img src="https://via.placeholder.com/1200x400/33FF57/FFFFFF?text=Promo+Image+3" class="d-block w-100" alt="Promo Image 3">
+        </div>
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#promoCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#promoCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </button>
+    <!-- จุดคลิกเพื่อเลือกแต่ละรูป -->
+    <div class="carousel-indicators">
+        <button type="button" data-bs-target="#promoCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+        <button type="button" data-bs-target="#promoCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+        <button type="button" data-bs-target="#promoCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+    </div>
+</div>
+
+<!-- การจัด layout ให้ฟอร์มและสินค้าอยู่ข้างกัน -->
+<div class="d-flex justify-content-between">
+    <!-- ฟอร์มค้นหาสินค้า -->
+    <div class="filter-bar" style="width: 30%;">
+        <form method="get" asp-action="ProductMainPage" asp-controller="Product">
+            <div class="filter-item">
+                <label for="category">Category</label>
+                <select name="category" id="category" class="form-control">
+                    <option value="">All Categories</option>
+                    @foreach (var category in ViewBag.Categories)
+                    {
+                        <option value="@category">@category</option>
+                    }
+                </select>
+            </div>
+
+            <div class="filter-item">
+                <label for="price">Price</label>
+                <select name="price" id="price" class="form-control">
+                    <option value="">All Prices</option>
+                    <option value="100-199">100฿ - 199฿</option>
+                    <option value="200-299">200฿ - 299฿</option>
+                    <option value="300-399">300฿ - 399฿</option>
+                </select>
+            </div>
+
+            <div class="filter-item">
+                <label for="color">Color</label>
+                <select name="color" id="color" class="form-control">
+                    <option value="">All Colors</option>
+                    @foreach (var color in ViewBag.Colors)
+                    {
+                        <option value="@color">@color</option>
+                    }
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+    </div>
+
+    <!-- แสดงสินค้า -->
+    <div class="row" style="width: 68%;">
+        @foreach (var product in Model)
+        {
+            <div class="col-md-3 mb-4">
+                <a asp-action="ProductDetails" asp-route-id="@product.Id" class="card h-100 text-decoration-none text-dark">
+                    @if (product.Images != null && product.Images.Image1 != null)
+                    {
+                        <img src="@(product.Images != null && product.Images.Image1 != null ? $"data:image/png;base64,{Convert.ToBase64String(product.Images.Image1)}" : "~/images/default-product.png")"
+                             class="card-img-top"
+                             alt="@product.ProductName"
+                             style="height: 200px; object-fit: cover;" />
+                    }
+                    else
+                    {
+                        <img src="~/images/default-product.png"
+                             class="card-img-top"
+                             alt="Default Image"
+                             style="height: 200px; object-fit: cover;" />
+                    }
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">@product.ProductName</h5>
+                        <p class="card-text">@String.Format("{0:C}", product.Price)</p>
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
+</div> 

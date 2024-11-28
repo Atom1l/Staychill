@@ -1,18 +1,15 @@
 @model Staychill.Models.ProductModel.Product
 
 @{
-    ViewData["Title"] = "ProductEdit";
+    ViewData["Title"] = "Edit Product";
 }
 
-<h1>Product Edit</h1>
+<h1>Edit Product</h1>
 
-<h4>ProductModel</h4>
-<hr />
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-6">
         <form asp-action="ProductEdit" method="post" enctype="multipart/form-data">
-
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
             <div class="form-group">
                 <label asp-for="ProductName" class="control-label"></label>
                 <input asp-for="ProductName" class="form-control" />
@@ -20,17 +17,17 @@
             </div>
             <div class="form-group">
                 <label asp-for="ProductType" class="control-label"></label>
-                <select asp-for="ProductType" class="form-control" asp-items="@(new SelectList(Model.Typeoptions))"></select>
+                <input asp-for="ProductType" class="form-control" />
                 <span asp-validation-for="ProductType" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Color" class="control-label"></label>
-                <select asp-for="Color" class="form-control" asp-items="@(new SelectList(Model.Coloroptions))"></select>
+                <input asp-for="Color" class="form-control" />
                 <span asp-validation-for="Color" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Description" class="control-label"></label>
-                <input asp-for="Description" class="form-control" />
+                <textarea asp-for="Description" class="form-control"></textarea>
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -44,35 +41,25 @@
                 <span asp-validation-for="Instock" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label>Upload Image 1</label>
+                <label>Update Image 1</label>
                 <input type="file" name="image1" accept="image/*" class="form-control" />
             </div>
-
             <div class="form-group">
-                <label>Upload Image 2</label>
+                <label>Update Image 2</label>
                 <input type="file" name="image2" accept="image/*" class="form-control" />
             </div>
-
             <div class="form-group">
-                <label>Upload Image 3</label>
+                <label>Update Image 3</label>
                 <input type="file" name="image3" accept="image/*" class="form-control" />
             </div>
-
             <div class="form-group">
-                <label>Upload Image 4</label>
+                <label>Update Image 4</label>
                 <input type="file" name="image4" accept="image/*" class="form-control" />
             </div>
-            <div class="form-group mt-2">
-                <input type="submit" value="Save Changes" class="btn btn-primary" />
+            <div class="form-group mt-3">
+                <input type="submit" value="Save" class="btn btn-primary" />
+                <a asp-action="ProductIndex" class="btn btn-secondary">Cancel</a>
             </div>
         </form>
     </div>
 </div>
-
-<div>
-    <a asp-action="ProductIndex">Back to List</a>
-</div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
