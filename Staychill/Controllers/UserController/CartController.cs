@@ -21,10 +21,20 @@ namespace Staychill.Controllers.UserController
         // ========== DISPLAY ========== //
         public IActionResult CartIndex() // Display the cart view for user //
         {
-            var cart = _db.CartDB.Include(c => c.CartItems).ThenInclude(c => c.Discount)
+            var currentUser = User.Identity.Name;
+
+            var user = _db.UserDB.FirstOrDefault(u => u.Username == currentUser);
+            if (user == null) 
+            {
+                return RedirectToAction("Login","User");
+            }
+            else
+            {
+                var cart = _db.CartDB.Include(c => c.CartItems).ThenInclude(c => c.Discount)
                                  .Include(c => c.CartItems).ThenInclude(c => c.Discount)
                                  .Include(c => c.CartItems).ThenInclude(c => c.Product)
-                                 .Include(c => c.CartItems).ThenInclude(c => c.Product.Images).ToList(); // Include all Model that link with CartDB into list //
+                                 .Include(c => c.CartItems).ThenInclude(c => c.Product.Images).Where(c => c.Username == currentUser)
+                                 .ToList(); // Include all Model that link with CartDB into list //
 
             var viewModel = new CartViewModel
             {
@@ -32,11 +42,13 @@ namespace Staychill.Controllers.UserController
                 TotalAmount = cart.SelectMany(c => c.CartItems).Select(item => item.TotalPrice - (item.Discount?.DiscountAmount ?? 0)).Sum() // Calculate the TotalAmount //
             };
             return View(viewModel); // return with "viewModel" value // 
+            }
         }
 
         [HttpPost]
         public IActionResult CartIndex(int productId, int quantity) // Add Product to the CartIndex(GET) //
         {
+            var currentUser = User.Identity.Name;
             var product = _db.ProductDB.FirstOrDefault(p => p.Id == productId); // Check if productId matches with ProductDB.Id //
 
             // If null return to Product Page //
@@ -53,12 +65,16 @@ namespace Staychill.Controllers.UserController
 
             // If the workflow is fine then proceed these action //
             // Find the existing Cart
-            var cart = _db.CartDB.Include(c => c.CartItems).ThenInclude(c => c.Product).FirstOrDefault(); // Get the first Cart (since there is only one cart) //
+            var cart = _db.CartDB.Include(c => c.CartItems).ThenInclude(c => c.Product).FirstOrDefault(c => c.Username == currentUser); // Get the first Cart (since there is only one cart) //
 
             // If the cart does not exist Create a new one instead //
             if (cart == null)
             {
-                cart = new Cart(); // Create a new Cart if one doesn't exist
+                cart = new Cart
+                {
+                    Username = currentUser,
+                    CartItems = new List<CartItem>(),
+                }; // Create a new Cart if one doesn't exist
                 _db.CartDB.Add(cart); // Add it to the database
                 _db.SaveChanges(); // Save changes to generate CartId
             }
@@ -96,11 +112,12 @@ namespace Staychill.Controllers.UserController
         public IActionResult ApplyDiscount(CartViewModel model) // Click the apply discount to preceed this action //
         {
             {
+                var currentUser = User.Identity.Name;
 
                 var discount = _db.DiscountDB.FirstOrDefault(d => d.DiscountCode == model.DiscountCode); // Retrieve the discountCode data //
 
                 var cartitems = _db.CartDB.Include(c => c.CartItems).ThenInclude(c => c.Product)
-                                          .Include(c => c.CartItems).ThenInclude(c => c.Product.Images).ToList(); // Retrieve the CartDB data //
+                                          .Include(c => c.CartItems).ThenInclude(c => c.Product.Images).Where(c => c.Username == currentUser).ToList(); // Retrieve the CartDB data //
 
                 model.TotalAmount = cartitems.SelectMany(c => c.CartItems).Sum(item => item.TotalPrice); // Calculate the total price of the product(s) //
 
@@ -130,7 +147,8 @@ namespace Staychill.Controllers.UserController
         [HttpPost]
         public IActionResult UpdateQuantity(int productId, string action) // To make user can edit quantities of the product at CartIndex //
         {
-            var cart = _db.CartDB.Include(c => c.CartItems).ThenInclude(c => c.Product).FirstOrDefault(); // Retrieve the Cartitem data //
+            var currentUser = User.Identity.Name;
+            var cart = _db.CartDB.Include(c => c.CartItems).ThenInclude(c => c.Product).FirstOrDefault(c => c.Username == currentUser); // Retrieve the Cartitem data //
             var item = cart.CartItems.FirstOrDefault(c => c.ProductId == productId); // Find if the Id parameter that we send through is matching with CartItem Id //
             if (item != null) // If item not null //
             {

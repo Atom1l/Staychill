@@ -1,0 +1,17 @@
+﻿@model Staychill.Models.UserModel.User
+@{
+    @if (User.Identity.IsAuthenticated)
+    {
+        if(User.Identity.Name == "Staychill"){
+            Layout = "_AdminLayout";
+        }
+        else{
+            Layout = "_Logged-In_Layout";
+        }
+    }
+}
+
+<div class="mt-4">
+    <h1>This is Edit Profiile</h1>
+    <h2>For user : @Model.Username</h2>
+</div>

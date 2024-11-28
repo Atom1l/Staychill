@@ -1,5 +1,16 @@
 ﻿@model Staychill.ViewModel.TrackingResultViewModel
 
+@{
+    @if (User.Identity.IsAuthenticated)
+    {
+        Layout = "_Logged-In_Layout";
+    }
+    else
+    {
+        Layout = "_Layout";
+    }
+}
+
 <link rel="stylesheet" href="~/css/UserCSS/TrackingResult.css" asp-append-version="true"/>
 
 <div class="container">

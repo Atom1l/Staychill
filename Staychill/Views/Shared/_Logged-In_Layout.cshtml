@@ -52,7 +52,7 @@
                             <!-- About us -->
                             <a class="nav-link text-dark fw-normal ms-3 ms-sm-2" asp-controller="" asp-action="">About us</a>
                             <!-- Tracking -->
-                            <a class="nav-link text-dark fw-normal ms-3 ms-sm-2" asp-area="" asp-controller="User" asp-action="Tracking">Tracking</a>
+                            <a class="nav-link text-dark fw-normal ms-3 ms-sm-2" asp-area="" asp-controller="Tracking" asp-action="TrackingIndex">Tracking</a>
                         </li>
                     </ul>
                     <!-- Unorder List of navigation links -->
@@ -60,15 +60,15 @@
                 <!-- Cart & User -->
                 <div class="d-flex ms-auto align-items-center align-content-start align-content-sm-center me-3">
                     <a class="searchnav text-decoration-none" href="#"><i class="bi bi-search"></i></a>
-                    <a class="cartnav" asp-controller="TestUserCreatingAccount" asp-action="ProductAddCart"><i class="bi bi-cart2"></i></a>       
+                    <a class="cartnav" asp-controller="Cart" asp-action="CartIndex"><i class="bi bi-cart2"></i></a>       
                     <!-- User dropdown -->
                     <div class="nav-item dropdown">
                         <div class="nav-link text-dark fw-normal  usernav" id="userDropdown" role="button">
                             <i class="bi bi-person"></i>
                         </div>
                         <ul class="dropdown-user" aria-labelledby="userDropdown">
-                            <li><a class="dropdown-item dropline text-decoration-none text-black" asp-action="">Edit Profile</a></li>
-                            <li><a class="dropdown-item dropline text-decoration-none text-black" asp-action="">Log Out</a></li>
+                            <li><a class="dropdown-item dropline text-decoration-none text-black" asp-action="EditProfile" asp-controller="User">Edit Profile</a></li>
+                            <li><a class="dropdown-item dropline text-decoration-none text-black" asp-action="Logout" asp-controller="User">Log Out</a></li>
                         </ul>
                     </div>
                 </div>

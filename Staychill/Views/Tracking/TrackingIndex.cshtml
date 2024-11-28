@@ -1,7 +1,14 @@
 ﻿@model Staychill.Models.ProductModel.TrackingModel.Tracking
 @{
+    @if (User.Identity.IsAuthenticated)
+    {
+        Layout = "_Logged-In_Layout";
+    }
+    else
+    {
+        Layout = "_Layout";
+    }
 }
-
 <link rel="stylesheet" href="~/css/UserCSS/TrackingIndex.css" asp-append-version="true" />
 
 

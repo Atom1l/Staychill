@@ -9,6 +9,8 @@ namespace Staychill.Models.ProductModel
         [Key]
         public int ReCartId { get; set; } // Primary key for the RetainCart
 
+        public string? Username { get; set; }
+
         // Navigation property for related retain cart items
         public ICollection<RetainCartItem> RetainCartItems { get; set; } = new List<RetainCartItem>();
 
