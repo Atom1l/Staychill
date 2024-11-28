@@ -1,0 +1,53 @@
+﻿@model IEnumerable<Staychill.Models.UserModel.Feedback>
+
+@{
+    Layout = "_AdminLayout";
+}
+
+<link href="/css/AdminCSS/AdminFeedback.css" rel="stylesheet" asp-append-version="true" />
+
+<div class="container-fluid mt-4" style="overflow-x:hidden;">
+    <h1 class="fw-bold text-center">Feedback-controller</h1>
+    <hr class="mb-4" />
+    <div class="feedback-search-container w-100 d-flex justify-content-end align-items-center mt-3">
+        <form asp-action="Feedback" class="d-flex align-items-center">
+            <label for="feedbackSearchbar" class="feedback-search-label fs-5 fw-bold me-2">Search : </label>
+            <div class="feedback-searchbar-container">
+                <input class="feedback-searchbar fs-6 rounded-3 p-1 me-2" type="text" name="feedbackquery" value="" placeholder="" />
+                <button type="submit" class="btn-warning p-1 pe-2 ps-2 rounded-3">Search!</button>
+            </div>
+        </form>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-bordered fs-5 mt-3">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Email)
+                    </th>
+                    <th>
+                        @Html.DisplayNameFor(model => model.Description)
+                    </th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="fw-bold">
+                            @Html.DisplayFor(modelItem => item.Email)
+                        </td>
+                        <td class="truncate-text">
+                            @Html.DisplayFor(modelItem => item.Description)
+                        </td>
+                        <td>
+                            <a asp-action="FeedbackDetail" asp-route-id="@item.Id" class="text-primary">Detail</a> |
+                            <a asp-action="FeedbackDelete" asp-route-id="@item.Id" class="text-danger" onclick="return confirm('Are you sure you want to delete this?')">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

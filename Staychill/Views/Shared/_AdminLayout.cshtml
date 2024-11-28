@@ -17,46 +17,50 @@
 <body>
     <!-- === Header === -->
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white">
+        <nav class="navbar navbar-expand-md navbar-toggleable-md navbar-light bg-white">
             <!-- Container of elements -->
-            <div class="container-fluid ps-2 ps-sm-0">
+            <div class="container-fluid ps-2 ps-md-0">
                 <!-- Collapse button -->
                 <button class="collapse-1 navbar-toggler" id="navbarToggleButton" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <i class="fa-solid fa-bars"></i>
                 </button>
                 <!-- Navbar content -->
-                <div class="navbar-collapse collapse d-sm-flex flex-sm-row justify-content-center ps-3">
+                <div class="navbar-collapse collapse d-md-flex flex-md-row justify-content-center ps-3">
                     <!-- Unorder List of navigation links -->
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item d-flex flex-column flex-sm-row fs-5">
+                        <li class="nav-item d-flex flex-column flex-md-row fs-5">
                             <!-- Another Collapse button -->
                             <button class="collapse-2 navbar-toggler" id="navbarToggleButton" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                                 <i class="fa-solid fa-xmark"></i>
                             </button>
+                            <!-- User -->
+                            <a class="nav-link text-dark fw-normal ms-3 ms-md-2" asp-controller="Admin" asp-action="Discount">User</a>
                             <!-- Products -->
-                            <a class="nav-link text-dark fw-normal ms-3 ms-sm-2" asp-controller="Admin" asp-action="Discount">Product</a>
+                            <a class="nav-link text-dark fw-normal ms-3 ms-md-2" asp-controller="Admin" asp-action="Discount">Product</a>
                             <!-- Discount -->
-                            <a class="nav-link text-dark fw-normal ms-3 ms-sm-2" asp-controller="Admin" asp-action="Discount">Discount</a>
+                            <a class="nav-link text-dark fw-normal ms-3 ms-md-2" asp-controller="Admin" asp-action="Discount">Discount</a>
                             <!-- Payment -->
-                            <a class="nav-link text-dark fw-normal ms-3 ms-sm-2" asp-controller="Admin" asp-action="Payment">Payment</a>
+                            <a class="nav-link text-dark fw-normal ms-3 ms-md-2" asp-controller="Admin" asp-action="Payment">Payment</a>
                             <!-- Tracking -->
-                            <a class="nav-link text-dark fw-normal ms-3 ms-sm-2" asp-area="" asp-controller="Admin" asp-action="Tracking">Tracking</a>
+                            <a class="nav-link text-dark fw-normal ms-3 ms-md-2" asp-area="" asp-controller="Admin" asp-action="Tracking">Tracking</a>
+                            <!-- Feedback -->
+                            <a class="nav-link text-dark fw-normal ms-3 ms-md-2" asp-area="" asp-controller="Admin" asp-action="Feedback">Feedback</a>
                         </li>
                     </ul>
                     <!-- Unorder List of navigation links -->
                 </div>
                 <!-- Cart & User -->
-                <div class="d-flex ms-auto align-items-center align-content-start align-content-sm-center me-3">
-                    <a class="searchnav text-decoration-none" href="#"><i class="bi bi-search"></i></a>
-                    <a class="cartnav" asp-controller="TestUserCreatingAccount" asp-action="ProductIndex"><i class="bi bi-cart2"></i></a>
+                <div class="d-flex ms-auto align-items-center align-content-start align-content-md-center me-3">
+@*                     <a class="searchnav text-decoration-none" href="#"><i class="bi bi-search"></i></a>
+                    <a class="cartnav" asp-controller="TestUserCreatingAccount" asp-action="ProductIndex"><i class="bi bi-cart2"></i></a> *@
                     <!-- User dropdown -->
                     <div class="nav-item dropdown">
                         <div class="nav-link text-dark fw-normal  usernav" id="userDropdown" role="button">
                             <i class="bi bi-person"></i>
                         </div>
                         <ul class="dropdown-user" aria-labelledby="userDropdown">
-                            <li><a class="dropdown-item dropline text-decoration-none text-black" asp-action="">Edit Profile</a></li>
-                            <li><a class="dropdown-item dropline text-decoration-none text-black" asp-action="">Log Out</a></li>
+                            <li><a class="dropdown-item dropline text-decoration-none text-black" asp-action="EditProfile" asp-controller="User">Edit Profile</a></li>
+                            <li><a class="dropdown-item dropline text-decoration-none text-black" asp-action="Logout" asp-controller="User">Log Out</a></li>
                         </ul>
                     </div>
                 </div>
@@ -73,13 +77,14 @@
     </div>
     <!-- === Body === -->
     <!-- === Footer === -->
-    <footer class="border-top footer text-muted">
+    @* <footer class="border-top footer text-muted">
         <div class="container">
             &copy; 2024 - Staychill
         </div>
-    </footer>
+    </footer> *@
     <!-- === Footer === -->
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="~/js/navbar.js"></script>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
