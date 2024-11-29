@@ -242,51 +242,41 @@ namespace Staychill.Controllers.ProductController
             }
             return View(updatedProduct);
         }
-        public async Task<IActionResult> ProductMainPage(string category, string price, string color = "White")
+        public async Task<IActionResult> ProductMainPage(string[] category, decimal? minPrice, decimal? maxPrice)
         {
             // ดึงข้อมูลประเภทสินค้าทั้งหมด (ProductType) สำหรับ filter
             ViewBag.Categories = await _db.ProductDB
-                                               .Select(p => p.ProductType)
-                                               .Distinct()
-                                               .ToListAsync();
-
-            // ดึงข้อมูลสีทั้งหมด (Color) สำหรับ filter
-            ViewBag.Colors = await _db.ProductDB
-                                           .Select(p => p.Color)
+                                           .Select(p => p.ProductType)
                                            .Distinct()
                                            .ToListAsync();
 
             // เริ่มต้นกรองสินค้าตามเงื่อนไข
             var products = _db.ProductDB.AsQueryable();
 
-            if (!string.IsNullOrEmpty(category))
-            {
-                products = products.Where(p => p.ProductType == category);
+            // ถ้าเลือกหมวดหมู่
+            if(category != null && category.Any())
+    {
+                products = products.Where(p => category.Contains(p.ProductType));
             }
 
-            if (!string.IsNullOrEmpty(price))
+            // ถ้ามีการกรอกราคาต่ำสุดและสูงสุด
+            if (minPrice.HasValue)
             {
-                var priceRange = price.Split('-');
-                if (priceRange.Length == 2)
-                {
-                    // แปลงราคาจาก string เป็น float
-                    var minPrice = float.Parse(priceRange[0]);
-                    var maxPrice = float.Parse(priceRange[1]);
-                    products = products.Where(p => p.Price >= minPrice && p.Price <= maxPrice);
-                }
+                // แปลง p.Price เป็น decimal หรือ float เพื่อให้สามารถเปรียบเทียบได้
+                products = products.Where(p => Convert.ToDecimal(p.Price) >= minPrice.Value);
+            }
+            if (maxPrice.HasValue)
+            {
+                products = products.Where(p => Convert.ToDecimal(p.Price) <= maxPrice.Value);
             }
 
-            // กรองสินค้าตามสี (เริ่มต้นเป็น White)
-            if (!string.IsNullOrEmpty(color))
-            {
-                products = products.Where(p => p.Color == color);
-            }
+            // เพิ่มเงื่อนไขให้แสดงเฉพาะสินค้าที่มีสี White
+            products = products.Where(p => p.Color == "White");
 
             // ดึงสินค้าทั้งหมดที่ตรงกับตัวกรอง
             var filteredProducts = await products
-         .Include(p => p.Images)  // แน่ใจว่าโหลดข้อมูล Images ด้วย
-         .ToListAsync();
-
+                .Include(p => p.Images) // โหลดข้อมูล Images ด้วย
+                .ToListAsync();
 
             return View(filteredProducts);
         }
