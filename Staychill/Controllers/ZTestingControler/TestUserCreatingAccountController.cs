@@ -197,7 +197,7 @@ namespace Staychill.Controllers.ZTestingControler
             //-------------------------- (INDEX) --------------------------//
                 public async Task<IActionResult> ProductIndex()
                 {
-                    var model = await _db.ProductDB.Include(p => p.Images).ToListAsync(); // Include Images from productImage to ProductDB //
+                    var model = await _db.ProductDB.AsNoTracking().Include(p => p.Images).ToListAsync(); // Include Images from productImage to ProductDB //
                     return View(model);
                 }
 

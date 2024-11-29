@@ -20,6 +20,7 @@ namespace Staychill.Data
         // User DbSet ----- //
         public DbSet<Staychill.Models.UserModel.User> UserDB { get; set; }
         public DbSet<Staychill.Models.UserModel.Address> AddressDB { get; set; }
+        public DbSet<Staychill.Models.UserModel.Feedback> FeedbackDB { get; set; }
 
         // Product DbSet ----- //
         public DbSet<Staychill.Models.ProductModel.Product> ProductDB { get; set; }
@@ -82,7 +83,7 @@ namespace Staychill.Data
             // RetainCart to RetainCartItem relationship
             modelBuilder.Entity<RetainCarts>()
                 .HasMany(rc => rc.RetainCartItems)
-                .WithOne(rci => rci.RetainCart) // Assuming RetainCartItem has a property named RetainCart
+                .WithOne(rci => rci.RetainCart) 
                 .HasForeignKey(rci => rci.RetainCartId) // Foreign key in RetainCartItem
                 .OnDelete(DeleteBehavior.Restrict); // Optional: specify delete behavior
 

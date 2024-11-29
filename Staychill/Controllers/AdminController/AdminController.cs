@@ -351,6 +351,42 @@ namespace Staychill.Controllers.AdminController
         }
         // ========== Convert Image into Byte to keep in database ========== //
 
+        // ============================================= Feedback ============================================= //
 
+        public IActionResult Feedback(string feedbackquery)
+        {
+            if (string.IsNullOrEmpty(feedbackquery))
+            {
+                return View("Feedback", _db.FeedbackDB.ToList());
+            }
+            else
+            {
+                var feedback = _db.FeedbackDB.ToList();
+                var filteredFeedback = feedback.Where(feedback => feedback.Email.Contains(feedbackquery) || feedback.Description.Contains(feedbackquery)).ToList();  
+                return View("Feedback",filteredFeedback);
+            }
+        }
+
+        public IActionResult FeedbackDetail(int id)
+        {
+            var existingfeedback = _db.FeedbackDB.FirstOrDefault(fb => fb.Id == id);
+            if (existingfeedback == null)
+            {
+                return RedirectToAction("Feedback");
+            }
+            return View(existingfeedback);
+        }
+
+        public IActionResult FeedbackDelete(int id)
+        {
+            var existingFeedback = _db.FeedbackDB.FirstOrDefault(fb => fb.Id == id);
+            if (existingFeedback != null)
+            {
+                _db.Remove(existingFeedback);
+                _db.SaveChanges();
+                return RedirectToAction("Feedback");
+            }
+            return RedirectToAction("Feedback");
+        }
     }
 }

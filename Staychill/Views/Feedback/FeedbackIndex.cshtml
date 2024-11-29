@@ -1,0 +1,40 @@
+﻿@model Staychill.Models.UserModel.Feedback
+
+@{
+    @if (User.Identity.IsAuthenticated)
+    {
+        Layout = "_Logged-In_Layout";
+    }
+    else
+    {
+        Layout = "_Layout";
+    }
+}
+
+<link rel="stylesheet" href="~/css/UserCSS/FeedbackIndex.css" asp-append-version="true" />
+
+
+<div class="container">
+    <div class="container-fluid d-flex justify-content-center align-items-center" style="min-height:80vh;">
+        <div class="w-100 h-auto d-flex justify-content-center align-items-center align-content-center text-center">
+            <form asp-action="FeedbackCreate" method="post" class="fs-3 p-5 shadow">
+                <div class="w-100" style="">
+                    <div class="mb-2 fw-bold fs-1">Feedback</div>
+                    <hr />
+                    <div class="fs-5 fw-bold">Email</div>
+                    <input type="text" class="feedbackIndex-input fs-5 p-2 w-100" name="email" placeholder="Email" />
+                    <div class="fs-5 fw-bold mt-3">Message</div>
+                    <textarea class="feedbackIndex-input fs-5 p-2 w-100" name="description" rows="4" cols="50" placeholder="Your feedback"></textarea>
+                </div>
+                @if (TempData["Message"] != null)
+                {
+                    <div class="alert alert-info fs-4 mt-2">
+                        @TempData["Message"]
+                    </div>
+                }
+                <button type="submit" class="feedbackIndex-submit w-100 btn mt-2 p-2 fs-5 text-white">Submit</button>
+            </form>
+        </div>
+    </div>
+
+</div>

@@ -85,10 +85,12 @@ namespace Staychill.Controllers.UserController
                 return BadRequest("Selected payment method is required.");
             }
 
+            var currentUser = User.Identity.Name; // Define the user account //
 
             // Create a new RetainCarts variable to store RetainCartItems
             var retainCart = new RetainCarts
             {
+                Username = currentUser,
                 RetainCartItems = new List<RetainCartItem>()
             };
 
@@ -230,6 +232,24 @@ namespace Staychill.Controllers.UserController
             var discountAmount = retainCart.RetainCartItems.FirstOrDefault()?.DiscountAmount.ToString("N2");
             var totalPrice = retainCart.RetainCartItems.FirstOrDefault()?.TotalDiscountedPrice.ToString("N2");
 
+            var currentUser = User.Identity.Name;
+            var existinguser = _db.UserDB.Include(u => u.Address).FirstOrDefault(u => u.Username == currentUser);
+
+            var name = existinguser.Firstname;
+            var surname = existinguser.Lastname;
+
+            var housenumber = existinguser.Address.Housenumber;
+            var alley = existinguser.Address.Alley;
+            var road = existinguser.Address.Road;
+            var subdistrict = existinguser.Address.Subdistrict;
+            var district = existinguser.Address.District;
+            var province = existinguser.Address.Province;
+            var country = existinguser.Address.Country;
+            var zipcode = existinguser.Address.Zipcode;
+
+            var tel = existinguser.Phonenumber; 
+
+
             string html = $@"
             <div style=""padding: 10px 30px 10px 30px;  box-sizing: border-box;"">
                 <div style=""width:100%; padding-top:20px; text-align:center;"">
@@ -252,9 +272,13 @@ namespace Staychill.Controllers.UserController
                         <div style=""width:45%; text-align:end;"">
                             <div style=""font-size:1.5rem; font-weight:bold; margin-bottom:5px; padding:5px;"">To:</div>
                             <div style=""margin-right:10px; font-size:1.1rem;"">
-                                <div style=""font-size:1.3rem; margin-bottom:5px;"">Name and Surname</div>
-                                <div style=""margin-bottom:5px;"">address, address, address, address, postal zip</div>
-                                <div style=""margin-bottom:5px;"">Tel : 0123-456-7890</div>
+                                <div style=""font-size:1.3rem; margin-bottom:5px;"">{name}<span> </span>{surname}</div>
+                                <div style=""margin-bottom:5px;"">
+                                    <div style=""margin-bottom:5px;"">{housenumber}, {alley}, {road},</div>
+                                    <div style=""margin-bottom:5px;"">{subdistrict}, {district}, {province},</div>
+                                    <div style=""margin-bottom:5px;"">{zipcode}, {country}</div>
+                                </div>
+                                <div style=""margin-bottom:5px;"">Tel : {tel}</div>
                             </div>
                         </div>
                     </div>
