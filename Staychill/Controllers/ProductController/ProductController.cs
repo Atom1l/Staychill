@@ -242,7 +242,7 @@ namespace Staychill.Controllers.ProductController
             }
             return View(updatedProduct);
         }
-        public async Task<IActionResult> ProductMainPage(string[] category, decimal? minPrice, decimal? maxPrice)
+        public async Task<IActionResult> ProductMainPage(string[] category, float? minPrice, float? maxPrice)
         {
             // ดึงข้อมูลประเภทสินค้าทั้งหมด (ProductType) สำหรับ filter
             ViewBag.Categories = await _db.ProductDB
@@ -254,20 +254,19 @@ namespace Staychill.Controllers.ProductController
             var products = _db.ProductDB.AsQueryable();
 
             // ถ้าเลือกหมวดหมู่
-            if(category != null && category.Any())
-    {
+            if (category != null && category.Any())
+            {
                 products = products.Where(p => category.Contains(p.ProductType));
             }
 
             // ถ้ามีการกรอกราคาต่ำสุดและสูงสุด
             if (minPrice.HasValue)
             {
-                // แปลง p.Price เป็น decimal หรือ float เพื่อให้สามารถเปรียบเทียบได้
-                products = products.Where(p => Convert.ToDecimal(p.Price) >= minPrice.Value);
+                products = products.Where(p => p.Price >= minPrice.Value);
             }
             if (maxPrice.HasValue)
             {
-                products = products.Where(p => Convert.ToDecimal(p.Price) <= maxPrice.Value);
+                products = products.Where(p => p.Price <= maxPrice.Value);
             }
 
             // เพิ่มเงื่อนไขให้แสดงเฉพาะสินค้าที่มีสี White
