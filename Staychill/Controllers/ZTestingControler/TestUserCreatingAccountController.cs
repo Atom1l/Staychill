@@ -356,6 +356,67 @@ namespace Staychill.Controllers.ZTestingControler
 
             return RedirectToAction("ProductAddCart"); // Redirect to the appropriate action
         }
+        //-------------------------- (DETAILS) --------------------------//
+        public async Task<IActionResult> ProductDetails(int id)
+        {
+            var product = await _db.ProductDB.Include(p => p.Images).FirstOrDefaultAsync(p => p.Id == id); // Load Product with Images
+            if (product == null)
+            {
+                return NotFound();
+            }
+            return View(product);
+        }
+
+        //-------------------------- (EDIT - GET) --------------------------//
+        public async Task<IActionResult> ProductEdit(int id)
+        {
+            var product = await _db.ProductDB.Include(p => p.Images).FirstOrDefaultAsync(p => p.Id == id); // Load Product with Images
+            if (product == null)
+            {
+                return NotFound();
+            }
+            return View(product);
+        }
+
+        //-------------------------- (EDIT - POST) --------------------------//
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ProductEdit(int id, Product updatedProduct)
+        {
+            if (id != updatedProduct.Id)
+            {
+                return BadRequest();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _db.ProductDB.Update(updatedProduct);
+                    await _db.SaveChangesAsync();
+                    return RedirectToAction(nameof(ProductIndex));
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!ProductExists(id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+            }
+            return View(updatedProduct);
+        }
+
+        // Check if Product exists
+        private bool ProductExists(int id)
+        {
+            return _db.ProductDB.Any(e => e.Id == id);
+        }
+
 
 
 

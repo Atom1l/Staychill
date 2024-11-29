@@ -43,10 +43,10 @@
                                     Products <span class="arrow-right" id="arrowIcon"><i class="fa-solid fa-angle-right"></i></span>
                                 </div>
                                 <ul class="dropdown-menu" id="productDropdownMenu" aria-labelledby="productDropdown">
-                                    <li><a class="dropdown-item dropline text-decoration-none text-black" asp-action="">All products</a></li>
-                                    <li><a class="dropdown-item dropline text-decoration-none text-black" asp-action="">Mug</a></li>
-                                    <li><a class="dropdown-item dropline text-decoration-none text-black" asp-action="">Steel Flask</a></li>
-                                    <li><a class="dropdown-item text-decoration-none text-black" asp-action="">Tumbler</a></li>
+                                    <li><a class="dropdown-item dropline text-decoration-none text-black" asp-action="ProductMainPage" asp-controller="Product">All products</a></li>
+                                    <li><a class="dropdown-item dropline text-decoration-none text-black" asp-route-category="Mug" asp-action="ProductMainPage" asp-controller="Product">Mug</a></li>
+                                    <li><a class="dropdown-item dropline text-decoration-none text-black" asp-route-category="Steel Flask" asp-action="ProductMainPage" asp-controller="Product">Steel Flask</a></li>
+                                    <li><a class="dropdown-item text-decoration-none text-black" asp-route-category="Tumbler" asp-action="ProductMainPage" asp-controller="Product">Tumbler</a></li>
                                 </ul>
                             </div>
                             <!-- About us -->
@@ -56,6 +56,7 @@
                         </li>
                     </ul>
                     <!-- Unorder List of navigation links -->
+                    
                 </div>              
                 <!-- Cart & User -->
                 <div class="d-flex ms-auto align-items-center align-content-start align-content-sm-center me-3">
