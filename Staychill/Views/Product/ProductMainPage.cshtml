@@ -5,7 +5,7 @@
 }
 
 <!-- สไลด์บาร์สำหรับแสดงรูปภาพโปรโมท -->
-<div id="promoCarousel" class="carousel slide" data-bs-ride="carousel" style="margin-bottom: 30px;">
+<div id="promoCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
     <div class="carousel-inner">
         <div class="carousel-item active">
             <img src="https://via.placeholder.com/1200x400/FF5733/FFFFFF?text=Promo+Image+1" class="d-block w-100" alt="Promo Image 1">
@@ -25,7 +25,6 @@
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Next</span>
     </button>
-    <!-- จุดคลิกเพื่อเลือกแต่ละรูป -->
     <div class="carousel-indicators">
         <button type="button" data-bs-target="#promoCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
         <button type="button" data-bs-target="#promoCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
@@ -33,73 +32,78 @@
     </div>
 </div>
 
-<!-- การจัด layout ให้ฟอร์มและสินค้าอยู่ข้างกัน -->
-<div class="d-flex justify-content-between">
-    <!-- ฟอร์มค้นหาสินค้า -->
-    <div class="filter-bar" style="width: 30%;">
-        <form method="get" asp-action="ProductMainPage" asp-controller="Product">
-            <div class="filter-item">
-                <label for="category">Category</label>
-                <select name="category" id="category" class="form-control">
-                    <option value="">All Categories</option>
-                    @foreach (var category in ViewBag.Categories)
-                    {
-                        <option value="@category">@category</option>
-                    }
-                </select>
-            </div>
-
-            <div class="filter-item">
-                <label for="price">Price</label>
-                <select name="price" id="price" class="form-control">
-                    <option value="">All Prices</option>
-                    <option value="100-199">100฿ - 199฿</option>
-                    <option value="200-299">200฿ - 299฿</option>
-                    <option value="300-399">300฿ - 399฿</option>
-                </select>
-            </div>
-
-            <div class="filter-item">
-                <label for="color">Color</label>
-                <select name="color" id="color" class="form-control">
-                    <option value="">All Colors</option>
-                    @foreach (var color in ViewBag.Colors)
-                    {
-                        <option value="@color">@color</option>
-                    }
-                </select>
-            </div>
-
-            <button type="submit" class="btn btn-primary">Search</button>
-        </form>
-    </div>
-
-    <!-- แสดงสินค้า -->
-    <div class="row" style="width: 68%;">
-        @foreach (var product in Model)
-        {
-            <div class="col-md-3 mb-4">
-                <a asp-action="ProductDetails" asp-route-id="@product.Id" class="card h-100 text-decoration-none text-dark">
-                    @if (product.Images != null && product.Images.Image1 != null)
-                    {
-                        <img src="@(product.Images != null && product.Images.Image1 != null ? $"data:image/png;base64,{Convert.ToBase64String(product.Images.Image1)}" : "~/images/default-product.png")"
-                             class="card-img-top"
-                             alt="@product.ProductName"
-                             style="height: 200px; object-fit: cover;" />
-                    }
-                    else
-                    {
-                        <img src="~/images/default-product.png"
-                             class="card-img-top"
-                             alt="Default Image"
-                             style="height: 200px; object-fit: cover;" />
-                    }
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">@product.ProductName</h5>
-                        <p class="card-text">@String.Format("{0:C}", product.Price)</p>
+<!-- Layout: Filter Bar + Products -->
+<div class="row gx-3">
+    <!-- Filter Bar -->
+    <div class="col-lg-3 mb-4">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <form method="get" asp-action="ProductMainPage" asp-controller="Product">
+                    <!-- Category Filter -->
+                    <h4 class="mb-2">Categories</h4>
+                    <div class="filter-item">
+                        @foreach (var category in ViewBag.Categories)
+                        {
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="@category" id="category-@category" name="category" />
+                                <label class="form-check-label" for="category-@category">
+                                    @category
+                                </label>
+                            </div>
+                        }
                     </div>
-                </a>
+
+                    <!-- Price Filter -->
+                    <h4 class="mb-2 mt-4">Price</h4>
+                    <div class="mb-3">
+                        <label for="minPrice">Starting Price</label>
+                        <input type="number" name="minPrice" id="minPrice" class="form-control" min="0" placeholder="Enter min price">
+                    </div>
+                    <div>
+                        <label for="maxPrice">Highest Price</label>
+                        <input type="number" name="maxPrice" id="maxPrice" class="form-control" min="0" placeholder="Enter max price">
+                    </div>
+
+                    <!-- Buttons -->
+                    <div class="d-flex mt-4">
+                        <button type="submit" class="btn btn-primary me-2">Search</button>
+                        <a href="@Url.Action("ProductMainPage", "Product")" class="btn btn-secondary">Reset</a>
+                    </div>
+                </form>
             </div>
-        }
+        </div>
     </div>
-</div> 
+
+    <!-- Product Display -->
+    <div class="col-lg-9">
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            @foreach (var product in Model)
+            {
+                <div class="col">
+                    <div class="card h-100 shadow-sm">
+                        <a asp-action="ProductDetails" asp-route-id="@product.Id" class="text-decoration-none text-dark">
+                            @if (product.Images != null && product.Images.Image1 != null)
+                            {
+                                <img src="@(product.Images != null && product.Images.Image1 != null ? $"data:image/png;base64,{Convert.ToBase64String(product.Images.Image1)}" : "~/images/default-product.png")"
+                                     class="card-img-top"
+                                     alt="@product.ProductName"
+                                     style="height: 250px; object-fit: cover;" />
+                            }
+                            else
+                            {
+                                <img src="~/images/default-product.png"
+                                     class="card-img-top"
+                                     alt="Default Image"
+                                     style="height: 250px; object-fit: cover;" />
+                            }
+                            <div class="card-body">
+                                <h5 class="card-title">@product.ProductName</h5>
+                                <p class="card-text">@String.Format("{0:C}", product.Price)</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</div>
