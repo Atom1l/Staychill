@@ -1,0 +1,203 @@
+﻿* ---- ProductMainPage.css ---- */
+/* General Styles */
+body {
+    background-color: #f8f9fa; /* สีพื้นหลังอ่อน */
+    margin-bottom: 20px;
+}
+
+/* Promo Carousel */
+#promoCarousel {
+    margin-bottom: 30px;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+    #promoCarousel img {
+        height: 400px;
+        object-fit: cover; /* ครอบคลุมพื้นที่รูปภาพ */
+    }
+
+/* Filter Bar */
+.card {
+    border: none;
+    border-radius: 10px;
+}
+
+    .card h4 {
+        font-size: 1.25rem;
+        font-weight: bold;
+        color: #343a40; /* สีหัวข้อใน Filter Bar */
+        text-align: left; /* จัดตัวอักษรให้อยู่ริมซ้าย */
+    }
+
+/* Checkbox Styling */
+.form-check {
+    display: flex; /* ใช้ Flexbox เพื่อจัด Checkbox และข้อความให้อยู่ในแถวเดียวกัน */
+    align-items: center; /* จัดข้อความให้กึ่งกลางแนวตั้งกับ Checkbox */
+    margin-bottom: 10px; /* เพิ่มระยะห่างระหว่าง Checkbox แต่ละตัว */
+}
+
+.form-check-input {
+    margin-right: 10px; /* เพิ่มช่องว่างระหว่าง Checkbox และข้อความ */
+}
+
+.form-check-label {
+    color: #495057;
+    font-size: 1rem; /* ปรับขนาดตัวอักษรให้เหมาะสม */
+}
+
+/* Filter Bar Buttons */
+button.btn-primary,
+button.btn-secondary {
+    display: block;
+    margin: 0 auto; /* ปุ่ม Search และ Reset อยู่ตรงกลาง */
+    width: 80%; /* กำหนดความกว้างของปุ่ม */
+}
+
+button.btn-primary {
+    background-color: #73e2ff;
+    border: none;
+}
+
+    button.btn-primary:hover {
+        background-color: #73cdff;
+    }
+
+button.btn-secondary {
+    background-color: #f792b6;
+    border: none;
+}
+
+    button.btn-secondary:hover {
+        background-color: #fe7f7f;
+    }
+
+/* Label Styling for Price Filter */
+#minPrice, #maxPrice {
+    margin-top: 5px;
+}
+
+label {
+    font-weight: bold; /* ข้อความหนาเพื่อเน้นหัวข้อ */
+    text-align: left; /* จัดข้อความให้อยู่ฝั่งซ้าย */
+    display: block; /* บังคับให้ข้อความอยู่คนละบรรทัดกับ input */
+    margin-bottom: 5px; /* เพิ่มระยะห่างระหว่าง Label และ Input */
+    color: #343a40; /* ใช้สีเดียวกับหัวข้ออื่น */
+}
+
+/* Product Card Grid */
+.row-cols-1 .col {
+    margin-bottom: 20px;
+}
+
+.card {
+    border: none;
+    border-radius: 10px;
+    transition: none; /* ยกเลิกเอฟเฟกต์ Hover */
+}
+
+.card-img-top {
+    border-radius: 10px 10px 0 0;
+}
+
+.card-body {
+    text-align: center; /* จัดให้อยู่ตรงกลาง */
+}
+
+.card-title {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #212529;
+}
+
+.card-text {
+    font-size: 1rem;
+    color: #6c757d; /* สีราคาสินค้า */
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: #0d6efd;
+    border: none;
+}
+
+    .btn-primary:hover {
+        background-color: #0b5ed7;
+    }
+
+/* Responsive Design */
+
+/* สำหรับหน้าจอเล็ก (เช่น โทรศัพท์มือถือ) */
+@media (max-width: 576px) {
+    /* Promo Carousel */
+    #promoCarousel img {
+        height: 200px; /* ลดความสูงของรูป Carousel ให้เล็กลง */
+    }
+
+    /* Filter Bar */
+    .card {
+        margin-bottom: 15px; /* เพิ่มระยะห่างระหว่าง Filter Bar กับส่วนอื่น */
+    }
+
+    /* ย่อ Filter Bar ให้แสดงเป็น Accordion */
+    .card-body {
+        padding: 0; /* ลด Padding ให้กระชับ */
+    }
+
+    h4 {
+        font-size: 1rem; /* ลดขนาดหัวข้อใน Filter Bar */
+        padding: 10px; /* เพิ่ม Padding ให้หัวข้อ */
+        background-color: #f8f9fa; /* เพิ่มพื้นหลังให้แยกออกจากเนื้อหา */
+        border-bottom: 1px solid #e9ecef; /* เพิ่มเส้นแบ่ง */
+        cursor: pointer; /* เปลี่ยน Cursor เมื่อ Hover */
+    }
+
+    .filter-item {
+        display: none; /* ซ่อนเนื้อหาเริ่มต้น */
+        padding: 10px;
+    }
+
+    h4.active + .filter-item {
+        display: block; /* แสดงเมื่อคลิก */
+    }
+
+    /* Product Grid */
+    .row-cols-1 .col {
+        flex: 0 0 calc(50% - 10px); /* ปรับการแสดงผลสินค้าให้มี 2 ชิ้นต่อแถวในมือถือ */
+        max-width: calc(50% - 10px); /* ลดขนาดการแสดงสินค้าให้มี 2 ชิ้น */
+        margin-bottom: 15px; /* เพิ่มระยะห่างระหว่างการ์ด */
+    }
+
+    .card {
+        border-radius: 5px; /* ลดความโค้งของการ์ด */
+        overflow: hidden; /* ห้ามรูปภาพล้นออกจากกรอบการ์ด */
+    }
+
+    .card-body {
+        padding: 10px; /* ลด Padding ของ Card */
+    }
+
+    .card-title {
+        font-size: 0.9rem; /* ลดขนาดของชื่อสินค้า */
+    }
+
+    .card-text {
+        font-size: 0.8rem; /* ลดขนาดตัวเลขราคา */
+    }
+
+    .card-img-top {
+        height: 100%; /* ทำให้รูปภาพมีความสูงเต็มที่ */
+        width: 100%; /* ทำให้รูปภาพมีความกว้างเต็มที่ */
+        object-fit: cover; /* ครอบคลุมพื้นที่ */
+        aspect-ratio: 1; /* สร้างอัตราส่วนเป็น 1:1 สำหรับรูปสี่เหลี่ยมจัตุรัส */
+    }
+
+    /* ปุ่ม */
+    .btn-primary,
+    .btn-secondary {
+        font-size: 0.9rem; /* ลดขนาดตัวอักษร */
+        padding: 8px 10px; /* ลดขนาด Padding ของปุ่ม */
+        width: 100%; /* ปรับให้เต็มความกว้าง */
+    }
+}
