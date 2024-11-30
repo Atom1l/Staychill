@@ -11,13 +11,13 @@
 <div id="promoCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
     <div class="carousel-inner">
         <div class="carousel-item active">
-            <img src="~/pic/banner.png" class="d-block w-100" alt="Promo Image 1">
+            <a asp-route-id="28" asp-action="ProductDetails" asp-controller="Product"><img src="~/pic/banner.png" class="d-block w-100 img-fluid" alt="Promo Image 1"></a>
         </div>
         <div class="carousel-item">
-            <img src="~/pic/Half Banner2.png" class="d-block w-100" alt="Promo Image 2">
+            <a asp-route-id="3" asp-action="ProductDetails" asp-controller="Product"><img src="~/pic/Half Banner2.png" class="d-block w-100 img-fluid" alt="Promo Image 2"></a>
         </div>
         <div class="carousel-item">
-            <img src="~/pic/Half Banner3.png" class="d-block w-100" alt="Promo Image 3">
+            <a asp-route-id="44" asp-action="ProductDetails" asp-controller="Product"><img src="~/pic/Half Banner3.png" class="d-block w-100 img-fluid" alt="Promo Image 3"></a>
         </div>
     </div>
 
@@ -105,18 +105,18 @@
                                 <img src="@(product.Images != null && product.Images.Image1 != null ? $"data:image/png;base64,{Convert.ToBase64String(product.Images.Image1)}" : "~/images/default-product.png")"
                                      class="card-img-top"
                                      alt="@product.ProductName"
-                                     style="height: 250px; object-fit: cover;" />
+                                     style="height: auto; object-fit: cover;" />
                             }
                             else
                             {
                                 <img src="~/images/default-product.png"
                                      class="card-img-top"
                                      alt="Default Image"
-                                     style="height: 250px; object-fit: cover;" />
+                                     style="height: auto; object-fit: cover;" />
                             }
                             <div class="card-body">
                                 <h5 class="card-title">@product.ProductName</h5>
-                                <p class="card-text">@String.Format("{0:C}", product.Price)</p>
+                                <p class="card-text">@product.Price ฿</p>
                             </div>
                         </a>
                     </div>

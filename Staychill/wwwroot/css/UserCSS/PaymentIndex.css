@@ -7,8 +7,8 @@
     overflow-x: hidden;
     overflow-y: auto;
     max-width: 100%;
-    padding-right: 2rem;
-    padding-left: 2rem;
+    padding-right: 5rem;
+    padding-left: 5rem;
 }
 .payment-contain{
     margin-top:50px;
@@ -231,6 +231,10 @@
 }
 
 @media (max-width: 575px) {
+    .container {
+        padding-right: 2rem;
+        padding-left: 2rem;
+    }
     .payment-select button {
         font-size: 1.2rem !important;
         padding: 15px 20px 15px 20px !important;

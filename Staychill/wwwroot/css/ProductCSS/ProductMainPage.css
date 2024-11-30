@@ -1,10 +1,44 @@
 ﻿* ---- ProductMainPage.css ---- */
 /* General Styles */
-body {
-    background-color: #f8f9fa; /* สีพื้นหลังอ่อน */
-    margin-bottom: 20px;
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
+.container {
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-width: 100%;
+    padding-right: 5rem;
+    padding-left: 5rem;
+}
+
+body {
+    background-color: #f8f9fa; /* สีพื้นหลังอ่อน */
+    margin-bottom: 70px;
+}
+
+
+.carousel-inner img {
+    width: 100% !important;
+    height: auto !important;
+    object-fit: cover;
+}
+.carousel-control-prev{
+    display:flex;
+    justify-content:start;
+    align-items:center;
+    padding-left:20px;
+    width:5%;
+}
+.carousel-control-next {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    padding-right: 20px;
+    width: 5%;
+}
 /* Promo Carousel */
 #promoCarousel {
     margin-bottom: 30px;
@@ -12,10 +46,10 @@ body {
     overflow: hidden;
 }
 
-    #promoCarousel img {
-        height: 400px;
-        object-fit: cover; /* ครอบคลุมพื้นที่รูปภาพ */
-    }
+#promoCarousel img {
+    height: 400px;
+    object-fit: cover; /* ครอบคลุมพื้นที่รูปภาพ */
+}
 
 /* Filter Bar */
 .card {
@@ -130,6 +164,10 @@ label {
 
 /* สำหรับหน้าจอเล็ก (เช่น โทรศัพท์มือถือ) */
 @media (max-width: 576px) {
+    .container {
+        padding-right: 2rem;
+        padding-left: 2rem;
+    }
     /* Promo Carousel */
     #promoCarousel img {
         height: 200px; /* ลดความสูงของรูป Carousel ให้เล็กลง */
@@ -167,6 +205,7 @@ label {
         flex: 0 0 calc(50% - 10px); /* ปรับการแสดงผลสินค้าให้มี 2 ชิ้นต่อแถวในมือถือ */
         max-width: calc(50% - 10px); /* ลดขนาดการแสดงสินค้าให้มี 2 ชิ้น */
         margin-bottom: 15px; /* เพิ่มระยะห่างระหว่างการ์ด */
+        margin-left:7px;
     }
 
     .card {

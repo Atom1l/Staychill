@@ -8,8 +8,8 @@
     overflow-x: hidden;
     overflow-y: auto;
     max-width: 100%;
-    padding-right: 2rem;
-    padding-left: 2rem;
+    padding-right: 5rem;
+    padding-left: 5rem;
 }
 .table-contain{
     margin-top:50px !important;
@@ -151,6 +151,10 @@
     }
 }
 @media (max-width: 575px){
+    .container {
+        padding-right: 2rem;
+        padding-left: 2rem;
+    }
     .cart-left-column{
         width: 100%
     }

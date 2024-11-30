@@ -8,8 +8,8 @@
     overflow-x: hidden;
     overflow-y: auto;
     max-width: 100%;
-    padding-right: 2rem;
-    padding-left: 2rem;
+    padding-right: 5rem;
+    padding-left: 5rem;
 }
 
 .trackingIndex-input{
@@ -25,4 +25,11 @@
     background: #0e2ce1;
     color : white !important;
     transition: 0.3s ease-in-out;
+}
+
+@media(max-width:575px){
+    .container {
+        padding-right: 2rem;
+        padding-left: 2rem;
+    }
 }
