@@ -8,8 +8,8 @@
     overflow-x: hidden;
     overflow-y: auto;
     max-width: 100%;
-    padding-right: 2rem;
-    padding-left: 2rem;
+    padding-right: 5rem;
+    padding-left: 5rem;
 }
 
 .feedbackIndex-input {
@@ -21,6 +21,13 @@
 .feedbackIndex-submit {
     background: #0e2ce1;
     color: white !important;
+}
+
+@media(max-width:575px){
+    .container {
+        padding-right: 2rem;
+        padding-left: 2rem;
+    }
 }
 
 @media(max-width:440px){
