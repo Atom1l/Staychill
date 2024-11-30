@@ -4,13 +4,14 @@
     ViewData["Title"] = "Product Details";
 }
 
-<div class="container mt-4">
-    <div class="row">
-        <!-- โซนแสดงภาพสินค้า -->
-        <div class="col-md-6">
+<div class="container mt-5">
+    <!-- โซนแสดงภาพสินค้าและรายละเอียด -->
+    <div class="row g-5 align-items-center">
+        <!-- ภาพสินค้า -->
+        <div class="col-md-6 text-center">
             @if (Model.Images != null && Model.Images.Image1 != null)
             {
-                <img src="@($"data:image/png;base64,{Convert.ToBase64String(Model.Images.Image1)}")" alt="Main Image" class="img-fluid rounded" />
+                <img src="@($"data:image/png;base64,{Convert.ToBase64String(Model.Images.Image1)}")" alt="Main Image" class="img-fluid rounded" style="max-height: 400px; object-fit: cover;" />
             }
             else
             {
@@ -18,95 +19,114 @@
             }
         </div>
 
-        <!-- โซนแสดงรายละเอียดสินค้า -->
+        <!-- รายละเอียดสินค้า -->
         <div class="col-md-6">
-            <h2>@Model.ProductName</h2>
-            <p>@Model.Description</p>
+            <h1 class="display-6 fw-bold mb-3">@Model.ProductName</h1>
+            <p class="text-muted">@Model.Description</p>
 
-            <!-- โซนกรองสี -->
-            <p><strong>Color:</strong></p>
-            <div class="d-flex gap-2">
-                @if (ViewBag.RelatedColors != null)
-                {
-                    foreach (var colorItem in ViewBag.RelatedColors)
+            <!-- สีของสินค้า -->
+            <div class="mb-4">
+                <strong>Color:</strong>
+                <div class="d-flex gap-2 mt-2">
+                    @if (ViewBag.RelatedColors != null)
                     {
-                        <a asp-action="ProductDetails" asp-route-id="@colorItem.Id" style="text-decoration: none;">
-                            <span class="d-inline-block" style="width: 20px; height: 20px; background-color: @colorItem.Color; border-radius: 50%; border: 1px solid #000; cursor: pointer;" title="@colorItem.Color"></span>
-                        </a>
+                        foreach (var colorItem in ViewBag.RelatedColors)
+                        {
+                            // เช็คสีเขียวและสีน้ำเงินเพื่อเปลี่ยนให้เป็นฟ้าและเขียวอ่อน
+                            string displayColor = colorItem.Color;
+
+                            if (colorItem.Color.ToLower() == "green") // ถ้าค่าสีเป็นเขียว
+                            {
+                                displayColor = "#a8d08d"; // สีเขียวอ่อน
+                            }
+                            else if (colorItem.Color.ToLower() == "blue") // ถ้าค่าสีเป็นน้ำเงิน
+                            {
+                                displayColor = "#add8e6"; // สีฟ้าอ่อน
+                            }
+
+                            <a asp-action="ProductDetails" asp-route-id="@colorItem.Id" class="text-decoration-none">
+                                <span class="d-inline-block border"
+                                      style="width: 30px; height: 30px; background-color: @displayColor; border-radius: 50%;
+                        cursor: pointer; opacity: 0.7;"
+                                      title="@colorItem.Color"></span>
+                            </a>
+                        }
                     }
-                }
+                </div>
             </div>
 
-            <!-- เพิ่มส่วนแสดงราคาสินค้า -->
-            <p class="mt-3">
-                <strong>Price:</strong>
-                <span style="font-size: 1.5rem;">@String.Format("{0:C}", Model.Price)</span> <!-- ปรับขนาดตัวอักษรที่นี่ -->
-            </p>
 
+            <!-- ราคาและจำนวนสินค้า -->
+            <div class="d-flex align-items-center gap-4 mb-4">
+                <div>
+                    <strong style="font-size: 1.25rem; color: black; margin-bottom: 5px;">Price:</strong>
+                    <span class="fs-3 fw-bold" style="font-size: 1.25rem; color: black; line-height: 1.2;">
+                        @String.Format("{0:C}", Model.Price)
+                    </span>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <!-- ปุ่มลดจำนวน -->
+                    <button type="button" class="btn btn-outline-secondary px-3" onclick="this.nextElementSibling.stepDown()">-</button>
+                    <!-- ตัวกรอกจำนวนสินค้า -->
+                    <input type="number" name="quantity" value="1" min="1" max="@Model.Instock" class="form-control text-center" style="width: 100px; height: 40px;" />
+                    <!-- ปุ่มเพิ่มจำนวน -->
+                    <button type="button" class="btn btn-outline-secondary px-3" onclick="this.previousElementSibling.stepUp()">+</button>
+                </div>
+            </div>
 
-            <!-- ฟอร์มเพิ่มสินค้า -->
-            <div class="mt-4">
+            <!-- ปุ่มเพิ่มสินค้า -->
+            <div>
                 <form asp-action="CartIndex" asp-controller="Cart" method="post">
                     <input type="hidden" name="productId" value="@Model.Id" />
-                    <label for="quantity">Quantity:</label>
-                    <div class="d-flex align-items-center">
-                        <button type="button" class="btn btn-secondary" onclick="this.nextElementSibling.stepDown()">-</button>
-                        <input type="number" name="quantity" value="1" min="1" max="@Model.Instock" class="form-control mx-2" style="width: 60px; text-align: center;" />
-                        <button type="button" class="btn btn-secondary" onclick="this.previousElementSibling.stepUp()">+</button>
-                    </div>
-                    <button type="submit" class="btn btn-primary mt-3">Add to Cart</button>
+                    <button type="submit" class="btn btn-lg w-100" style="background-color: #73e2ff; border-color: #73e2ff;">Add To Cart</button>
                 </form>
             </div>
         </div>
-
+    </div>
 
     <!-- โซนแสดงภาพเพิ่มเติม -->
-    <div class="mt-4">
-        <div class="row">
+    <div class="container mt-5">
+        <div class="row g-3 justify-content-center">
             @if (Model.Images != null)
             {
-                <div class="col-4 col-md-3 col-lg-2">
-                    @if (Model.Images.Image2 != null)
-                    {
-                        <img src="@($"data:image/png;base64,{Convert.ToBase64String(Model.Images.Image2)}")" alt="Image 2" class="img-fluid mb-2 rounded" />
-                    }
-                </div>
-                <div class="col-4 col-md-3 col-lg-2">
-                    @if (Model.Images.Image3 != null)
-                    {
-                        <img src="@($"data:image/png;base64,{Convert.ToBase64String(Model.Images.Image3)}")" alt="Image 3" class="img-fluid mb-2 rounded" />
-                    }
-                </div>
-                <div class="col-4 col-md-3 col-lg-2">
-                    @if (Model.Images.Image4 != null)
-                    {
-                        <img src="@($"data:image/png;base64,{Convert.ToBase64String(Model.Images.Image4)}")" alt="Image 4" class="img-fluid mb-2 rounded" />
-                    }
-                </div>
+                @if (Model.Images.Image2 != null)
+                {
+                    <div class="col-4 col-md-3">
+                        <img src="@($"data:image/png;base64,{Convert.ToBase64String(Model.Images.Image2)}")" alt="Image 2" class="img-fluid rounded" onclick="openImagePopup(this.src)" style="cursor: pointer;" />
+                    </div>
+                }
+                @if (Model.Images.Image3 != null)
+                {
+                    <div class="col-4 col-md-3">
+                        <img src="@($"data:image/png;base64,{Convert.ToBase64String(Model.Images.Image3)}")" alt="Image 3" class="img-fluid rounded" onclick="openImagePopup(this.src)" style="cursor: pointer;" />
+                    </div>
+                }
+                @if (Model.Images.Image4 != null)
+                {
+                    <div class="col-4 col-md-3">
+                        <img src="@($"data:image/png;base64,{Convert.ToBase64String(Model.Images.Image4)}")" alt="Image 4" class="img-fluid rounded" onclick="openImagePopup(this.src)" style="cursor: pointer;" />
+                    </div>
+                }
             }
         </div>
     </div>
 
-    <!-- โซนแสดงสินค้าอื่นๆ ที่สุ่มมา -->
-    <div class="mt-4">
-        <h3>Others</h3>
-        <div class="row">
+    <!-- โซนสินค้าอื่น -->
+    <div class="container mt-5">
+        <h5 class="mb-3 text-center">----- Let's See Others -----</h5>
+        <div class="row g-4 justify-content-center">
             @if (ViewBag.OtherProducts != null)
             {
                 foreach (var otherProduct in ViewBag.OtherProducts)
                 {
                     <div class="col-6 col-md-4 col-lg-3">
-                        <div class="text-center">
+                        <div class="card border-0 shadow-sm">
                             @if (otherProduct.Images != null && otherProduct.Images.Image1 != null)
                             {
                                 var base64Image = Convert.ToBase64String(otherProduct.Images.Image1);
                                 <a href="@Url.Action("ProductDetails", "Product", new { id = otherProduct.Id })">
-                                    <img src="@($"data:image/png;base64,{base64Image}")" alt="Image1" class="img-fluid mb-2 rounded" />
+                                    <img src="@($"data:image/png;base64,{base64Image}")" alt="Image1" class="card-img-top rounded" />
                                 </a>
-                            }
-                            else
-                            {
-                                <p>No Image Available</p>
                             }
                         </div>
                     </div>
@@ -119,5 +139,9 @@
         </div>
     </div>
 
-    <a asp-action="ProductMainPage" class="btn btn-link mt-4">Back</a>
+
+    <!-- ปุ่มกลับ -->
+    <div class="text-center mt-4">
+        <a asp-action="ProductMainPage" class="btn btn-outline-secondary">Back to Menu</a>
+    </div>
 </div>
