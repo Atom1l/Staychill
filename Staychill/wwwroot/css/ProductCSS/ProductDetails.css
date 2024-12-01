@@ -4,21 +4,20 @@
     box-sizing: border-box;
 }
 
+
+
+body {
+    margin-bottom:70px;
+    
+}
 .container {
     overflow-x: hidden;
     overflow-y: auto;
     max-width: 100%;
     padding-right: 5rem;
     padding-left: 5rem;
-}
-
-body {
     
 }
-
-
-
-
 .right-col{
     /*background:blue;*/
 }
