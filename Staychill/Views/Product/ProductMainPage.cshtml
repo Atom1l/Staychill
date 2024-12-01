@@ -1,7 +1,14 @@
 ﻿@model IEnumerable<Staychill.Models.ProductModel.Product>
 
 @{
-    ViewData["Title"] = "Products";
+    @if (User.Identity.IsAuthenticated)
+    {
+        Layout = "_Logged-In_Layout";
+    }
+    else
+    {
+        Layout = "_Layout";
+    }
 }
 
 <!-- เชื่อมไฟล์ CSS -->

@@ -1,13 +1,12 @@
 ﻿@model Staychill.Models.ProductModel.Product
 
 @{
-    ViewData["Title"] = "ProductCreate";
+    Layout = "_AdminLayout";
 }
 
-<h1>ProductCreate</h1>
+<h1 class="fw-bold text-center mt-4">Create The Product</h1>
+<hr class="mb-4" />
 
-<h4>ProductModel</h4>
-<hr />
 <div class="row">
     <div class="col-md-4">
         <form asp-action="ProductCreate" method="post" enctype="multipart/form-data">
