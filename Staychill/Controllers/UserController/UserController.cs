@@ -179,8 +179,12 @@ namespace Staychill.Controllers.UserController
 
 
         // ================= SignUp ================= //
-        public IActionResult SignUp()
+        public async Task<IActionResult> SignUp()
         {
+            if (User.Identity.Name != null)
+            {
+                await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+            }
             return View(new UserViewModel());
         }
 

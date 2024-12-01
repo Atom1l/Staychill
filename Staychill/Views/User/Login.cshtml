@@ -9,12 +9,8 @@
 <div class="container">
     <div class="container-fluid d-flex justify-content-center align-items-center" style="min-height:80vh;">
         <div class="w-100 h-auto d-flex justify-content-center align-items-center align-content-center text-center flex-wrap">
-            <!-- Image Column -->
-            <div class="left-col col-12 col-md-3">
-                <img src="~/pic/login.jpg" alt="Staychill" class="img-column rounded"  />
-            </div>
             <!-- Form Column -->
-            <div class="right-col col-12 col-md-6 col-lg-3 d-flex justify-content-start align-items-center bg-white" style="z-index:99;">
+            <div class="right-col col-12 col-md-6 col-lg-3 d-flex justify-content-start align-items-center bg-white shadow" style="z-index:99;">
                 <div>
                     <div class="fs-2 mb-4">Login</div>
                     <form asp-action="Login" method="post" class="d-flex flex-column justify-content-center align-items-center">
@@ -32,7 +28,7 @@
                             <button type="submit" class="loginbtn btn w-100 fs-5">Login</button>
                         </div>
 
-                        <div class="mt-2">
+                        <div class="">
                             <div class=" fs-6 mb-2">or</div>
                             <a asp-action="SignUp" asp-controller="User" class="Signupbtn btn fs-5 fw-bold text-decoration-none text-black">Create Your Account</a>
                         </div>

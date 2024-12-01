@@ -44,6 +44,10 @@ body {
     align-items:center !important;
 
 }
+.right-col div{
+    margin-top:20px;
+    margin-bottom:20px;
+}
 .right-col button{
 }
 
