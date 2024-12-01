@@ -18,6 +18,11 @@ namespace Staychill.Controllers.UserController
             _db = db;
         }
 
+        public IActionResult Home()
+        {
+            return View();
+        }
+
         public IActionResult Login()
         {
             return View();

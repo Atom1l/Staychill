@@ -1,0 +1,36 @@
+﻿
+* {
+margin: 0;
+padding: 0;
+ box-sizing: border-box;
+}
+
+.container {
+ overflow-x: hidden;
+ overflow-y: auto;
+max-width: 100%;
+padding-right: 2rem;
+padding-left: 2rem;
+}
+
+.btn-primary {
+  background-color: white;
+ border: 2px solid gray;
+ border-radius: 10px;
+ padding: 10px 20px;
+ font-size: 16px;
+ color: gray;
+transition: background-color 0.3s, color 0.3s;
+}
+
+  
+ .btn-primary:hover {
+  background-color: lightgray;
+  color: black;
+}
+
+    
+.btn-primary:active {
+ background-color: gray; 
+ color: white;
+}

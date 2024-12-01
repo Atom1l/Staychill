@@ -1,0 +1,209 @@
+﻿
+    <link rel="stylesheet" href="~/css/UserCSS/Index.css" />
+    <style>
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    .container {
+        overflow-x: hidden;
+        overflow-y: auto;
+        max-width: 100%;
+        padding-right: 2rem;
+        padding-left: 2rem;
+    }
+    .btn {
+        background-color: white;
+        border: 2px solid gray;
+        border-radius: 10px;
+        padding: 10px 20px;
+        font-size: 16px;
+        color: gray;
+        transition: background-color 0.3s, color 0.3s;
+    }
+
+
+    .btn:hover {
+     background-color: pink;
+     color: white;
+        }
+
+
+     .btn:active {
+     background-color: gray;
+     color: white;
+        }
+
+    .custom-row .col-sm-4 {
+     margin-bottom: 20px; 
+    }
+
+    .custom-row .col-sm-4 img {
+          margin-right: 10px; 
+     }
+
+    </style>
+
+<div class="col-sm-12 mx-auto">
+    <div id="promoCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active">
+                <a asp-route-id="28" asp-action="ProductDetails" asp-controller="Product"><img src="~/pic/banner.png" class="d-block w-100 img-fluid" alt="Promo Image 1"></a>
+            </div>
+            <div class="carousel-item">
+                <a asp-route-id="3" asp-action="ProductDetails" asp-controller="Product"><img src="~/pic/Half Banner2.png" class="d-block w-100 img-fluid" alt="Promo Image 2"></a>
+            </div>
+            <div class="carousel-item">
+                <a asp-route-id="44" asp-action="ProductDetails" asp-controller="Product"><img src="~/pic/Half Banner3.png" class="d-block w-100 img-fluid" alt="Promo Image 3"></a>
+            </div>
+        </div>
+
+        <button class="carousel-control-prev" type="button" data-bs-target="#promoCarousel" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#promoCarousel" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+        <div class="carousel-indicators">
+            <button type="button" data-bs-target="#promoCarousel" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+            <button type="button" data-bs-target="#promoCarousel" data-bs-slide-to="1" aria-label="Slide 2"></button>
+            <button type="button" data-bs-target="#promoCarousel" data-bs-slide-to="2" aria-label="Slide 3"></button>
+        </div>
+    </div>
+</div>
+
+
+<!--------------body---------------->
+<h1 class="text-center">Recommend</h1>
+
+<div class="container">
+    <div class="row">
+        <div class="col-sm-6 d-flex justify-content-center">
+            <a asp-route-id="5" asp-action="ProductDetails" asp-controller="Product">
+                <img src="~/pic/Half Banner2.png" style="width: 100%; height: auto;">
+            </a>
+        </div>
+        <div class="col-sm-6 d-flex justify-content-center">
+            <a asp-route-id="44" asp-action="ProductDetails" asp-controller="Product">
+                <img src="~/pic/Half Banner3.png" style="width: 100%; height: auto;">
+            </a>
+        </div>
+    </div>
+</div>
+<br>
+<div class="container">
+    <div class="row">
+        <div class="col-sm-4 d-flex justify-content-center">
+            <a asp-route-id="11" asp-action="ProductDetails" asp-controller="Product">
+                <img src="~/pic/small/small.png" class="card-img-top .custom-img" alt="..." style="width: 100%; height: auto;">
+            </a>
+        </div>
+        <div class="col-sm-4 d-flex justify-content-center">
+            <a asp-route-id="24" asp-action="ProductDetails" asp-controller="Product">
+                <img src="~/pic/small/small2.png" class="card-img-top" alt="..." style="width: 100%; height: auto;">
+            </a>
+        </div>
+        <div class="col-sm-4 d-flex justify-content-center">
+            <a asp-route-id="44" asp-action="ProductDetails" asp-controller="Product">
+                <img src="~/pic/small/small3.png" class="card-img-top" alt="..." style="width: 100%; height: auto;">
+            </a>
+        </div>
+    </div>
+    <br>
+    <div class="row">
+        <div class="col-sm-4 d-flex justify-content-center">
+            <a asp-route-id="59" asp-action="ProductDetails" asp-controller="Product">
+                <img src="~/pic/small/small4.png" class="card-img-top" alt="..." style="width: 100%; height: auto;">
+            </a>
+        </div>
+        <div class="col-sm-4 d-flex justify-content-center">
+            <a asp-route-id="61" asp-action="ProductDetails" asp-controller="Product">
+                <img src="~/pic/small/small5.png" class="card-img-top" alt="..." style="width: 100%; height: auto;">
+            </a>
+        </div>
+        <div class="col-sm-4 d-flex justify-content-center">
+            <a asp-route-id="33" asp-action="ProductDetails" asp-controller="Product">
+                <img src="~/pic/small/small6.png" class="card-img-top" alt="..." style="width: 100%; height: auto;">
+            </a>
+        </div>
+    </div>
+    
+</div>
+
+<br>
+
+<div class="align-items-center">
+    
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-4"></div>
+            <div class="col-sm-4 justify-content-center">
+                <h1>Let us help you find it.</h1>
+            </div>
+            <div class="col-4"></div>
+        </div>
+        <div class="row align-items-center">
+            <div class="col-4"></div>
+            <div class="col-sm-4 justify-content-center">
+                <a class="btn btn" style="margin: 10px;" asp-route-category="Mug" asp-action="ProductMainPage" asp-controller="Product">Mug</a>
+                <a class="btn btn" style="margin: 10px;" asp-route-category="Steel Flask" asp-action="ProductMainPage" asp-controller="Product">SteelFladk</a>
+                <a class="btn btn" style="margin: 10px;" asp-route-category="Tumbler" asp-action="ProductMainPage" asp-controller="Product">Tumdlem</a>
+            </div>
+            <div class="col-4"></div>
+        </div>
+
+        <div class="row  align-items-center">
+            <div class="col-sm-4 justify-content-center"></div>
+            <div class="col-sm-4">
+
+                <a class="btn" style="margin: 10px;" asp-route-minPrice="0" asp-route-maxPrice="160" asp-action="ProductMainPage" asp-controller="Product">0-159฿</a>
+                <a class="btn" style="margin: 10px;" asp-route-minPrice="160" asp-route-maxPrice="199" asp-action="ProductMainPage" asp-controller="Product">160-199฿</a>
+                <a class="btn" style="margin: 10px;" asp-route-minPrice="200" asp-route-maxPrice="300" asp-action="ProductMainPage" asp-controller="Product">300฿</a>
+            </div>
+            <div class="col-sm-4"></div>
+        </div>
+    </div>
+</div>
+
+
+
+<br>
+
+<h4>About Us</h4>
+<div class="col-sm-12">
+    <p>Staychill is an E-Commerce website selling beverage packaging products. This website is created by a group of students in the CMM349 Web Application course. It is intended for educational use only.</p>
+</div>
+
+
+<h4>Contact</h4>
+
+<div class="col-6">
+  <p>
+        King Mongkut’s University of Technology Thonburi (KMUTT)
+        6B floor, 14-storey Parking Building
+        126 Pracha Uthit Rd., Bang Mod, Thung Khru, Bangkok 10140. Thailand
+   </p>
+    <p>
+        Call : 01-234-5678<br>
+Gmail : Staychill.gmail.com</p>
+        
+</div>
+
+    <div>
+        <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3877.106954579432!2d100.49386787455713!3d13.651257399614483!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30e2a251bb6b0cf1%3A0xf656e94ff13324ad!2z4Lih4Lir4Liy4Lin4Li04LiX4Lii4Liy4Lil4Lix4Lii4LmA4LiX4LiE4LmC4LiZ4LmC4Lil4Lii4Li14Lie4Lij4Liw4LiI4Lit4Lih4LmA4LiB4Lil4LmJ4Liy4LiY4LiZ4Lia4Li44Lij4Li1!5e0!3m2!1sth!2sth!4v1733047888953!5m2!1sth!2sth"
+                width="600"
+                height="450"
+                style="border:0;"
+                allowfullscreen=""
+                loading="lazy"
+                referrerpolicy="no-referrer-when-downgrade">
+            </iframe>
+    </div>
+    
+
+</div>
