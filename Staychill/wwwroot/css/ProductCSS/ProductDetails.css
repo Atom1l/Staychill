@@ -1,0 +1,53 @@
+﻿* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.container {
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-width: 100%;
+    padding-right: 5rem;
+    padding-left: 5rem;
+}
+
+body {
+    
+}
+
+
+
+
+.right-col{
+    /*background:blue;*/
+}
+.pricetag{
+    font-size:1.25rem;
+}
+.price{
+    border:solid 1px black;
+}
+input[type=number].no-spinner::-webkit-inner-spin-button,
+input[type=number].no-spinner::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number].no-spinner {
+    -moz-appearance: textfield; /* Firefox */
+}
+
+
+
+
+
+@media (max-width: 576px) {
+    .container {
+        padding-right: 2rem;
+        padding-left: 2rem;
+    }
+    .pricetag {
+        font-size: 0.9rem;
+    }
+}

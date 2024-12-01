@@ -1,14 +1,14 @@
 ﻿@model IEnumerable<Staychill.Models.ProductModel.Product>
 
 @{
-    ViewData["Title"] = "ProductIndex";
+    Layout = "_AdminLayout";
 }
 
-<h1>ProductIndex</h1>
+<h1 class="fw-bold text-center mt-4">Tracking-controller</h1>
+<hr class="mb-4" />
 
 <div>
-    <a asp-action="ProductCreate">Create Product</a> |
-    <a asp-action="ProductAddCart">See Cart</a>
+    <a asp-action="ProductCreate">Create Product</a>
 </div>
 <table class="table">
     <thead>
@@ -89,13 +89,6 @@
                     }
                 </td>
                 <td>
-                    <!-- ปุ่ม Add to Cart -->
-                    <form asp-action="CartIndex" asp-controller="Cart" method="post">
-                        <input type="hidden" name="productId" value="@product.Id" />
-                        <input type="number" name="quantity" value="1" min="1" />
-                        <button type="submit">Add to Cart</button>
-                    </form>
-
                     <!-- ปุ่ม Details -->
                     <a asp-action="ProductDetailsAdmin" asp-route-id="@product.Id" class="btn btn-info">Details</a>
 
