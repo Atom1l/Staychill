@@ -19,7 +19,11 @@ namespace Staychill.Controllers.UserController
             _db = db;
         }
 
-
+        public IActionResult Home()
+        {
+            return View();
+        }
+        
         public async Task<IActionResult> Index()
         {
             if(User.Identity.Name != null)

@@ -18,7 +18,7 @@ namespace Staychill.Controllers.AdminController
         {
             _db = db;
         }
-
+        
 
         // ============================================= Discount ============================================= //
         public IActionResult Discount(string discountquery) // Admin-Discount-Index //
