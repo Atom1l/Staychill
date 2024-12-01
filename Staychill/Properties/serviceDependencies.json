@@ -1,0 +1,14 @@
+{
+  "dependencies": {
+    "mssql3": {
+      "type": "mssql",
+      "connectionId": "ConnectionStrings:StaychillConnectionString",
+      "dynamicId": null
+    },
+    "mssql1": {
+      "ignored": "true",
+      "type": "mssql",
+      "connectionId": "ConnectionStrings:StaychillConnectionStrings"
+    }
+  }
+}

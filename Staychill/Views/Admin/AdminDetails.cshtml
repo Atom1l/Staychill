@@ -1,0 +1,72 @@
+﻿@model Staychill.Models.UserModel.User
+
+@{
+    Layout = "_AdminLayout";
+}
+
+<h1 class="fw-bold text-center">User-controller</h1>
+<hr class="mb-4" />
+
+<div class="card">
+    <div class="card-header">
+        <h4>User Information</h4>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">ID :</dt>
+            <dd class="col-sm-9">@Model.Id</dd>
+
+            <dt class="col-sm-3">Firstname :</dt>
+            <dd class="col-sm-9">@Model.Firstname</dd>
+
+            <dt class="col-sm-3">Lastname :</dt>
+            <dd class="col-sm-9">@Model.Lastname</dd>
+
+            <dt class="col-sm-3">Username :</dt>
+            <dd class="col-sm-9">@Model.Username</dd>
+
+            <dt class="col-sm-3">Email :</dt>
+            <dd class="col-sm-9">@Model.Email</dd>
+
+            <dt class="col-sm-3">Phone Number :</dt>
+            <dd class="col-sm-9">@Model.Phonenumber</dd>
+        </dl>
+    </div>
+</div>
+
+<div class="card mt-4">
+    <div class="card-header">
+        <h4>Address Information</h4>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">House Number :</dt>
+            <dd class="col-sm-9">@Model.Address.Housenumber</dd>
+
+            <dt class="col-sm-3">Alley :</dt>
+            <dd class="col-sm-9">@Model.Address.Alley</dd>
+
+            <dt class="col-sm-3">Road :</dt>
+            <dd class="col-sm-9">@Model.Address.Road</dd>
+
+            <dt class="col-sm-3">Subdistrict :</dt>
+            <dd class="col-sm-9">@Model.Address.Subdistrict</dd>
+
+            <dt class="col-sm-3">District :</dt>
+            <dd class="col-sm-9">@Model.Address.District</dd>
+
+            <dt class="col-sm-3">Province :</dt>
+            <dd class="col-sm-9">@Model.Address.Province</dd>
+
+            <dt class="col-sm-3">Country :</dt>
+            <dd class="col-sm-9">@Model.Address.Country</dd>
+
+            <dt class="col-sm-3">Zip Code :</dt>
+            <dd class="col-sm-9">@Model.Address.Zipcode</dd>
+        </dl>
+    </div>
+</div>
+
+<div class="mt-4">
+    <a href="@Url.Action("AdminUserIndex", "Admin")" class="btn btn-secondary">Back to List</a>
+</div>

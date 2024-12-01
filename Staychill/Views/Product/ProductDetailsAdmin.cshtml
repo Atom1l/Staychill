@@ -4,7 +4,7 @@
     Layout = "_AdminLayout";
 }
 
-<h1 class="fw-bold text-center mt-4">Product's Details</h1>
+<h1 class="fw-bold text-center mt-4">Product-controller</h1>
 <hr class="mb-4" />
 
 <div>
@@ -49,24 +49,24 @@
             Images
         </dt>
         <dd class="col-sm-10">
-            <div>
+            <div class="row d-flex flex-row justify-content-start gap-2">
                 @if (Model.Images != null)
                 {
                     if (Model.Images.Image1 != null)
                     {
-                        <img src="@($"data:image/png;base64,{Convert.ToBase64String(Model.Images.Image1)}")" alt="Image 1" class="img-thumbnail" />
+                        <img src="@($"data:image/png;base64,{Convert.ToBase64String(Model.Images.Image1)}")" alt="Image 1" class="img-thumbnail" style="border:none; width:200px; height:200px;" />
                     }
                     if (Model.Images.Image2 != null)
                     {
-                        <img src="@($"data:image/png;base64,{Convert.ToBase64String(Model.Images.Image2)}")" alt="Image 2" class="img-thumbnail" />
+                        <img src="@($"data:image/png;base64,{Convert.ToBase64String(Model.Images.Image2)}")" alt="Image 2" class="img-thumbnail" style="width:200px; height:200px;" />
                     }
                     if (Model.Images.Image3 != null)
                     {
-                        <img src="@($"data:image/png;base64,{Convert.ToBase64String(Model.Images.Image3)}")" alt="Image 3" class="img-thumbnail" />
+                        <img src="@($"data:image/png;base64,{Convert.ToBase64String(Model.Images.Image3)}")" alt="Image 3" class="img-thumbnail" style="width:200px; height:200px;" />
                     }
                     if (Model.Images.Image4 != null)
                     {
-                        <img src="@($"data:image/png;base64,{Convert.ToBase64String(Model.Images.Image4)}")" alt="Image 4" class="img-thumbnail" />
+                        <img src="@($"data:image/png;base64,{Convert.ToBase64String(Model.Images.Image4)}")" alt="Image 4" class="img-thumbnail" style="width:200px; height:200px;" />
                     }
                 }
             </div>

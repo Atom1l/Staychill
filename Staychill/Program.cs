@@ -23,8 +23,10 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
         options.LogoutPath = "/User/Logout"; // Redirect to logout action
         options.ExpireTimeSpan = TimeSpan.FromDays(7); // Set cookie expiration
     });
+builder.Services.AddSession();
 
 var app = builder.Build();
+app.UseSession();
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
@@ -45,6 +47,6 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=User}/{action=LogIn}/{id?}");
+    pattern: "{controller=User}/{action=Home}/{id?}");
 
 app.Run();

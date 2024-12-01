@@ -4,10 +4,10 @@
     Layout = "_AdminLayout";
 }
 
-<h1 class="fw-bold text-center mt-4">Create The Product</h1>
+<h1 class="fw-bold text-center mt-4">Product-controller</h1>
 <hr class="mb-4" />
 
-<div class="row">
+<div class="w-100 row d-flex justify-content-center align-items-center">
     <div class="col-md-4">
         <form asp-action="ProductCreate" method="post" enctype="multipart/form-data">
 
@@ -61,16 +61,17 @@
                 <label>Upload Image 4</label>
                 <input type="file" name="image4" accept="image/*" class="form-control" />
             </div>
-            <div class="form-group mt-2">
-                <input type="submit" value="Create" class="btn btn-primary" />
+            <div class="form-group mt-2 d-flex flex-row gap-1 align-items-center">
+                <input type="submit" value="Create" class="btn btn-primary" /> |
+                <div>
+                    <a asp-action="ProductIndex" class="text-secondary">Back to List</a>
+                </div>
             </div>
         </form>
     </div>
 </div>
 
-<div>
-    <a asp-action="ProductIndex">Back to List</a>
-</div>
+
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}

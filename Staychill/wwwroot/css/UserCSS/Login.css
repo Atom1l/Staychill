@@ -11,8 +11,12 @@
     padding-right: 5rem;
     padding-left: 5rem;
 }
+
 body {
-    margin-bottom:70px;
+    margin-bottom: 70px;
+    background: url('/pic/sign up.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
 }
 
 .row{
@@ -44,14 +48,15 @@ body {
     align-items:center !important;
 
 }
-.right-col div{
+.containerlogin{
     margin-top:20px;
-    margin-bottom:20px;
+    margin-bottom:50px;
 }
 .right-col button{
 }
 
 .Signupbtn {
+    width:100%;
     background: #FDE4F5;
 }
 

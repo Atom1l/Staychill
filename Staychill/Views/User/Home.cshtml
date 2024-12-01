@@ -1,53 +1,18 @@
-﻿
-    <link rel="stylesheet" href="~/css/UserCSS/Index.css" />
-    <style>
-
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
+﻿@{
+    @if (User.Identity.IsAuthenticated)
+    {
+        Layout = "_Logged-In_Layout";
     }
-
-    .container {
-        overflow-x: hidden;
-        overflow-y: auto;
-        max-width: 100%;
-        padding-right: 2rem;
-        padding-left: 2rem;
+    else
+    {
+        Layout = "_Layout";
     }
-    .btn {
-        background-color: white;
-        border: 2px solid gray;
-        border-radius: 10px;
-        padding: 10px 20px;
-        font-size: 16px;
-        color: gray;
-        transition: background-color 0.3s, color 0.3s;
-    }
+}
+<link rel="stylesheet" href="~/css/UserCSS/Index.css" />
+<link rel="stylesheet" href="~/css/UserCSS/Home.css" />
 
 
-    .btn:hover {
-     background-color: pink;
-     color: white;
-        }
-
-
-     .btn:active {
-     background-color: gray;
-     color: white;
-        }
-
-    .custom-row .col-sm-4 {
-     margin-bottom: 20px; 
-    }
-
-    .custom-row .col-sm-4 img {
-          margin-right: 10px; 
-     }
-
-    </style>
-
-<div class="col-sm-12 mx-auto">
+<div class="caroul col-sm-12 mx-auto">
     <div id="promoCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
         <div class="carousel-inner">
             <div class="carousel-item active">
@@ -79,7 +44,7 @@
 
 
 <!--------------body---------------->
-<h1 class="text-center">Recommend</h1>
+<h1 class="text-center fw-bold mb-2 reccom">Recommend</h1>
 
 <div class="container">
     <div class="row">
@@ -96,39 +61,39 @@
     </div>
 </div>
 <br>
-<div class="container">
-    <div class="row">
-        <div class="col-sm-4 d-flex justify-content-center">
+<div class="container mt-3">
+    <div class="imgrow1 row d-flex flex-row justify-content-center align-items-center">
+        <div class="col-sm-3 d-flex justify-content-center">
             <a asp-route-id="11" asp-action="ProductDetails" asp-controller="Product">
-                <img src="~/pic/small/small.png" class="card-img-top .custom-img" alt="..." style="width: 100%; height: auto;">
+                <img src="~/pic/small/small.png" class="card-img-top .custom-img" alt="..." style="max-width: 100%; height: auto; object-fit: cover;">
             </a>
         </div>
-        <div class="col-sm-4 d-flex justify-content-center">
+        <div class="col-sm-3 d-flex justify-content-center">
             <a asp-route-id="24" asp-action="ProductDetails" asp-controller="Product">
-                <img src="~/pic/small/small2.png" class="card-img-top" alt="..." style="width: 100%; height: auto;">
+                <img src="~/pic/small/small2.png" class="card-img-top" alt="..." style="max-width: 100%; height: auto; object-fit: cover;">
             </a>
         </div>
-        <div class="col-sm-4 d-flex justify-content-center">
+        <div class="col-sm-3 d-flex justify-content-center">
             <a asp-route-id="44" asp-action="ProductDetails" asp-controller="Product">
-                <img src="~/pic/small/small3.png" class="card-img-top" alt="..." style="width: 100%; height: auto;">
+                <img src="~/pic/small/small3.png" class="card-img-top" alt="..." style="max-width: 100%; height: auto; object-fit: cover;">
             </a>
         </div>
     </div>
     <br>
-    <div class="row">
-        <div class="col-sm-4 d-flex justify-content-center">
+    <div class="imgrow2 row d-flex flex-row justify-content-center align-items-center">
+        <div class="col-sm-3 d-flex justify-content-center">
             <a asp-route-id="59" asp-action="ProductDetails" asp-controller="Product">
-                <img src="~/pic/small/small4.png" class="card-img-top" alt="..." style="width: 100%; height: auto;">
+                <img src="~/pic/small/small4.png" class="card-img-top" alt="..." style="max-width: 100%; height: auto; object-fit: cover;">
             </a>
         </div>
-        <div class="col-sm-4 d-flex justify-content-center">
+        <div class="col-sm-3 d-flex justify-content-center">
             <a asp-route-id="61" asp-action="ProductDetails" asp-controller="Product">
-                <img src="~/pic/small/small5.png" class="card-img-top" alt="..." style="width: 100%; height: auto;">
+                <img src="~/pic/small/small5.png" class="card-img-top" alt="..." style="max-width: 100%; height: auto; object-fit: cover;">
             </a>
         </div>
-        <div class="col-sm-4 d-flex justify-content-center">
+        <div class="col-sm-3 d-flex justify-content-center">
             <a asp-route-id="33" asp-action="ProductDetails" asp-controller="Product">
-                <img src="~/pic/small/small6.png" class="card-img-top" alt="..." style="width: 100%; height: auto;">
+                <img src="~/pic/small/small6.png" class="card-img-top" alt="..." style="max-width: 100%; height: auto; object-fit: cover;">
             </a>
         </div>
     </div>
@@ -136,68 +101,70 @@
 </div>
 
 <br>
+<hr/>
 
-<div class="align-items-center">
-    
+<div class="align-items-center helpfind">
     <div class="container">
         <div class="row align-items-center">
             <div class="col-4"></div>
-            <div class="col-sm-4 justify-content-center">
-                <h1>Let us help you find it.</h1>
+            <div class="col-sm-4 w-100 d-flex justify-content-center fw-bold">
+                <h1 class="fw-bold">Let us help you find it.</h1>
             </div>
             <div class="col-4"></div>
         </div>
-        <div class="row align-items-center">
-            <div class="col-4"></div>
-            <div class="col-sm-4 justify-content-center">
-                <a class="btn btn" style="margin: 10px;" asp-route-category="Mug" asp-action="ProductMainPage" asp-controller="Product">Mug</a>
-                <a class="btn btn" style="margin: 10px;" asp-route-category="Steel Flask" asp-action="ProductMainPage" asp-controller="Product">SteelFladk</a>
-                <a class="btn btn" style="margin: 10px;" asp-route-category="Tumbler" asp-action="ProductMainPage" asp-controller="Product">Tumdlem</a>
+        <div class="">
+            <div class="row d-flex justify-content-center align-items-center">
+                <div class="col-4"></div>
+                <div class="col-sm-4 justify-content-center tagbox1 gap-2">
+                    <a class="btn btn btn-outline-dark rounded-3 fs-4" style="margin: 10px;" asp-route-category="Mug" asp-action="ProductMainPage" asp-controller="Product">Mug</a>
+                    <a class="btn btn btn-outline-dark rounded-3 fs-4" style="margin: 10px;" asp-route-category="Steel Flask" asp-action="ProductMainPage" asp-controller="Product">SteelFlask</a>
+                    <a class="btn btn btn-outline-dark rounded-3 fs-4" style="margin: 10px;" asp-route-category="Tumbler" asp-action="ProductMainPage" asp-controller="Product">Tumbler</a>
+                </div>
+                <div class="col-4"></div>
             </div>
-            <div class="col-4"></div>
-        </div>
 
-        <div class="row  align-items-center">
-            <div class="col-sm-4 justify-content-center"></div>
-            <div class="col-sm-4">
-
-                <a class="btn" style="margin: 10px;" asp-route-minPrice="0" asp-route-maxPrice="160" asp-action="ProductMainPage" asp-controller="Product">0-159฿</a>
-                <a class="btn" style="margin: 10px;" asp-route-minPrice="160" asp-route-maxPrice="199" asp-action="ProductMainPage" asp-controller="Product">160-199฿</a>
-                <a class="btn" style="margin: 10px;" asp-route-minPrice="200" asp-route-maxPrice="300" asp-action="ProductMainPage" asp-controller="Product">300฿</a>
+            <div class="row d-flex justify-content-center  align-items-center">
+                <div class="col-sm-4 justify-content-center"></div>
+                <div class="col-sm-4 tagbox2">
+                    <a class="btn btn-outline-dark rounded-3 fs-4" style="margin: 10px;" asp-route-minPrice="0" asp-route-maxPrice="160" asp-action="ProductMainPage" asp-controller="Product">0-159฿</a>
+                    <a class="btn btn-outline-dark rounded-3 fs-4" style="margin: 10px;" asp-route-minPrice="160" asp-route-maxPrice="199" asp-action="ProductMainPage" asp-controller="Product">160-199฿</a>
+                    <a class="btn btn-outline-dark rounded-3 fs-4" style="margin: 10px;" asp-route-minPrice="200" asp-route-maxPrice="300" asp-action="ProductMainPage" asp-controller="Product">300฿</a>
+                </div>
+                <div class="col-sm-4"></div>
             </div>
-            <div class="col-sm-4"></div>
         </div>
     </div>
 </div>
 
+<br />
 
+<hr/>
 
-<br>
+<br />
 
-<h4>About Us</h4>
-<div class="col-sm-12">
-    <p>Staychill is an E-Commerce website selling beverage packaging products. This website is created by a group of students in the CMM349 Web Application course. It is intended for educational use only.</p>
+<h4 class="fw-bold">About Us</h4>
+<div class="col-sm-12" id="about-us">
+    <p class="fs-5">Staychill is an E-Commerce website selling beverage packaging products. This website is created by a group of students in the CMM349 Web Application course. It is intended for educational use only.</p>
 </div>
 
 
-<h4>Contact</h4>
+<h4 class="fw-bold">Contact</h4>
 
-<div class="col-6">
-  <p>
+<div class="col-6" id="contact">
+    <p class="fs-5">
         King Mongkut’s University of Technology Thonburi (KMUTT)
         6B floor, 14-storey Parking Building
-        126 Pracha Uthit Rd., Bang Mod, Thung Khru, Bangkok 10140. Thailand
+        126 Pracha Uthit Rd., Bang Mod, Thung Khru, Bangkok 10140. Thailand </br>
+        <span class="fw-bold">Call : 01-234-5678</span><br>
+        <span class="fw-bold">Gmail : Staychill.gmail.com</span>
    </p>
-    <p>
-        Call : 01-234-5678<br>
-Gmail : Staychill.gmail.com</p>
         
 </div>
 
     <div>
         <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3877.106954579432!2d100.49386787455713!3d13.651257399614483!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30e2a251bb6b0cf1%3A0xf656e94ff13324ad!2z4Lih4Lir4Liy4Lin4Li04LiX4Lii4Liy4Lil4Lix4Lii4LmA4LiX4LiE4LmC4LiZ4LmC4Lil4Lii4Li14Lie4Lij4Liw4LiI4Lit4Lih4LmA4LiB4Lil4LmJ4Liy4LiY4LiZ4Lia4Li44Lij4Li1!5e0!3m2!1sth!2sth!4v1733047888953!5m2!1sth!2sth"
-                width="600"
-                height="450"
+                width="auto"
+                height="auto"
                 style="border:0;"
                 allowfullscreen=""
                 loading="lazy"

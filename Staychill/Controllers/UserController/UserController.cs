@@ -21,17 +21,17 @@ namespace Staychill.Controllers.UserController
 
         public IActionResult Home()
         {
-            return View();
-        }
-        
-        public async Task<IActionResult> Index()
-        {
-            if(User.Identity.Name != null)
+            if(User.Identity.Name == "Staychill")
             {
-                await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                return RedirectToAction("AdminUserIndex", "Admin");
             }
-            return View();
+            else
+            {
+                return View();
+            }
+            
         }
+
 
 
         // ================= LOG-IN ================= //
@@ -64,7 +64,7 @@ namespace Staychill.Controllers.UserController
                         // Sign in the user
                         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
 
-                        return RedirectToAction("Tracking", "Admin"); // Redirect to another action if username and password are "Staychill"
+                        return RedirectToAction("AdminUserIndex", "Admin"); // Redirect to another action if username and password are "Staychill"
                     }
                     else
                     {
@@ -80,7 +80,7 @@ namespace Staychill.Controllers.UserController
                         // Sign in the user
                         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
 
-                        return RedirectToAction("ProductMainPage", "Product"); // Redirect to homepage or dashboard
+                        return RedirectToAction("Home", "User"); // Redirect to homepage or dashboard
                     }
                 }
                 else
