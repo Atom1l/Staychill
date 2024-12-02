@@ -1,111 +1,114 @@
 ﻿@model IEnumerable<Staychill.Models.ProductModel.Product>
 
 @{
-    ViewData["Title"] = "ProductIndex";
+    Layout = "_AdminLayout";
 }
+<link href="/css/AdminCSS/ProductIndex.css" rel="stylesheet" asp-append-version="true" />
 
-<h1>ProductIndex</h1>
+<h1 class="fw-bold text-center mt-4">Product-controller</h1>
+<hr class="mb-4" />
 
-<div>
-    <a asp-action="ProductCreate">Create Product</a> |
-    <a asp-action="ProductAddCart">See Cart</a>
+<div class="product-search-container w-100 d-flex justify-content-between align-items-center mt-3">
+    <a asp-action="ProductCreate" class="fs-5 fw-bold">
+        <div class="product-create-new btn-primary p-2 pe-3 ps-3 rounded-3">Create New</div>
+    </a>
+    <form asp-action="ProductIndex" class="d-flex align-items-center">
+        <label for="productSearchbar" class="product-search-label fs-5 fw-bold me-2">Search : </label>
+        <div class="product-searchbar-container">
+            <input class="product-searchbar fs-6 rounded-3 p-1 me-2" type="text" name="productquery" value="" placeholder="" />
+            <button type="submit" class="btn-warning p-1 pe-2 ps-2 rounded-3">Search!</button>
+        </div>
+    </form>
 </div>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Id)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ProductName)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ProductType)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Color)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Description)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Price)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Instock)
-            </th>
-            <th>
-                Pics
-            </th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var product in Model)
-        {
+<div class="table-responsive">
+    <table>
+        <thead>
             <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => product.Id)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => product.ProductName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => product.ProductType)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => product.Color)
-                </td>
-                <td class="container-fluid">
-                    @Html.DisplayFor(modelItem => product.Description)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => product.Price)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => product.Instock)
-                </td>
-                <td class="container-fluid">
-                    @if (product.Images != null)
-                    {
-                        <div>
-                            @if (product.Images.Image1 != null)
-                            {
-                                <img src="@($"data:image/png;base64,{Convert.ToBase64String(product.Images.Image1)}")" alt="Image 1" style="width: 50px; height: 50px;" />
-                            }
-                            @if (product.Images.Image2 != null)
-                            {
-                                <img src="@($"data:image/png;base64,{Convert.ToBase64String(product.Images.Image2)}")" alt="Image 2" style="width: 50px; height: 50px;" />
-                            }
-                            @if (product.Images.Image3 != null)
-                            {
-                                <img src="@($"data:image/png;base64,{Convert.ToBase64String(product.Images.Image3)}")" alt="Image 3" style="width: 50px; height: 50px;" />
-                            }
-                            @if (product.Images.Image4 != null)
-                            {
-                                <img src="@($"data:image/png;base64,{Convert.ToBase64String(product.Images.Image4)}")" alt="Image 4" style="width: 50px; height: 50px;" />
-                            }
-                        </div>
-                    }
-                </td>
-                <td>
-                    <!-- ปุ่ม Add to Cart -->
-                    <form asp-action="CartIndex" asp-controller="Cart" method="post">
-                        <input type="hidden" name="productId" value="@product.Id" />
-                        <input type="number" name="quantity" value="1" min="1" />
-                        <button type="submit">Add to Cart</button>
-                    </form>
-
-                    <!-- ปุ่ม Details -->
-                    <a asp-action="ProductDetailsAdmin" asp-route-id="@product.Id" class="btn btn-info">Details</a>
-
-                    <!-- ปุ่ม Edit -->
-                    <a asp-action="ProductEdit" asp-route-id="@product.Id" class="btn btn-warning">Edit</a>
-
-                    <!-- ปุ่ม Delete -->
-                    <a asp-action="ProductDelete" asp-route-id="@product.Id" class="btn btn-danger">Delete</a>
-                </td>
+                <th>
+                    @Html.DisplayNameFor(model => model.Id)
+                </th>
+                <th>
+                   Name
+                </th>
+                <th>
+                    Type
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Color)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Description)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Price)
+                </th>
+                <th>
+                    Stock
+                </th>
+                <th>
+                    Pics
+                </th>
+                <th>Actions</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var product in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => product.Id)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => product.ProductName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => product.ProductType)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => product.Color)
+                    </td>
+                    <td class="container-fluid truncate-text">
+                        @Html.DisplayFor(modelItem => product.Description)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => product.Price)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => product.Instock)
+                    </td>
+                    <td class="container-fluid">
+                        @if (product.Images != null)
+                        {
+                            <div>
+                                @if (product.Images.Image1 != null)
+                                {
+                                    <img src="@($"data:image/png;base64,{Convert.ToBase64String(product.Images.Image1)}")" alt="Image 1" style="width: 50px; height: 50px;" />
+                                }
+                                @if (product.Images.Image2 != null)
+                                {
+                                    <img src="@($"data:image/png;base64,{Convert.ToBase64String(product.Images.Image2)}")" alt="Image 2" style="width: 50px; height: 50px;" />
+                                }
+                                @if (product.Images.Image3 != null)
+                                {
+                                    <img src="@($"data:image/png;base64,{Convert.ToBase64String(product.Images.Image3)}")" alt="Image 3" style="width: 50px; height: 50px;" />
+                                }
+                                @if (product.Images.Image4 != null)
+                                {
+                                    <img src="@($"data:image/png;base64,{Convert.ToBase64String(product.Images.Image4)}")" alt="Image 4" style="width: 50px; height: 50px;" />
+                                }
+                            </div>
+                        }
+                    </td>
+                    <td>
+                        <!-- ปุ่ม Edit -->
+                        <a asp-action="ProductEdit" asp-route-id="@product.Id" class="text-primary">Edit</a>
+                        <!-- ปุ่ม Details -->
+                        <a asp-action="ProductDetailsAdmin" asp-route-id="@product.Id" class="text-info">Details</a>
+                        <!-- ปุ่ม Delete -->
+                        <a asp-action="ProductDelete" asp-route-id="@product.Id" class="text-danger" onclick="return confirm('Are you sure you want to delete this?')">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

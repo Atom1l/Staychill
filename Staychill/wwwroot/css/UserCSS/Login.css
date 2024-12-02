@@ -1,0 +1,74 @@
+﻿* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.container {
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-width: 100%;
+    padding-right: 5rem;
+    padding-left: 5rem;
+}
+
+body {
+    margin-bottom: 70px;
+    background: url('/pic/sign up.jpg');
+    background-size: cover;
+    background-repeat: no-repeat;
+}
+
+.row{
+    height:50vh !important;
+    background:red;
+}
+
+.loginbtn {
+    background: #C9F0F7;
+    color: #FFFFFF !important;
+}
+
+.loginbtn:hover {
+    background: #0e2ce1;
+    color: white !important;
+    transition: 0.3s ease-in-out;
+}
+
+.img-column {
+    width:100%;
+    height:100%;
+    object-fit: cover;
+}
+
+.right-col{
+    display:flex;
+    flex-direction:column;
+    justify-content:center !important;
+    align-items:center !important;
+
+}
+.containerlogin{
+    margin-top:20px;
+    margin-bottom:50px;
+}
+.right-col button{
+}
+
+.Signupbtn {
+    width:100%;
+    background: #FDE4F5;
+}
+
+@media (max-width: 768px) {
+    .left-col {
+        display: none;
+    }
+}
+
+@media (max-width: 575px) {
+    .container {
+        padding-right: 2rem;
+        padding-left: 2rem;
+    }
+}

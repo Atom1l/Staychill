@@ -1,16 +1,37 @@
-@model Staychill.Models.ProductModel.Product
+﻿@model Staychill.Models.ProductModel.Product
 
 @{
-    ViewData["Title"] = "Product Details";
+    @if (User.Identity.IsAuthenticated)
+    {
+        Layout = "_Logged-In_Layout";
+    }
+    else
+    {
+        Layout = "_Layout";
+    }
 }
+<link rel="stylesheet" href="~/css/ProductCSS/ProductDetails.css" />
 
-<div class="container mt-4">
-    <div class="row">
-        <!-- ⫹�ʴ��Ҿ�Թ��� -->
-        <div class="col-md-6">
+<div class="container mt-5">
+    <!-- â«¹áÊ´§ÀÒ¾ÊÔ¹¤éÒáÅÐÃÒÂÅÐàÍÕÂ´ -->
+    <div class="row g-5 align-items-center">
+        <!-- ÀÒ¾ÊÔ¹¤éÒ -->
+        <div class="left-col col-md-6 text-center">
             @if (Model.Images != null && Model.Images.Image1 != null)
             {
-                <img src="@($"data:image/png;base64,{Convert.ToBase64String(Model.Images.Image1)}")" alt="Main Image" class="img-fluid rounded" />
+                @if (Model.Images != null && Model.Images.Image1 != null)
+                {
+                    <img src="@($"data:image/png;base64,{Convert.ToBase64String(Model.Images.Image1)}")"
+                         alt="Main Image"
+                         class="img-fluid img-cover rounded"
+                         style="max-height: 400px; object-fit: cover; cursor: pointer;"
+                         onclick="openImageInNewTab(this.src)" />
+                }
+                else
+                {
+                    <p>No Image Available</p>
+                }
+
             }
             else
             {
@@ -18,95 +39,113 @@
             }
         </div>
 
-        <!-- ⫹�ʴ���������´�Թ��� -->
-        <div class="col-md-6">
-            <h2>@Model.ProductName</h2>
-            <p>@Model.Description</p>
+        <!-- ÃÒÂÅÐàÍÕÂ´ÊÔ¹¤éÒ -->
+        <div class="right-col col-md-4">
+            <h1 class="display-6 fw-bold mb-3">@Model.ProductName</h1>
+            <p class="text-muted">@Model.Description</p>
 
-            <!-- ⫹��ͧ�� -->
-            <p><strong>Color:</strong></p>
-            <div class="d-flex gap-2">
-                @if (ViewBag.RelatedColors != null)
-                {
-                    foreach (var colorItem in ViewBag.RelatedColors)
+            <!-- ÊÕ¢Í§ÊÔ¹¤éÒ -->
+            <div class="mb-4">
+                <strong>Color:</strong>
+                <div class="d-flex gap-2 mt-2">
+                    @if (ViewBag.RelatedColors != null)
                     {
-                        <a asp-action="ProductDetails" asp-route-id="@colorItem.Id" style="text-decoration: none;">
-                            <span class="d-inline-block" style="width: 20px; height: 20px; background-color: @colorItem.Color; border-radius: 50%; border: 1px solid #000; cursor: pointer;" title="@colorItem.Color"></span>
-                        </a>
+                        foreach (var colorItem in ViewBag.RelatedColors)
+                        {
+                            // àªç¤ÊÕà¢ÕÂÇáÅÐÊÕ¹éÓà§Ô¹à¾×èÍà»ÅÕèÂ¹ãËéà»ç¹¿éÒáÅÐà¢ÕÂÇÍèÍ¹
+                            string displayColor = colorItem.Color;
+
+                            if (colorItem.Color.ToLower() == "green") // ¶éÒ¤èÒÊÕà»ç¹à¢ÕÂÇ
+                            {
+                                displayColor = "#B1CFB7"; // ÊÕà¢ÕÂÇÍèÍ¹
+                            }
+                            else if (colorItem.Color.ToLower() == "blue") // ¶éÒ¤èÒÊÕà»ç¹¹éÓà§Ô¹
+                            {
+                                displayColor = "#B3D9E1"; // ÊÕ¿éÒÍèÍ¹
+                            }
+
+                            <a asp-action="ProductDetails" asp-route-id="@colorItem.Id" class="text-decoration-none">
+                                <span class="d-inline-block border"
+                                      style="width: 30px; height: 30px; background-color: @displayColor; border-radius: 50%;
+                                      cursor: pointer; opacity: 0.7;"
+                                      title="@colorItem.Color"></span>
+                            </a>
+                        }
                     }
-                }
+                </div>
             </div>
 
-            <!-- ������ǹ�ʴ��Ҥ��Թ��� -->
-            <p class="mt-3">
-                <strong>Price:</strong>
-                <span style="font-size: 1.5rem;">@String.Format("{0:C}", Model.Price)</span> <!-- ��Ѻ��Ҵ����ѡ�÷���� -->
-            </p>
 
-
-            <!-- ����������Թ��� -->
-            <div class="mt-4">
-                <form asp-action="CartIndex" asp-controller="Cart" method="post">
-                    <input type="hidden" name="productId" value="@Model.Id" />
-                    <label for="quantity">Quantity:</label>
-                    <div class="d-flex align-items-center">
-                        <button type="button" class="btn btn-secondary" onclick="this.nextElementSibling.stepDown()">-</button>
-                        <input type="number" name="quantity" value="1" min="1" max="@Model.Instock" class="form-control mx-2" style="width: 60px; text-align: center;" />
-                        <button type="button" class="btn btn-secondary" onclick="this.previousElementSibling.stepUp()">+</button>
+            <!-- ÃÒ¤ÒáÅÐ¨Ó¹Ç¹ÊÔ¹¤éÒ -->
+            <form asp-action="CartIndex" asp-controller="Cart" method="post">
+                <div class="row d-flex align-items-center gap-4 mb-4">
+                    <div class="pricetag col-12">
+                        <span><strong style="font-size: 1.25rem; color: black; margin-bottom: 5px;">Price:</strong></span>
+                        <span class="fs-3 fw-bold" style="font-size: 1.25rem; color: black; line-height: 1.2;">
+                            @Model.Price ฿
+                        </span>
                     </div>
-                    <button type="submit" class="btn btn-primary mt-3">Add to Cart</button>
-                </form>
-            </div>
+                    <div class="d-flex align-items-center gap-2">
+                        <!-- »ØèÁÅ´¨Ó¹Ç¹ -->
+                        <button type="button" class="btn btn-outline-secondary px-3" onclick="this.nextElementSibling.stepDown()">-</button>
+                        <!-- µÑÇ¡ÃÍ¡¨Ó¹Ç¹ÊÔ¹¤éÒ -->
+                        <input type="number" name="quantity" value="1" min="1" max="@Model.Instock" class="form-control text-center no-spinner" style="width: 100px; height: 40px;" />
+                        <!-- »ØèÁà¾ÔèÁ¨Ó¹Ç¹ -->
+                        <button type="button" class="btn btn-outline-secondary px-3" onclick="this.previousElementSibling.stepUp()">+</button>
+                    </div>
+                </div>
+
+                <div>                   
+                    <input type="hidden" name="productId" value="@Model.Id" />
+                    <button type="submit" class="btn btn-lg w-100" style="background-color: #73e2ff; border-color: #73e2ff;">Add To Cart</button>         
+                </div>
+            </form>
         </div>
+    </div>
 
-
-    <!-- ⫹�ʴ��Ҿ������� -->
-    <div class="mt-4">
-        <div class="row">
+    <!-- â«¹áÊ´§ÀÒ¾à¾ÔèÁàµÔÁ -->
+    <div class="container mt-5">
+        <div class="row g-3 justify-content-center">
             @if (Model.Images != null)
             {
-                <div class="col-4 col-md-3 col-lg-2">
-                    @if (Model.Images.Image2 != null)
-                    {
-                        <img src="@($"data:image/png;base64,{Convert.ToBase64String(Model.Images.Image2)}")" alt="Image 2" class="img-fluid mb-2 rounded" />
-                    }
-                </div>
-                <div class="col-4 col-md-3 col-lg-2">
-                    @if (Model.Images.Image3 != null)
-                    {
-                        <img src="@($"data:image/png;base64,{Convert.ToBase64String(Model.Images.Image3)}")" alt="Image 3" class="img-fluid mb-2 rounded" />
-                    }
-                </div>
-                <div class="col-4 col-md-3 col-lg-2">
-                    @if (Model.Images.Image4 != null)
-                    {
-                        <img src="@($"data:image/png;base64,{Convert.ToBase64String(Model.Images.Image4)}")" alt="Image 4" class="img-fluid mb-2 rounded" />
-                    }
-                </div>
+                @if (Model.Images.Image2 != null)
+                {
+                    <div class="col-4 col-md-3">
+                        <img src="@($"data:image/png;base64,{Convert.ToBase64String(Model.Images.Image2)}")" alt="Image 2" class="img-fluid rounded" onclick="openImageInNewTab(this.src)" style="cursor: pointer;" />
+                    </div>
+                }
+                @if (Model.Images.Image3 != null)
+                {
+                    <div class="col-4 col-md-3">
+                        <img src="@($"data:image/png;base64,{Convert.ToBase64String(Model.Images.Image3)}")" alt="Image 3" class="img-fluid rounded" onclick="openImageInNewTab(this.src)" style="cursor: pointer;" />
+                    </div>
+                }
+                @if (Model.Images.Image4 != null)
+                {
+                    <div class="col-4 col-md-3">
+                        <img src="@($"data:image/png;base64,{Convert.ToBase64String(Model.Images.Image4)}")" alt="Image 4" class="img-fluid rounded" onclick="openImageInNewTab(this.src)" style="cursor: pointer;" />
+                    </div>
+                }
             }
         </div>
     </div>
 
-    <!-- ⫹�ʴ��Թ������� ��������� -->
-    <div class="mt-4">
-        <h3>Others</h3>
-        <div class="row">
+    <!-- â«¹ÊÔ¹¤éÒÍ×è¹ -->
+    <div class="container mt-5">
+        <h5 class="mb-3 text-center">----- Let's See Others -----</h5>
+        <div class="row g-4 justify-content-center">
             @if (ViewBag.OtherProducts != null)
             {
                 foreach (var otherProduct in ViewBag.OtherProducts)
                 {
                     <div class="col-6 col-md-4 col-lg-3">
-                        <div class="text-center">
+                        <div class="card border-0 shadow-sm">
                             @if (otherProduct.Images != null && otherProduct.Images.Image1 != null)
                             {
                                 var base64Image = Convert.ToBase64String(otherProduct.Images.Image1);
                                 <a href="@Url.Action("ProductDetails", "Product", new { id = otherProduct.Id })">
-                                    <img src="@($"data:image/png;base64,{base64Image}")" alt="Image1" class="img-fluid mb-2 rounded" />
+                                    <img src="@($"data:image/png;base64,{base64Image}")" alt="Image1" class="card-img-top rounded" />
                                 </a>
-                            }
-                            else
-                            {
-                                <p>No Image Available</p>
                             }
                         </div>
                     </div>
@@ -119,5 +158,72 @@
         </div>
     </div>
 
-    <a asp-action="ProductMainPage" class="btn btn-link mt-4">Back</a>
+
+    <!--- »ØèÁ¡ÅÑº --->
+    <div class="text-center mt-4">
+        <a asp-action="ProductMainPage" class="btn btn-outline-secondary">Back to Menu</a>
+    </div>
 </div>
+
+
+<script>
+    document.querySelectorAll('input[name="quantity"]').forEach(input => {
+        input.addEventListener('input', (e) => {
+            // Allow only numeric input
+            e.target.value = e.target.value.replace(/[^0-9]/g, '');
+
+            // Ensure the value is within the min and max range
+            const min = parseInt(input.getAttribute('min')) || 1;
+            const max = parseInt(input.getAttribute('max')) || Infinity;
+            if (e.target.value) {
+                let value = parseInt(e.target.value);
+                if (value < min) e.target.value = min;
+                if (value > max) e.target.value = max;
+            }
+        });
+    });
+
+    function openImageInNewTab(imageSrc) {
+    const newTab = window.open();
+    newTab.document.body.innerHTML = `
+        <style>
+            body {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                background-color: rgba(0, 0, 0, 0.8);
+                margin: 0;
+                height: 100vh;
+                overflow: hidden;
+            }
+            img {
+                max-width: 80%;
+                max-height: 80%;
+                border: 3px solid white;
+                border-radius: 10px;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.6);
+            }
+            button {
+                position: absolute;
+                top: 20px;
+                right: 20px;
+                background-color: red;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                padding: 10px 15px;
+                font-size: 16px;
+                cursor: pointer;
+                box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+            }
+            button:hover {
+                background-color: darkred;
+            }
+        </style>
+        <button onclick="window.close()">X</button>
+        <img src="${imageSrc}" alt="Enlarged Image">
+    `;
+    newTab.document.title = "Enlarged Image";
+}
+
+</script>

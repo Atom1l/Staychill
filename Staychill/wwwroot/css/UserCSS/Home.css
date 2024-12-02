@@ -1,0 +1,83 @@
+﻿
+* {
+margin: 0;
+padding: 0;
+ box-sizing: border-box;
+}
+
+.container {
+ overflow-x: hidden;
+ overflow-y: auto;
+max-width: 100%;
+padding-right: 5rem;
+padding-left: 5rem;
+}
+.caroul{
+    margin-top:75px;
+}
+.reccom{
+    margin-top:70px;
+}
+.helpfind{
+    margin-top:50px !important;
+    margin-bottom:25px !important;
+}
+.btn-primary {
+    background-color: white;
+    border: 2px solid gray;
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: gray;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.btn-primary:hover {
+background-color: lightgray;
+color: black;
+}
+
+ 
+.btn-primary:active {
+ background-color: gray; 
+ color: white;
+}
+
+.carousel-inner img {
+    width: 100% !important;
+    height: auto !important;
+    object-fit: cover;
+}
+
+.carousel-control-prev {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    padding-left: 20px;
+    width: 5%;
+}
+
+.carousel-control-next {
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    padding-right: 20px;
+    width: 5%;
+}
+
+.tagbox1,.tagbox2{
+    display:flex;
+    justify-content:center;
+}
+
+@media(max-width:576px){
+    .container {
+        padding-right: 2rem;
+        padding-left: 2rem;
+    }
+    .tagbox1, .tagbox2 {
+        display:flex; 
+        flex-direction:column;
+        justify-content: center;
+    }
+}

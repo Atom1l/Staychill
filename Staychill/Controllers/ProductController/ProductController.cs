@@ -28,11 +28,22 @@ namespace Staychill.Controllers.ProductController
             return View();
         }
 
-        public async Task<IActionResult> ProductIndex()
+        public async Task<IActionResult> ProductIndex(string productquery)
         {
-            var model = await _db.ProductDB.Include(p => p.Images).ToListAsync(); // Include Images from productImage to ProductDB //
+            IQueryable<Product> query = _db.ProductDB.Include(p => p.Images); // Start with IQueryable
+
+            if (!string.IsNullOrEmpty(productquery))
+            {
+                query = query.Where(p => p.Id.ToString().Contains(productquery) || p.ProductName.Contains(productquery)
+                                      || p.ProductType.Contains(productquery) || p.Color.Contains(productquery)
+                                      || p.Description.Contains(productquery) || p.Price.ToString().Contains(productquery)
+                                      || p.Instock.ToString().Contains(productquery));
+            }
+
+            var model = await query.ToListAsync(); // Call ToListAsync on IQueryable
             return View(model);
         }
+
 
         public IActionResult ProductCreate()
         {
@@ -84,23 +95,14 @@ namespace Staychill.Controllers.ProductController
             {
                 return NotFound();
             }
-            return View(product);
+            else
+            {
+                _db.Remove(product);
+                await _db.SaveChangesAsync();
+                return RedirectToAction("ProductIndex", "Product");
+            }
         }
 
-        // POST:(DELETE) //
-        [HttpPost, ActionName("ProductDelete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> ProductDeleteConfirmed(int id)
-        {
-            var product = await _db.ProductDB.FindAsync(id); // If match and confirmed then proceed to delete the data that contain inside int id //
-            if (product != null)
-            {
-                _db.ProductDB.Remove(product);
-                await _db.SaveChangesAsync();
-                return RedirectToAction("ProductIndex");
-            }
-            return NotFound();
-        }
         public IActionResult ProductAddCart()
         {
             var cartItems = _db.CartDB

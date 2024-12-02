@@ -8,6 +8,7 @@ using Staychill.ViewModel;
 using SelectPdf;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using Staychill.Models.ProductModel.DiscountModel;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace Staychill.Controllers.AdminController
 {
@@ -18,7 +19,7 @@ namespace Staychill.Controllers.AdminController
         {
             _db = db;
         }
-
+        
 
         // ============================================= Discount ============================================= //
         public IActionResult Discount(string discountquery) // Admin-Discount-Index //
@@ -387,6 +388,50 @@ namespace Staychill.Controllers.AdminController
                 return RedirectToAction("Feedback");
             }
             return RedirectToAction("Feedback");
+        }
+
+        // ============================================= User ============================================= //
+
+        public IActionResult AdminUserIndex(string userquery)
+        {
+            if (string.IsNullOrEmpty(userquery))
+            {
+                return View("AdminUserIndex", _db.UserDB.Include(u => u.Address).ToList());
+            }
+            else
+            {
+                var user = _db.UserDB.Include(u => u.Address).ToList();
+                var filtereduser = user.Where(u => u.Id.ToString().Contains(userquery) || u.Username.Contains(userquery)
+                                    || u.Firstname.Contains(userquery) || u.Lastname.Contains(userquery) || u.Username.Contains(userquery)
+                                    || u.Email.Contains(userquery) || u.Phonenumber.Contains(userquery) || u.Firstname.Contains(userquery)
+                                    || u.Address.Housenumber.Contains(userquery) || u.Address.Alley.Contains(userquery) || u.Address.Road.Contains(userquery)
+                                    || u.Address.Subdistrict.Contains(userquery) || u.Address.District.Contains(userquery) || u.Address.Province.Contains(userquery)
+                                    || u.Address.Country.Contains(userquery) || u.Address.Zipcode.Contains(userquery)).ToList();
+                return View("AdminUserIndex", filtereduser);
+            }
+            
+        }
+
+        public IActionResult AdminDetails(int id)
+        {
+            var existinguser = _db.UserDB.Include(u=>u.Address).FirstOrDefault(fb => fb.Id == id);
+            if (existinguser == null)
+            {
+                return RedirectToAction("AdminUserIndex");
+            }
+            return View(existinguser);
+        }
+
+        public IActionResult AdminDelete(int id)
+        {
+            var existinuser = _db.UserDB.Include(u => u.Address).FirstOrDefault(u=>u.Id == id);
+            if (existinuser != null)
+            {
+                _db.Remove(existinuser);
+                _db.SaveChanges();
+                return RedirectToAction("AdminUserIndex");
+            }
+            return RedirectToAction("AdminUserIndex");
         }
     }
 }

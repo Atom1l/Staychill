@@ -34,7 +34,7 @@
                                 <i class="fa-solid fa-xmark"></i>
                             </button>
                             <!-- User -->
-                            <a class="nav-link text-dark fw-normal ms-3 ms-md-2" asp-controller="Admin" asp-action="Discount">User</a>
+                            <a class="nav-link text-dark fw-normal ms-3 ms-md-2" asp-controller="Admin" asp-action="AdminUserIndex">User</a>
                             <!-- Products -->
                             <a class="nav-link text-dark fw-normal ms-3 ms-md-2" asp-controller="Product" asp-action="ProductIndex">Product</a>
                             <!-- Discount -->
@@ -59,8 +59,10 @@
                             <i class="bi bi-person"></i>
                         </div>
                         <ul class="dropdown-user" aria-labelledby="userDropdown">
-                            <li><a class="dropdown-item dropline text-decoration-none text-black" asp-action="EditProfile" asp-controller="User">Edit Profile</a></li>
-                            <li><a class="dropdown-item dropline text-decoration-none text-black" asp-action="Logout" asp-controller="User">Log Out</a></li>
+                            <li><p class="text-center fw-bold fs-5 mt-1">@User.Identity.Name</p></li>
+                            <hr />
+                            <li><a class="dropdown-item dropline text-decoration-none text-black text-center" asp-route-username="Staychill" asp-action="EditProfile" asp-controller="User">Edit Profile</a></li>
+                            <li><a class="dropdown-item dropline text-decoration-none text-black text-center" asp-action="Logout" asp-controller="User">Log Out</a></li>
                         </ul>
                     </div>
                 </div>
