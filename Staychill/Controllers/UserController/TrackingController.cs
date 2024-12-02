@@ -266,7 +266,7 @@ namespace Staychill.Controllers.UserController
                                 <div style=""font-size:1.3rem; margin-bottom:5px;"">Staychill Shop</div>
                                 <div style=""margin-bottom:5px;"">King Mongkut’s University of Technology Thonburi</div>
                                 <div style=""margin-bottom:5px;"">126 Pracha Uthit Rd., Bang Mod, Thung Khru, Bangkok 10140. Thailand</div>
-                                <div style=""margin-bottom:5px;"">Tel : 01-234-5678</div>
+                                <div style=""margin-bottom:5px;"">Tel : 012345678</div>
                             </div>
                         </div>
                         <div style=""width:45%; text-align:end;"">
