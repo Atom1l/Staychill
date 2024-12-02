@@ -1,9 +1,12 @@
 {
   "dependencies": {
-    "mssql2": {
+    "mssql3": {
+      "serviceConnectorResourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('serviceConnectorResourceGroupName')]/providers/Microsoft.Web/sites/Staychill/providers/Microsoft.ServiceLinker/linkers/ConnectionStringsStaychillConnectionStri_F3B3C77AFF",
       "secretStore": "AzureAppSettings",
-      "type": "mssql.onprem",
-      "connectionId": "ConnectionStrings:DatabaseConnection"
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/staychillshop/databases/StaychillShop",
+      "type": "mssql.azure",
+      "connectionId": "ConnectionStrings:StaychillConnectionString",
+      "dynamicId": null
     }
   }
 }
