@@ -9,6 +9,10 @@
       "ignored": "true",
       "type": "mssql",
       "connectionId": "ConnectionStrings:StaychillConnectionStrings"
+    },
+    "mssql2": {
+      "type": "mssql",
+      "connectionId": "ConnectionStrings:DatabaseConnection"
     }
   }
 }
