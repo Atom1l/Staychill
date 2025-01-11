@@ -85,6 +85,19 @@ namespace Staychill.Controllers.UserController
                 return BadRequest("Selected payment method is required.");
             }
 
+            if (SelectedPaymethod == "Credit Card" && (creditcardType == null || creditcardName == null || creditcardNumber == null || creditcardExp == null || creditcardCvv == null))
+            {
+                return RedirectToAction("PaymentIndex", "Payment");
+            }
+            if (SelectedPaymethod == "Bank transfer" && (bankAcc == null || bankNumber == null))
+            {
+                return RedirectToAction("PaymentIndex", "Payment");
+            }
+            if (SelectedPaymethod == "Prompt Pay" && uploadedPic == null) 
+            {
+                return RedirectToAction("PaymentIndex","Payment");
+            }
+
             var currentUser = User.Identity.Name; // Define the user account //
 
             // Create a new RetainCarts variable to store RetainCartItems
